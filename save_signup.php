@@ -12,6 +12,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
     // Open file in append mode
     $file = fopen($filename, 'a');
+    if ($file === false) {
+        exit('Unable to open data file for writing.');
+    }
     
     // Add headers if file is new
     if (!$fileExists) {
@@ -22,22 +25,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         ]);
     }
     
-   
-
-    if ($emailExists) {
-        echo "Error: Email already registered.";
-    } else {
-        echo "Signup successful!";
-    }
-    
-    fclose($file);
-
-     // Add user data
+ 
     fputcsv($file, [
         $fullname,
         $email,
         $password
     ]);
+    fclose($file);
      $emailExists = false;
     if (file_exists($filename)) {
         $file = fopen($filename, 'r');
@@ -47,7 +41,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 break;
             }
         }
-    
+      
+
+    if ($emailExists) {
+        echo "Error: Email already registered.";
+    } else {
+        echo "Signup successful!";
+    }
     fclose($file);
 }
 }
