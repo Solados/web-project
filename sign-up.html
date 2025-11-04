@@ -9,21 +9,44 @@
 </head>
 <body>
     <main>
-      <div class="login-page">
+      <div class="sign-in">
           <div class="form">
-              <form class="login-form" action="#" method="post" aria-label="Login form">
+              <!-- send the data to php file  -->
+              <form class="login-form" action="save_signup.php" method="post" onsubmit="return validateForm()" aria-label="Sign-up form">
                   <label for="username">Username</label>
                   <input id="username" name="username" type="text" placeholder="username" required />
-                  <label for="E-mail">E-mail</label>
-                  <input id="email" name="E-mail" type="" placeholder="E-mail" required />
-                  <label for="password" class="visually-hidden">Password</label>
+
+                  <label for="email">E-mail</label>
+                  <input id="email" name="email" type="email" placeholder="E-mail" required />
+
+                  <label for="password">Password</label>
                   <input id="password" name="password" type="password" placeholder="password" required />
-                  <button type="submit">sign in</button>
+
+                  <button type="submit">Sign up</button>
               </form>
           </div>
       </div>
+        <script>
+        function validateForm() {
+            const password = document.getElementById('password').value;
+            const email = document.getElementById('email').value;
+            const Username = document.getElementById('username').value;
+            // Basic password validation
+            if (password.length < 8) {
+                alert('Password must be at least 8 characters long');
+                return false;
+            }
+            
+            // Basic email validation
+            if (!email.includes('@')) {
+                alert('Please enter a valid email address');
+                return false;
+            }
+            
+            return true;
+        }
+        </script>
+
     </main>
-
-
 </body>
 </html>
