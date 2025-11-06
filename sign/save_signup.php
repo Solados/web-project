@@ -5,12 +5,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = htmlspecialchars($_POST['email']);
     $password = password_hash($_POST['password'], PASSWORD_DEFAULT); // Hash password
     //file name
-    $filename = __DIR__ .'/data/user_data.csv';
+    $filename = dirname(__DIR__) .'/data/user_data.csv';
     
     // Check if file exists
     $fileExists = file_exists($filename);
     
-    // Open file in append mode
+    // Open file in read mode
     $file = fopen($filename, 'a');
     if ($file === false) {
         exit('Unable to open data file for writing.');
@@ -46,11 +46,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($emailExists) {
         echo "Error: Email already registered.";
     } else {
-        session_start();
-        $_SESSION['user_email'] = $email;
-        header('Location: index.html');
-        exit();
+        fclose($file);
+        exit('Unable to lock data file.');
     }
+
     fclose($file);
+
+    // Start session and redirect to root index
+    session_start();
+    $_SESSION['user_email'] = $email_raw;
+    header('Location: /index.html');
+    exit();
+
 }
 }

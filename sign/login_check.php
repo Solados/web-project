@@ -8,7 +8,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = htmlspecialchars($_POST['email']);
     $password = $_POST['password']; 
 
-    $filename = __DIR__ . '/data/user_data.csv';
+    // Resolve CSV path in the project `data/` folder (one level above this sign/ directory)
+    $filename = dirname(__DIR__) . '/data/user_data.csv';
     
     // Check if file exists
     if (!file_exists($filename)) {
@@ -48,7 +49,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         session_start();
         $_SESSION['user_email'] = $email;
         // 2. Redirect to a dashboard or home page
-        header('Location: index.html');
+        header('Location: /index.html');
         exit();
     } else {
         echo "Error: Invalid email or password.";
