@@ -46,7 +46,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($emailExists) {
         echo "Error: Email already registered.";
     } else {
-        echo "Signup successful!";
+        session_start();
+        $_SESSION['user_email'] = $email;
+        header('Location: index.html');
+        exit();
     }
     fclose($file);
 }
