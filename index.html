@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!--<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>saudi culture</title>
 
-<link rel="stylesheet" href="testcss.css"/>
+<link rel="stylesheet" href="styles.css"/>
 </head>
 <body>
     <nav>
@@ -14,7 +14,7 @@
     <form action="/search" method="get">
   <label for="search-query" class="visually-hidden">Search:</label>
   <input type="search" id="search-query" name="searchbar" placeholder="Search...">
-  <button type="submit">Search1</button>
+  <button type="submit">Search</button>
 </form>
 </nav>
 
@@ -23,3 +23,289 @@
 
 </body>
 </html>
+-->
+
+<!doctype html>
+<html lang="ar" dir="rtl">
+ <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>الثقافة السعودية | الصفحة الرئيسية</title>
+  <meta name="description" content="اكتشف التراث، الفنون، المطبخ، والوجهات في المملكة العربية السعودية.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/styles.css">
+ </head>
+ <body>
+  <a class="skip-link" href="#main">تجاوز إلى المحتوى</a>
+  <header class="site-header">
+   <nav class="navbar" aria-label="التنقل الرئيسي">
+    <a class="brand" href="#hero" aria-label="العودة إلى الأعلى">الثقافة السعودية</a>
+    <button class="menu-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="فتح/إغلاق القائمة">☰</button>
+    <ul id="nav-links" class="nav-links">
+     <li><a href="#about">نبذة</a></li>
+     <li><a href="#heritage">التراث</a></li>
+     <li><a href="#arts">الفنون</a></li>
+     <li><a href="#cuisine">المطبخ</a></li>
+     <li><a href="#gallery">معرض</a></li>
+     <li><a href="#visit">خطط لزيارتك</a></li>
+    </ul>
+   </nav>
+  </header>
+
+  <!-- carousel slider -->
+  <div class="carousel">
+    <!-- list item -->
+    <div class="list">
+      <div class="item">
+        <img src="image/img1.jpg" alt="التراث السعودي">
+        <div class="content">
+          <div class="author">المملكة العربية السعودية</div>
+          <div class="title">اكتشف</div>
+          <div class="topic">الثقافة السعودية</div>
+          <div class="des">
+            من قصور الطين التاريخية في نجد إلى الأبراج الحديثة في الرياض، ومن رقصات العرضة السعودية إلى الفنون المعاصرة. المملكة العربية السعودية تفتح أبوابها لاستكشاف تراثها العريق وثقافتها الأصيلة.
+          </div>
+          <div class="buttons">
+            <button onclick="document.getElementById('about').scrollIntoView({behavior: 'smooth'})">اكتشف المزيد</button>
+            <button onclick="document.getElementById('visit').scrollIntoView({behavior: 'smooth'})">خطط لزيارتك</button>
+          </div>
+        </div>
+      </div>
+      <div class="item">
+        <img src="image/img2.jpg" alt="التراث والمعمار">
+        <div class="content">
+          <div class="author">المملكة العربية السعودية</div>
+          <div class="title">التراث</div>
+          <div class="topic">والعمارة</div>
+          <div class="des">
+            تتنوع العمارة السعودية بين الطين والحجر والخشب، مع تفاصيل زخرفية دقيقة. مواقع مثل الدرعية التاريخية وجدة التاريخية والعلا تشهد على أصالة المكان وتطوره عبر العصور.
+          </div>
+          <div class="buttons">
+            <button onclick="document.getElementById('heritage').scrollIntoView({behavior: 'smooth'})">اكتشف المزيد</button>
+            <button onclick="document.getElementById('visit').scrollIntoView({behavior: 'smooth'})">خطط لزيارتك</button>
+          </div>
+        </div>
+      </div>
+      <div class="item">
+        <img src="image/img3.jpg" alt="الفنون والثقافة">
+        <div class="content">
+          <div class="author">المملكة العربية السعودية</div>
+          <div class="title">الفنون</div>
+          <div class="topic">والثقافة</div>
+          <div class="des">
+            تشهد المملكة حراكاً ثقافياً لافتاً عبر المتاحف والمهرجانات ودعم المواهب الشابة في السينما والموسيقى والفنون البصرية، مما يجعلها وجهة ثقافية رائدة في المنطقة.
+          </div>
+          <div class="buttons">
+            <button onclick="document.getElementById('arts').scrollIntoView({behavior: 'smooth'})">اكتشف المزيد</button>
+            <button onclick="document.getElementById('visit').scrollIntoView({behavior: 'smooth'})">خطط لزيارتك</button>
+          </div>
+        </div>
+      </div>
+      <div class="item">
+        <img src="image/img4.jpg" alt="المطبخ السعودي">
+        <div class="content">
+          <div class="author">المملكة العربية السعودية</div>
+          <div class="title">المطبخ</div>
+          <div class="topic" style="margin-bottom: 0;">السعودي</div>
+          <div class="des">
+            نكهات متوارثة تجمع البهارات العطرية والوصفات العائلية. من الكبسة الشهيرة إلى القهوة العربية والتمر، المطبخ السعودي يعكس كرم الضيافة وروح التراث الأصيل.
+          </div>
+          <div class="buttons">
+            <button onclick="document.getElementById('cuisine').scrollIntoView({behavior: 'smooth'})">اكتشف المزيد</button>
+            <button onclick="document.getElementById('visit').scrollIntoView({behavior: 'smooth'})">خطط لزيارتك</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- list thumbnail -->
+    <div class="thumbnail">
+      <div class="item">
+        <img src="image/img1.jpg" alt="الثقافة السعودية">
+        <div class="content">
+          <div class="title">الثقافة السعودية</div>
+          <div class="description">تراث عريق وحضارة أصيلة</div>
+        </div>
+      </div>
+      <div class="item">
+        <img src="image/img2.jpg" alt="التراث والعمارة">
+        <div class="content">
+          <div class="title">التراث والعمارة</div>
+          <div class="description">من التاريخ إلى الحاضر</div>
+        </div>
+      </div>
+      <div class="item">
+        <img src="image/img3.jpg" alt="الفنون والثقافة">
+        <div class="content">
+          <div class="title">الفنون والثقافة</div>
+          <div class="description">حراك ثقافي ملهم</div>
+        </div>
+      </div>
+      <div class="item">
+        <img src="image/img4.jpg" alt="المطبخ السعودي">
+        <div class="content">
+          <div class="title">المطبخ السعودي</div>
+          <div class="description">نكهات أصيلة</div>
+        </div>
+      </div>
+    </div>
+    <!-- next prev -->
+    <div class="arrows">
+      <button id="prev"><</button>
+      <button id="next">></button>
+    </div>
+    <!-- time running -->
+    <div class="time"></div>
+  </div>
+
+  <section id="hero" class="hero" role="banner" aria-label="صورة بطل وتعريف" style="display: none;">
+   <div class="hero-overlay"></div>
+   <div class="hero-content">
+    <h1>اكتشف روح المملكة</h1>
+    <p>تاريخ عريق، حاضر ملهم، ومستقبل واعد</p>
+    <div class="hero-cta">
+     <a class="btn btn-primary" href="#about">ابدأ الاستكشاف</a>
+     <a class="btn btn-outline" href="#visit">خطط لزيارتك</a>
+    </div>
+   </div>
+  </section>
+
+  <main id="main">
+   <section id="about" class="section section-intro">
+    <div class="container">
+     <h2>المملكة: تنوّع ثقافي نابض</h2>
+     <p>
+      من عمارة الطين في نجد إلى بيوت الحجر المرجانية في جدة التاريخية، ومن رقصات السامري والعرضة إلى الفنون المعاصرة؛ تحتضن المملكة فسيفساء غنية من الممارسات الثقافية التي تعكس هويتها الأصيلة.
+     </p>
+     <div class="features">
+      <article class="feature-card" aria-label="الضيافة السعودية">
+       <div class="icon" aria-hidden="true">☕</div>
+       <h3>الضيافة السعودية</h3>
+       <p>القهوة العربية والتمر رمز الكرم والأصالة في كل بيت.</p>
+      </article>
+      <article class="feature-card" aria-label="الأزياء التقليدية">
+       <div class="icon" aria-hidden="true">👘</div>
+       <h3>الأزياء التقليدية</h3>
+       <p>البشت والثوب والدقلة تفصيل يعبّر عن الهوية المحلية.</p>
+      </article>
+      <article class="feature-card" aria-label="الموسيقى والرقص">
+       <div class="icon" aria-hidden="true">🥁</div>
+       <h3>الموسيقى والرقص</h3>
+       <p>إيقاعات الطبول والعرضة السعودية في المناسبات الوطنية.</p>
+      </article>
+     </div>
+    </div>
+   </section>
+
+   <section id="heritage" class="section section-alt">
+    <div class="container two-col">
+     <div class="col">
+      <h2>التراث والعمارة</h2>
+      <p>
+       تتنوّع العمارة السعودية بين الطين، والحجر، والخشب، مع تفاصيل زخرفية دقيقة كالأبواب المنحوتة والمشربيات. مواقع مثل الدرعية وجدة التاريخية تشهد على أصالة المكان وتطوّره.
+      </p>
+      <ul class="checklist">
+       <li>الدرعية التاريخية</li>
+       <li>العلا وواجهاتها الصخرية</li>
+       <li>جدة التاريخية ومشربياتها</li>
+      </ul>
+     </div>
+     <figure class="col media">
+      <img src="https://images.unsplash.com/photo-1582661705940-bb1b1c2c2f1f?q=80&w=1600&auto=format&fit=crop" alt="عمارة تراثية سعودية" loading="lazy">
+     </figure>
+    </div>
+   </section>
+
+   <section id="arts" class="section">
+    <div class="container two-col">
+     <figure class="col media">
+      <img src="https://images.unsplash.com/photo-1614854262340-9c3f2b805d6f?q=80&w=1600&auto=format&fit=crop" alt="فنون ومعارض في المملكة" loading="lazy">
+     </figure>
+     <div class="col">
+      <h2>الفنون والثقافة المعاصرة</h2>
+      <p>
+       تشهد المملكة حراكاً ثقافياً لافتاً عبر المتاحف، المهرجانات، ودعم المواهب الشابة في السينما والموسيقى والفنون البصرية.
+      </p>
+      <div class="pill-row">
+       <span class="pill">المتاحف</span>
+       <span class="pill">المسرح</span>
+       <span class="pill">السينما</span>
+       <span class="pill">المعارض</span>
+      </div>
+     </div>
+    </div>
+   </section>
+
+   <section id="cuisine" class="section section-alt">
+    <div class="container">
+     <h2>المطبخ السعودي</h2>
+     <p>نكهات متوارثة تجمع البهارات العطرية والوصفات العائلية.</p>
+     <div class="cards-grid">
+      <article class="card">
+       <img src="https://images.unsplash.com/photo-1551183053-bf91a1d81141?q=80&w=1200&auto=format&fit=crop" alt="كبسة سعودية" loading="lazy">
+       <div class="card-body">
+        <h3>كبسة</h3>
+        <p>أشهر الأطباق مع الأرز واللحم أو الدجاج.</p>
+       </div>
+      </article>
+      <article class="card">
+       <img src="https://images.unsplash.com/photo-1526318472351-c75fcf070305?q=80&w=1200&auto=format&fit=crop" alt="قهوة عربية" loading="lazy">
+       <div class="card-body">
+        <h3>قهوة عربية</h3>
+        <p>قهوة خفيفة مع هيل تقدم مع التمر.</p>
+       </div>
+      </article>
+      <article class="card">
+       <img src="https://images.unsplash.com/photo-1625944525241-3b2a8a2e01f3?q=80&w=1200&auto=format&fit=crop" alt="تمر سعودي" loading="lazy">
+       <div class="card-body">
+        <h3>تمر</h3>
+        <p>مذاق أصيل وحضور دائم في الضيافة.</p>
+       </div>
+      </article>
+     </div>
+    </div>
+   </section>
+
+   <section id="gallery" class="section">
+    <div class="container">
+     <h2>معرض صور</h2>
+     <div class="masonry">
+      <img src="https://images.unsplash.com/photo-1543832923-1314492df3d3?q=80&w=800&auto=format&fit=crop" alt="الكثبان الرملية" loading="lazy">
+      <img src="https://images.unsplash.com/photo-1577046840843-4d3b7d8f3a5b?q=80&w=800&auto=format&fit=crop" alt="واحة خضراء" loading="lazy">
+      <img src="https://images.unsplash.com/photo-1558981359-219d6364c9cf?q=80&w=800&auto=format&fit=crop" alt="أبراج حديثة" loading="lazy">
+      <img src="https://images.unsplash.com/photo-1588001831080-4d0b5c1b1a2e?q=80&w=800&auto=format&fit=crop" alt="تراث عمراني" loading="lazy">
+      <img src="https://images.unsplash.com/photo-1594897030264-3a01d10b191d?q=80&w=800&auto=format&fit=crop" alt="حرف يدوية" loading="lazy">
+     </div>
+    </div>
+   </section>
+
+   <section id="visit" class="section section-cta">
+    <div class="container cta">
+     <h2>خطط لرحلة عبر أقاليم المملكة</h2>
+     <p>استكشف الوجهات من الرياض إلى العلا ومن جدة إلى أبها.</p>
+     <a class="btn btn-primary" href="#hero">ابدأ من هنا</a>
+    </div>
+   </section>
+  </main>
+
+  <footer class="site-footer" aria-label="تذييل">
+   <div class="container footer-grid">
+    <div>
+     <strong>الثقافة السعودية</strong>
+     <p>© 2025 جميع الحقوق محفوظة</p>
+    </div>
+    <ul class="footer-links">
+     <li><a href="#about">عن الثقافة</a></li>
+     <li><a href="#heritage">التراث</a></li>
+     <li><a href="#arts">الفنون</a></li>
+     <li><a href="#cuisine">المطبخ</a></li>
+    </ul>
+   </div>
+  </footer>
+
+  <script src="assets/script.js"></script>
+ </body>
+ </html>
+
+
