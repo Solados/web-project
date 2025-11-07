@@ -548,3 +548,44 @@ body {
 }
 
 
+/* القائمة المنسدلة */
+.dropdown {
+  position: relative;
+}
+
+.dropdown-content {
+  position: absolute;
+  right: 0;
+  top: 100%;
+  background-color: white;
+  min-width: 180px;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+  border-radius: 10px;
+  overflow: hidden;
+  list-style: none; 
+  padding: 0;       
+  margin: 0;
+
+  /* حركة الانزلاق */
+  max-height: 0;
+  opacity: 0;
+  transition: max-height 0.4s ease, opacity 0.3s ease;
+}
+
+.dropdown-content li a {
+  color: #004d40;
+  text-decoration: none;
+  display: block;
+  padding: 10px 16px;
+  text-align: right;
+}
+
+.dropdown-content li a:hover {
+  background-color: #f1f1f1;
+}
+
+/* عند فتح القائمة */
+.dropdown.show .dropdown-content {
+  max-height: 400px;
+  opacity: 1;
+}
