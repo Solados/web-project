@@ -86,3 +86,19 @@ if (carouselDom) {
 }
 
 
+// القائمة المنسدلة للمناطق
+const dropdown = document.querySelector('.dropdown');
+
+if (dropdown) {
+  dropdown.addEventListener('click', function (e) {
+    e.preventDefault(); // يمنع التنقل للرابط
+    this.classList.toggle('show');
+  });
+
+  // إغلاق القائمة إذا ضغط المستخدم خارجها
+  window.addEventListener('click', function (e) {
+    if (!e.target.closest('.dropdown')) {
+      dropdown.classList.remove('show');
+    }
+  });
+}
