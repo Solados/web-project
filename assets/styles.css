@@ -259,16 +259,35 @@ body {
   width: 1140px;
   max-width: 80%;
   left: 50%;
-  transform: translateX(-5%);
+  transform: translateX(-50%);
   padding-right: 30%;
   box-sizing: border-box;
   color: #fff;
   text-shadow: 0 5px 10px #0004;
 }
 
+/* LTR support for English content */
+.carousel .list .item .content[dir="ltr"] {
+  text-align: left;
+  padding-right: 30%;
+  padding-left: 0;
+}
+
+.carousel .list .item .content .des {
+  font-size: 1.2em;
+  line-height: 1.6;
+  margin-top: 20px;
+  max-width: 100%;
+  word-wrap: break-word;
+}
+
+.carousel .list .item .content[dir="ltr"] .des {
+  text-align: left;
+}
+
 .carousel .list .item .author {
   font-weight: bold;
-  letter-spacing: 10px;
+  letter-spacing: 5px;
 }
 
 .carousel .list .item .title,
@@ -348,6 +367,11 @@ body {
 
 .thumbnail .item .content .description {
   font-weight: 300;
+}
+
+/* LTR support for thumbnail content */
+.thumbnail .item .content[dir="ltr"] {
+  text-align: left;
 }
 
 /* Arrows */

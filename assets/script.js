@@ -78,10 +78,11 @@ if (carouselDom) {
       carouselDom.classList.remove('prev');
     }, timeRunning);
 
-    clearTimeout(runNextAuto);
-    runNextAuto = setTimeout(() => {
-      if (nextDom) nextDom.click();
-    }, timeAutoNext);
+    // Auto-play is disabled - uncomment below to enable
+    // clearTimeout(runNextAuto);
+    // runNextAuto = setTimeout(() => {
+    //   if (nextDom) nextDom.click();
+    // }, timeAutoNext);
   }
 }
 
