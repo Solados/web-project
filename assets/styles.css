@@ -575,12 +575,15 @@ body {
 /* القائمة المنسدلة */
 .dropdown {
   position: relative;
+  text-align: center; /* لضمان محاذاة الزر نفسه في الوسط */
 }
 
+/* محتوى القائمة */
 .dropdown-content {
   position: absolute;
-  right: 0;
-  top: 100%;
+  top: 100%;              
+  left: 50%;
+  transform: translateX(-50%);
   background-color: white;
   min-width: 180px;
   box-shadow: 0 8px 16px rgba(0,0,0,0.2);
@@ -596,14 +599,16 @@ body {
   transition: max-height 0.4s ease, opacity 0.3s ease;
 }
 
+/* الروابط داخل القائمة */
 .dropdown-content li a {
   color: #004d40;
   text-decoration: none;
   display: block;
   padding: 10px 16px;
-  text-align: right;
+  text-align: center; /* نصوص المناطق في الوسط */
 }
 
+/* تأثير عند المرور على الرابط */
 .dropdown-content li a:hover {
   background-color: #f1f1f1;
 }
