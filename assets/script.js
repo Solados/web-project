@@ -84,11 +84,13 @@ if (carouselDom) {
 
 // القائمة المنسدلة للمناطق
 const dropdown = document.querySelector('.dropdown');
+const dropbtn = dropdown?.querySelector('.dropbtn');
 
-if (dropdown) {
-  dropdown.addEventListener('click', function (e) {
-    e.preventDefault(); // يمنع التنقل للرابط
-    this.classList.toggle('show');
+if (dropdown && dropbtn) {
+  // عند الضغط على زر القائمة فقط
+  dropbtn.addEventListener('click', function (e) {
+    e.preventDefault(); // يمنع التنقل عن الزر نفسه فقط
+    dropdown.classList.toggle('show');
   });
 
   // إغلاق القائمة إذا ضغط المستخدم خارجها
