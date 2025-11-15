@@ -18,16 +18,16 @@
     <ul id="nav-links" class="nav-links">
      <li><a href="sign/SignUp_LogIn_Form.html">Login</a></li>
      <li><a href="#">Quizzes</a></li>
-          <li class="dropdown">
-        <a class="dropbtn">Regions</a>
-        <ul class="dropdown-content">
-          <li><a href="North.html">Northern Region</a></li>
-          <li><a href="South.html">Southern Region</a></li>
-          <li><a href="West.html">Western Region</a></li>
-          <li><a href="East.html">Eastern Region</a></li>
-          <li><a href="Central.html">Central Region</a></li>
-        </ul>
-      </li>
+     <li class="dropdown">
+       <a class="dropbtn">Regions</a>
+       <ul class="dropdown-content">
+         <li><a href="North.html">Northern Region</a></li>
+         <li><a href="South.html">Southern Region</a></li>
+         <li><a href="West.html">Western Region</a></li>
+         <li><a href="East.html">Eastern Region</a></li>
+         <li><a href="Central.html">Central Region</a></li>
+       </ul>
+     </li>
      <li><a href="index.html">Home</a></li>
     </ul>
    </nav>
@@ -35,16 +35,19 @@
 
   <!-- carousel slider for Northern Region Cities -->
   <div id="top" class="carousel">
-    <!-- list item -->
+    <!-- main list -->
     <div class="list">
       <div class="item">
-        <img src="image/North.jpg" alt="Tabuk">
+        <picture>
+          <source srcset="image/hail.jpg" type="image/jpeg">
+          <img src="image/North.jpg" alt="Hail">
+        </picture>
         <div class="content" dir="ltr">
           <div class="author">Northern Region</div>
           <div class="title">Discover</div>
-          <div class="topic">Tabuk</div>
+          <div class="topic">Hail</div>
           <div class="des">
-            Tabuk is the capital of the Tabuk Province and the largest city in the Northern Region. It serves as a gateway to historical sites and is renowned for its ancient castles, archaeological treasures, and strategic location on the historic pilgrimage and trade routes. The city features moderate climate, beautiful natural landscapes, and rich historical heritage dating back thousands of years.
+            Hail is famous for its historic forts and the nearby Jubbah rock art — part of the UNESCO-listed rock art of the Hail Region. Visitors enjoy desert landscapes, seasonal wildflower displays, and traditional souks. The city's strong cultural traditions and archaeological sites make it a must-see for travelers interested in ancient desert history.
           </div>
           <div class="buttons">
             <button onclick="document.getElementById('about').scrollIntoView({behavior: 'smooth'})">Explore</button>
@@ -52,13 +55,16 @@
         </div>
       </div>
       <div class="item">
-        <img src="image/North.jpg" alt="Sakaka - Al-Jouf">
+        <picture>
+          <source srcset="image/sakaka.jpg" type="image/jpeg">
+          <img src="image/North.jpg" alt="Sakaka">
+        </picture>
         <div class="content" dir="ltr">
           <div class="author">Northern Region</div>
           <div class="title">Explore</div>
-          <div class="topic">Sakaka - Al-Jouf</div>
+          <div class="topic">Sakaka</div>
           <div class="des">
-            Sakaka is the capital of Al-Jouf Province, known for its ancient civilization and vast olive groves. One of the oldest continuously inhabited areas in the Arabian Peninsula, Al-Jouf is home to numerous historical monuments and archaeological sites. The region is famous for producing high-quality olives and combines rich history with stunning natural beauty.
+            Sakaka is the agricultural heart of Al-Jouf, known for vast olive groves and the striking Rajajil standing stones. The area combines museums and archaeological ruins with lively markets and olive-oil traditions. Travelers come for rural landscapes, local cuisine, and a window into northern agricultural life.
           </div>
           <div class="buttons">
             <button onclick="document.getElementById('about').scrollIntoView({behavior: 'smooth'})">Explore</button>
@@ -66,13 +72,16 @@
         </div>
       </div>
       <div class="item">
-        <img src="image/North.jpg" alt="Arar">
+        <picture>
+          <source srcset="image/arar.jpg" type="image/jpeg">
+          <img src="image/arar.svg" alt="Arar">
+        </picture>
         <div class="content" dir="ltr">
           <div class="author">Northern Region</div>
           <div class="title">Experience</div>
           <div class="topic">Arar</div>
           <div class="des">
-            Arar is the capital of the Northern Borders Province, characterized by vast deserts and unique archaeological treasures. The city is home to authentic tribal heritage and ancient traditions. Arar contains important archaeological sites dating back thousands of years and features the stunning beauty of the Arabian desert, blending ancient history with modern development.
+            Arar is a regional center celebrated for its Bedouin heritage and bustling markets. Natural highlights include expansive desert panoramas and Wadi Arar — one of the largest wadis in the north, stretching roughly 190 kilometers. The city's frontier culture and lively bazaars offer an authentic northern Saudi experience.
           </div>
           <div class="buttons">
             <button onclick="document.getElementById('about').scrollIntoView({behavior: 'smooth'})">Explore</button>
@@ -80,27 +89,16 @@
         </div>
       </div>
       <div class="item">
-        <img src="image/North.jpg" alt="Qurayyat">
+        <picture>
+          <source srcset="image/umluj.jpg" type="image/jpeg">
+          <img src="image/North.jpg" alt="Umluj">
+        </picture>
         <div class="content" dir="ltr">
           <div class="author">Northern Region</div>
-          <div class="title">Adventure</div>
-          <div class="topic">Qurayyat</div>
+          <div class="title">Relax</div>
+          <div class="topic">Umluj</div>
           <div class="des">
-            Qurayyat is an important city in Al-Jouf Province, located near the Jordanian border. The city is known for its agricultural activities, particularly date palm cultivation and olive farming. Qurayyat features beautiful desert landscapes, historical sites, and serves as a commercial hub connecting Saudi Arabia with neighboring countries. The city combines traditional Bedouin culture with modern urban development.
-          </div>
-          <div class="buttons">
-            <button onclick="document.getElementById('about').scrollIntoView({behavior: 'smooth'})">Explore</button>
-          </div>
-        </div>
-      </div>
-      <div class="item">
-        <img src="image/North.jpg" alt="Dumat al-Jandal">
-        <div class="content" dir="ltr">
-          <div class="author">Northern Region</div>
-          <div class="title">Discover</div>
-          <div class="topic">Dumat al-Jandal</div>
-          <div class="des">
-            Dumat al-Jandal is a historic city in Al-Jouf Province, known for its ancient archaeological sites and significant historical importance. The city features the famous Marid Castle, one of the most prominent historical landmarks in the region, and ancient rock art dating back thousands of years. Dumat al-Jandal offers visitors a unique glimpse into the ancient history of the Arabian Peninsula.
+            Umluj is a coastal gem on the Red Sea, prized for clear waters, coral reefs and scenic islands ideal for boat trips and snorkeling. Its fishing villages, sandy beaches, and island escapes give visitors a distinct seaside flavor compared with inland northern destinations. Travelers prize Umluj for marine adventures and tranquil island scenery.
           </div>
           <div class="buttons">
             <button onclick="document.getElementById('about').scrollIntoView({behavior: 'smooth'})">Explore</button>
@@ -111,38 +109,43 @@
     <!-- list thumbnail -->
     <div class="thumbnail">
       <div class="item">
-        <img src="image/North.jpg" alt="Tabuk">
+        <picture>
+          <source srcset="image/hail.jpg" type="image/jpeg">
+          <img src="image/North.jpg" alt="Hail">
+        </picture>
         <div class="content" dir="ltr">
-          <div class="title">Tabuk</div>
-          <div class="description">Gateway to Historical Sites</div>
+          <div class="title">Hail</div>
+          <div class="description">Historic forts & rock art</div>
         </div>
       </div>
       <div class="item">
-        <img src="image/North.jpg" alt="Sakaka - Al-Jouf">
+        <picture>
+          <source srcset="image/sakaka.jpg" type="image/jpeg">
+          <img src="image/North.jpg" alt="Sakaka">
+        </picture>
         <div class="content" dir="ltr">
           <div class="title">Sakaka</div>
-          <div class="description">Ancient Civilization & Olives</div>
+          <div class="description">Olive groves & archaeology</div>
         </div>
       </div>
       <div class="item">
-        <img src="image/North.jpg" alt="Arar">
+        <picture>
+          <source srcset="image/arar.jpg" type="image/jpeg">
+          <img src="image/arar.svg" alt="Arar">
+        </picture>
         <div class="content" dir="ltr">
           <div class="title">Arar</div>
-          <div class="description">Desert & Archaeological Treasures</div>
+          <div class="description">Wadi Arar & desert markets</div>
         </div>
       </div>
       <div class="item">
-        <img src="image/North.jpg" alt="Qurayyat">
+        <picture>
+          <source srcset="image/umluj.jpg" type="image/jpeg">
+          <img src="image/North.jpg" alt="Umluj">
+        </picture>
         <div class="content" dir="ltr">
-          <div class="title">Qurayyat</div>
-          <div class="description">Agricultural & Commercial Hub</div>
-        </div>
-      </div>
-      <div class="item">
-        <img src="image/North.jpg" alt="Dumat al-Jandal">
-        <div class="content" dir="ltr">
-          <div class="title">Dumat al-Jandal</div>
-          <div class="description">Ancient Historical City</div>
+          <div class="title">Umluj</div>
+          <div class="description">Red Sea islands & reefs</div>
         </div>
       </div>
     </div>
@@ -160,30 +163,85 @@
     <div class="container">
      <h2 dir="ltr">Overview of the Northern Region</h2>
      <p dir="ltr">
-       The Northern Region of Saudi Arabia is a region rich in history and heritage, extending from Al-Jouf in the south to the Northern Borders. This region is famous for its ancient historical sites, vast deserts, and authentic tribal heritage. The main cities in the region are known for being important stations on ancient trade and pilgrimage routes, containing unique archaeological treasures dating back thousands of years.     </p>
+       The Northern Region of Saudi Arabia is rich in history, rugged landscapes and coastal gems. From rock art and historic forts to olive valleys, long wadis and Red Sea islands, the north offers diverse experiences for cultural and nature travelers.
+     </p>
      <div class="features">
       
-      <article class="feature-card" aria-label="What is the largest city in the Northern Region?">
+      <article class="feature-card" aria-label="What is a top destination in the Northern Region?">
        <div class="icon" aria-hidden="true">🏛️</div>
-       <h3 dir="ltr">What is the largest city in the Northern Region?</h3>
+       <h3 dir="ltr">Top destinations</h3>
        <br>
-       <p dir="ltr">Tabuk</p>
+       <p dir="ltr">Hail, Sakaka, Arar and Umluj</p>
       </article>
-      <article class="feature-card" aria-label="Which city in the Northern Region is famous for olive groves?">
+      <article class="feature-card" aria-label="Which city is famous for olive groves?">
        <div class="icon" aria-hidden="true">🫒</div>
-       <h3 dir="ltr">Which city in the Northern Region is famous for olive groves?</h3>
-       <p dir="ltr">Sakaka - Al-Jouf</p>
+       <h3 dir="ltr">Olive country</h3>
+       <p dir="ltr">Sakaka (Al-Jouf)</p>
       </article>
-      <article class="feature-card" aria-label="What is the capital of Northern Borders Province?">
+      <article class="feature-card" aria-label="Which city is on the northern border?">
        <div class="icon" aria-hidden="true">🏜️</div>
-       <h3 dir="ltr">What is the capital of Northern Borders Province?	</h3>
+       <h3 dir="ltr">Border town</h3>
        <br>
        <p dir="ltr">Arar</p>
       </article>
-      <article class="feature-card" aria-label="Which city in Al-Jouf is known for the Marid Castle?	">
-       <div class="icon" aria-hidden="true">🏰</div>
-       <h3 dir="ltr">Which city in Al-Jouf is known for the Marid Castle?</h3>
+      <article class="feature-card" aria-label="Which destination offers Red Sea islands?">
+       <div class="icon" aria-hidden="true">🏖️</div>
+       <h3 dir="ltr">Coastal islands</h3>
        <br>
+       <p dir="ltr">Umluj</p>
+      </article>
+      <article class="feature-card" aria-label="What makes the Northern Region unique?">
+       <div class="icon" aria-hidden="true">🎭</div>
+       <h3 dir="ltr">Why visit?</h3>
+       <br>
+       <p dir="ltr">UNESCO rock art, olive landscapes, vast wadis, and Red Sea reefs.</p>
+      </article>
+     </div>
+    </div>
+   </section>
+
+
+   <section id="visit" class="section section-cta">
+    <div class="container cta">
+     <h2>Challenge your knowledge of the Northern Region</h2>
+     <p>Test your knowledge about the Northern Region, its history, and heritage</p>
+     <a class="btn btn-primary" href="#top">Start now</a>
+    </div>
+   </section>
+  </main>
+
+  <footer class="site-footer" aria-label="footer">
+   <div class="container footer-grid">
+    <div>
+     <strong>Saudi Culture</strong>
+     <p>© 2025 All rights reserved</p>
+    </div>
+    <ul class="footer-links">
+     <li><a href="#top">Back to Top</a></li>
+     <li><a href="#main">Questions & Answers</a></li>
+    </ul>
+   </div>
+  </footer>
+
+  <script src="assets/script.js"></script>
+ </body>
+</html>
+        <div class="content" dir="ltr">
+          <div class="title">Arar</div>
+          <div class="description">Wadi Arar & desert markets</div>
+        </div>
+      </div>
+      <div class="item">
+        <picture>
+          <source srcset="image/umluj.jpg" type="image/jpeg">
+          <img src="image/North.jpg" alt="Umluj">
+        </picture>
+        <div class="content" dir="ltr">
+          <div class="title">Umluj</div>
+          <div class="description">Red Sea islands & reefs</div>
+        </div>
+      </div>
+    </div>
        <p dir="ltr">Dumat al-Jandal</p>
       </article>
       <article class="feature-card" aria-label="What is Qurayyat known for?">
