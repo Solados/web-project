@@ -3,18 +3,30 @@
  <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Page Title -->
   <title>Test Your Knowledge — Quiz</title>
+
+  <!-- SEO Description -->
   <meta name="description" content="Test your knowledge with a random set of Arabic questions">
+
+  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <!-- Stylesheet -->
   <link rel="stylesheet" href="assets/styles.css">
  </head>
+
  <body>
+  <!-- Navigation Header -->
   <header class="site-header">
    <nav class="navbar" aria-label="Main navigation">
      <ul id="nav-links" class="nav-links">
       <li><a href="index.html">Home</a></li>
+
+      <!-- Regions Dropdown -->
       <li class="dropdown">
         <a class="dropbtn">Regions</a>
         <ul class="dropdown-content">
@@ -25,10 +37,15 @@
           <li><a href="Central.html">Central Region</a></li>
         </ul>
       </li>
+
       <li><a href="QUIZ.html">Quizzes</a></li>
       <li><a href="sign/SignUp_LogIn_Form.html">Login</a></li>
     </ul>
+
+    <!-- Website Logo -->
     <a class="brand" href="index.html" aria-label="Home">Saudi Culture</a>
+
+    <!-- Mobile Menu Toggle Button -->
     <button class="menu-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Open/close menu">☰</button>
    </nav>
   </header>
@@ -36,10 +53,14 @@
   <main id="main">
    <section class="section section-intro">
     <div class="container">
+
     <h2>Test your knowledge</h2>
     <p>Choose the number of questions then start the quiz. Results will be shown after completion.</p>
+
      <div class="two-col" style="margin-top:1rem">
+      <!-- Settings Panel -->
       <div>
+       <!-- Number of questions -->
        <label>Select number of questions:</label>
        <select id="questionCount">
          <option value="5">5 questions</option>
@@ -47,17 +68,20 @@
          <option value="15">15 questions</option>
          <option value="20">20 questions</option>
        </select>
+
+       <!-- Region filter (not applied in script yet) -->
        <label>Select region:</label>
        <select id="regionFilter">
-  <option value="all">All Regions</option>
-  <option value="randomRegion">Random from All Regions</option>
-  <option value="west">West</option>
-  <option value="east">East</option>
-  <option value="north">North</option>
-  <option value="south">South</option>
-  <option value="center">Central</option>
-</select>
+          <option value="all">All Regions</option>
+          <option value="randomRegion">Random from All Regions</option>
+          <option value="west">West</option>
+          <option value="east">East</option>
+          <option value="north">North</option>
+          <option value="south">South</option>
+          <option value="center">Central</option>
+       </select>
 
+       <!-- Question Type -->
        <label style="margin-top:12px;display:block">Select question type:</label>
        <select id="typeFilter">
          <option value="all">All Types</option>
@@ -66,7 +90,8 @@
          <option value="tf">True/False</option>
          <option value="fill">Fill in the Blank</option>
        </select>
-       
+
+       <!-- Category Filter -->
        <label style="margin-top:12px;display:block">Select category:</label>
        <select id="categoryFilter">
          <option value="all">All Categories</option>
@@ -75,10 +100,14 @@
          <option value="celebration">Celebration</option>
          <option value="games">Games</option>
        </select>
+
+       <!-- Start Quiz Button -->
        <div style="margin-top:12px">
          <a class="btn btn-primary" id="startBtn" href="#quiz">Start Quiz</a>
        </div>
       </div>
+
+      <!-- Informational Text -->
       <div>
       <p>This quiz displays questions in Arabic from a general question bank. Questions are chosen randomly and presented as multiple-choice options.</p>
       </div>
@@ -86,6 +115,7 @@
     </div>
    </section>
 
+   <!-- Quiz Section -->
    <section id="quiz" class="section section-alt">
     <div class="container">
      <div id="quizContainer"></div>
@@ -94,6 +124,7 @@
    </section>
   </main>
 
+  <!-- Footer -->
   <footer class="site-footer" aria-label="footer">
    <div class="container footer-grid">
     <ul class="footer-links">
@@ -107,9 +138,15 @@
    </div>
   </footer>
 
-  <script src="assets/script.js"></script>
+  <!-- Quiz Script -->
   <script>
-  // Quiz data and logic (kept inline so page works with existing assets)
+  /*
+    Array of quiz questions.
+    Each question object contains:
+    - question: The question text
+    - choices: Multiple-choice answers
+    - answer: The correct answer
+  */
   const allQuestions = [
     { question:"ما هي عاصمة السعودية؟", choices:["الرياض","جدة","مكة","الدمام"], answer:"الرياض" },
     { question:"أكبر محيط في العالم؟", choices:["الهادئ","الأطلسي","الهندي","المتجمد"], answer:"الهادئ" },
@@ -133,6 +170,10 @@
     { question:"ما هو الكوكب الأحمر؟", choices:["المريخ","الزهرة","المشتري","الأرض"], answer:"المريخ" }
   ];
 
+  /*
+    Function to shuffle array elements
+    (Used to randomize question order and choice order)
+  */
   function shuffle(arr){
     for(let i=arr.length-1;i>0;i--){
       const j = Math.floor(Math.random()*(i+1));
@@ -140,62 +181,112 @@
     }
   }
 
+  // Array to store randomly selected questions
   let selectedQuestions = [];
 
+  /*
+    Starts the quiz:
+    - Reads number of questions
+    - Randomizes question order
+    - Selects required amount
+    - Shuffles choices for each question
+  */
   function startQuiz(){
     const count = Number(document.getElementById('questionCount').value) || 5;
+    
     selectedQuestions = allQuestions.slice();
     shuffle(selectedQuestions);
     selectedQuestions = selectedQuestions.slice(0, count);
+
+    // Shuffle choices for each question
     selectedQuestions.forEach(q => shuffle(q.choices));
+
     displayQuestions();
     document.getElementById('result').innerHTML = '';
+
+    // Scroll to quiz section
     window.location.hash = '#quiz';
   }
 
+  /*
+    Displays the selected questions on the page
+  */
   function displayQuestions(){
     const container = document.getElementById('quizContainer');
     container.innerHTML = '';
+
     selectedQuestions.forEach((q, i) => {
       const box = document.createElement('div');
       box.className = 'feature-card';
+
       let html = `<h3 dir="ltr">${i+1}. ${q.question}</h3>`;
+
       q.choices.forEach(choice => {
-        html += `<label style="display:block;margin:.25rem 0"><input type="radio" name="q${i}" value="${choice}"> ${choice}</label>`;
+        html += `
+          <label style="display:block;margin:.25rem 0">
+            <input type="radio" name="q${i}" value="${choice}"> ${choice}
+          </label>`;
       });
+
       box.innerHTML = html;
       container.appendChild(box);
     });
+
+    // Add "Check Answers" button
     const checkBtn = document.createElement('a');
     checkBtn.className = 'btn btn-primary';
     checkBtn.textContent = 'Check Answers';
     checkBtn.href = '#result';
     checkBtn.style.display = 'inline-block';
     checkBtn.style.marginTop = '1rem';
-    checkBtn.addEventListener('click', (e) => { e.preventDefault(); checkAnswers(); });
+
+    // Prevent default link behavior and check answers instead
+    checkBtn.addEventListener('click', (e) => { 
+      e.preventDefault(); 
+      checkAnswers(); 
+    });
+
     container.appendChild(checkBtn);
   }
 
+  /*
+    Checks the user's answers:
+    - Counts correct responses
+    - Calculates percentage
+    - Colors the score based on performance
+  */
   function checkAnswers(){
     let score = 0;
+
     for(let i=0;i<selectedQuestions.length;i++){
       const sel = document.querySelector(`input[name="q${i}"]:checked`);
       if(sel && sel.value === selectedQuestions[i].answer) score++;
     }
+
     const total = selectedQuestions.length || 1;
     const percent = Math.round((score/total)*100);
-    let color = '#1e88e5';
+
+    // Choose color based on percentage
+    let color = '#1e88e5'; // default blue
     if(percent >= 80) color = 'green';
     else if(percent >= 50) color = 'orange';
     else color = 'red';
-    document.getElementById('result').innerHTML = `Your score: <span style="color:${color}">${score} / ${total} (${percent}%)</span>`;
+
+    document.getElementById('result').innerHTML =
+      `Your score: <span style="color:${color}">${score} / ${total} (${percent}%)</span>`;
   }
 
-  // hook start button
+  /*
+    Activates the Start button on page load
+  */
   document.addEventListener('DOMContentLoaded', () => {
     const startBtn = document.getElementById('startBtn');
-    if(startBtn) startBtn.addEventListener('click', (e) => { e.preventDefault(); startQuiz(); });
+    if(startBtn) startBtn.addEventListener('click', (e) => { 
+      e.preventDefault(); 
+      startQuiz(); 
+    });
   });
   </script>
+
  </body>
 </html>
