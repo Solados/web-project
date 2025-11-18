@@ -1,127 +1,173 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" dir="ltr">
-<head>
-<meta charset="UTF-8">
-<title>Random Quiz</title>
-<style>
-body { font-family: Arial; padding:20px; background:#f2f2f2; text-align:left; }
-.question-box { background:white; padding:15px; margin-bottom:15px; border-radius:8px; }
-button { padding:10px 20px; cursor:pointer; margin-top:10px; }
-#result { margin-top:20px; font-size:18px; font-weight:bold; }
-</style>
-</head>
-<body>
-<!--ask user to choose how many number of questions does he want to show him the number he choosen -->
-<h2>Random Quiz</h2>
+ <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Test Your Knowledge — Quiz</title>
+  <meta name="description" content="Test your knowledge with a random set of Arabic questions">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/styles.css">
+ </head>
+ <body>
+  <header class="site-header">
+   <nav class="navbar" aria-label="Main navigation">
+    <ul id="nav-links" class="nav-links">
+     <li><a href="sign/SignUp_LogIn_Form.html">Login</a></li>
+     <li><a href="QUIZ.html">Quizzes</a></li>
+     <li class="dropdown">
+       <a class="dropbtn">Regions</a>
+       <ul class="dropdown-content">
+         <li><a href="North.html">Northern Region</a></li>
+         <li><a href="South.html">Southern Region</a></li>
+         <li><a href="West.html">Western Region</a></li>
+         <li><a href="East.html">Eastern Region</a></li>
+         <li><a href="Central.html">Central Region</a></li>
+       </ul>
+     </li>
+     <li><a href="index.html">Home</a></li>
+    </ul>
+    <a class="brand" href="index.html" aria-label="Home">Saudi Culture</a>
+    <button class="menu-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Open/close menu">☰</button>
+   </nav>
+  </header>
 
-<label>Select number of questions:</label>
-<select id="questionCount">
-  <option value="5">5 questions</option>
-  <option value="10">10 questions</option>
-  <option value="15">15 questions</option>
-  <option value="20">20 questions</option>
-</select>
-<hr>
-<button onclick="startQuiz()">Start Quiz</button>
+  <main id="main">
+   <section class="section section-intro">
+    <div class="container">
+    <h2>Test your knowledge</h2>
+    <p>Choose the number of questions then start the quiz. Results will be shown after completion.</p>
+     <div class="two-col" style="margin-top:1rem">
+      <div>
+       <label>Select number of questions:</label>
+       <select id="questionCount">
+         <option value="5">5 questions</option>
+         <option value="10">10 questions</option>
+         <option value="15">15 questions</option>
+         <option value="20">20 questions</option>
+       </select>
+       <div style="margin-top:12px">
+         <a class="btn btn-primary" id="startBtn" href="#quiz">Start Quiz</a>
+       </div>
+      </div>
+      <div>
+      <p>This quiz displays questions in Arabic from a general question bank. Questions are chosen randomly and presented as multiple-choice options.</p>
+      </div>
+     </div>
+    </div>
+   </section>
 
-<hr>
+   <section id="quiz" class="section section-alt">
+    <div class="container">
+     <div id="quizContainer"></div>
+     <div id="result" style="margin-top:1rem;font-weight:700"></div>
+    </div>
+   </section>
+  </main>
 
+  <footer class="site-footer" aria-label="footer">
+   <div class="container footer-grid">
+    <div>
+     <strong>Saudi Culture</strong>
+     <p>© 2025 All rights reserved</p>
+    </div>
+    <ul class="footer-links">
+     <li><a href="#top">Back to Top</a></li>
+     <li><a href="#main">Questions</a></li>
+    </ul>
+   </div>
+  </footer>
 
-<div id="quiz" dir="rtl"></div>
+  <script src="assets/script.js"></script>
+  <script>
+  // Quiz data and logic (kept inline so page works with existing assets)
+  const allQuestions = [
+    { question:"ما هي عاصمة السعودية؟", choices:["الرياض","جدة","مكة","الدمام"], answer:"الرياض" },
+    { question:"أكبر محيط في العالم؟", choices:["الهادئ","الأطلسي","الهندي","المتجمد"], answer:"الهادئ" },
+    { question:"من هو مخترع المصباح الكهربائي؟", choices:["توماس إديسون","نيوتن","أينشتاين","تسلا"], answer:"توماس إديسون" },
+    { question:"كم عدد الكواكب في المجموعة الشمسية؟", choices:["7","8","9","10"], answer:"8" },
+    { question:"أسرع حيوان بري؟", choices:["الفهد","الأسد","النمر","الغزال"], answer:"الفهد" },
+    { question:"أين يقع برج إيفل؟", choices:["باريس","لندن","روما","برلين"], answer:"باريس" },
+    { question:"ما هو أكبر كوكب في المجموعة الشمسية؟", choices:["الأرض","المشتري","زحل","الزهرة"], answer:"المشتري" },
+    { question:"ما هي لغة البرمجة الأكثر استخداماً؟", choices:["Python","C++","Java","HTML"], answer:"Python" },
+    { question:"ما هو أسرع طائر في العالم؟", choices:["النســر","الصقر","النعامة","الكناري"], answer:"الصقر" },
+    { question:"ما هو الحيوان الذي لا يشرب الماء؟", choices:["الجمل","الكنغر","الذئب","الفهد"], answer:"الجمل" },
+    { question:"ما هي العملة الرسمية في اليابان؟", choices:["ين","دولار","يورو","جنيه"], answer:"ين" },
+    { question:"كم عدد الحروف في الأبجدية العربية؟", choices:["28","30","26","24"], answer:"28" },
+    { question:"ما هو أكبر حيوان على الأرض؟", choices:["الحوت الأزرق","الفيل","الزرافة","القرش"], answer:"الحوت الأزرق" },
+    { question:"من هو مؤسس شركة مايكروسوفت؟", choices:["بيل غيتس","ستيف جوبز","إيلون ماسك","مارك زوكربيرغ"], answer:"بيل غيتس" },
+    { question:"ما هو أسرع حيوان في الماء؟", choices:["سمكة أبو سيف","الدلفين","القرش","الحوت"], answer:"سمكة أبو سيف" },
+    { question:"أين تقع الأهرامات؟", choices:["مصر","المغرب","السعودية","اليمن"], answer:"مصر" },
+    { question:"ما هو العنصر الكيميائي الذي رمزه O؟", choices:["أكسجين","هيدروجين","نيتروجين","ذهب"], answer:"أكسجين" },
+    { question:"ما هي عاصمة فرنسا؟", choices:["باريس","لندن","روما","مدريد"], answer:"باريس" },
+    { question:"من كتب رواية 1984؟", choices:["جورج أورويل","تولستوي","شكسبير","هاروكي موراكامي"], answer:"جورج أورويل" },
+    { question:"ما هو الكوكب الأحمر؟", choices:["المريخ","الزهرة","المشتري","الأرض"], answer:"المريخ" }
+  ];
 
-<div id="result"></div>
-
-<script>
-//  Questions
-var allQuestions = [
-  { question:"ما هي عاصمة السعودية؟", choices:["الرياض","جدة","مكة","الدمام"], answer:"الرياض" },
-  { question:"أكبر محيط في العالم؟", choices:["الهادئ","الأطلسي","الهندي","المتجمد"], answer:"الهادئ" },
-  { question:"من هو مخترع المصباح الكهربائي؟", choices:["توماس إديسون","نيوتن","أينشتاين","تسلا"], answer:"توماس إديسون" },
-  { question:"كم عدد الكواكب في المجموعة الشمسية؟", choices:["7","8","9","10"], answer:"8" },
-  { question:"أسرع حيوان بري؟", choices:["الفهد","الأسد","النمر","الغزال"], answer:"الفهد" },
-  { question:"أين يقع برج إيفل؟", choices:["باريس","لندن","روما","برلين"], answer:"باريس" },
-  { question:"ما هو أكبر كوكب في المجموعة الشمسية؟", choices:["الأرض","المشتري","زحل","الزهرة"], answer:"المشتري" },
-  { question:"ما هي لغة البرمجة الأكثر استخداماً؟", choices:["Python","C++","Java","HTML"], answer:"Python" },
-  { question:"ما هو أسرع طائر في العالم؟", choices:["النســر","الصقر","النعامة","الكناري"], answer:"الصقر" },
-  { question:"ما هو الحيوان الذي لا يشرب الماء؟", choices:["الجمل","الكنغر","الذئب","الفهد"], answer:"الجمل" },
-  { question:"ما هي العملة الرسمية في اليابان؟", choices:["ين","دولار","يورو","جنيه"], answer:"ين" },
-  { question:"كم عدد الحروف في الأبجدية العربية؟", choices:["28","30","26","24"], answer:"28" },
-  { question:"ما هو أكبر حيوان على الأرض؟", choices:["الحوت الأزرق","الفيل","الزرافة","القرش"], answer:"الحوت الأزرق" },
-  { question:"من هو مؤسس شركة مايكروسوفت؟", choices:["بيل غيتس","ستيف جوبز","إيلون ماسك","مارك زوكربيرغ"], answer:"بيل غيتس" },
-  { question:"ما هو أسرع حيوان في الماء؟", choices:["سمكة أبو سيف","الدلفين","القرش","الحوت"], answer:"سمكة أبو سيف" },
-  { question:"أين تقع الأهرامات؟", choices:["مصر","المغرب","السعودية","اليمن"], answer:"مصر" },
-  { question:"ما هو العنصر الكيميائي الذي رمزه O؟", choices:["أكسجين","هيدروجين","نيتروجين","ذهب"], answer:"أكسجين" },
-  { question:"ما هي عاصمة فرنسا؟", choices:["باريس","لندن","روما","مدريد"], answer:"باريس" },
-  { question:"من كتب رواية 1984؟", choices:["جورج أورويل","تولستوي","شكسبير","هاروكي موراكامي"], answer:"جورج أورويل" },
-  { question:"ما هو الكوكب الأحمر؟", choices:["المريخ","الزهرة","المشتري","الأرض"], answer:"المريخ" }
-];
-
-// Helper functions
-function shuffle(array) {
-  for(var i=array.length-1;i>0;i--){
-    var j=Math.floor(Math.random()*(i+1));
-    var temp=array[i]; array[i]=array[j]; array[j]=temp;
-  }
-}
-
-function shuffleChoices(question){
-  shuffle(question.choices);
-}
-
-var selectedQuestions=[];
-
-//Start Quiz
-function startQuiz(){
-  var count = Number(document.getElementById("questionCount").value);
-  selectedQuestions = allQuestions.slice();
-  shuffle(selectedQuestions);
-  selectedQuestions = selectedQuestions.slice(0,count);
-
-  for(var i=0;i<selectedQuestions.length;i++){
-    shuffleChoices(selectedQuestions[i]);
-  }
-
-  displayQuestions();
-  document.getElementById("result").innerHTML=""; 
-}
-
-//Display Questions 
-function displayQuestions(){
-  var quizDiv = document.getElementById("quiz");
-  quizDiv.innerHTML="";
-
-  for(var i=0;i<selectedQuestions.length;i++){
-    var q = selectedQuestions[i];
-    var choicesHtml="";
-    for(var j=0;j<q.choices.length;j++){
-      choicesHtml += '<label><input type="radio" name="q'+i+'" value="'+q.choices[j]+'"> '+q.choices[j]+'</label><br>';
+  function shuffle(arr){
+    for(let i=arr.length-1;i>0;i--){
+      const j = Math.floor(Math.random()*(i+1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
     }
-    quizDiv.innerHTML += '<div class="question-box"><h3>'+(i+1)+'. '+q.question+'</h3>'+choicesHtml+'</div>';
   }
 
-  quizDiv.innerHTML += '<button onclick="checkAnswers()">Check Answers</button>';
-}
+  let selectedQuestions = [];
 
-// Check Answers
-function checkAnswers(){
-  var score=0;
-  for(var i=0;i<selectedQuestions.length;i++){
-    var selected = document.querySelector('input[name="q'+i+'"]:checked');
-    if(selected && selected.value===selectedQuestions[i].answer) score++;
+  function startQuiz(){
+    const count = Number(document.getElementById('questionCount').value) || 5;
+    selectedQuestions = allQuestions.slice();
+    shuffle(selectedQuestions);
+    selectedQuestions = selectedQuestions.slice(0, count);
+    selectedQuestions.forEach(q => shuffle(q.choices));
+    displayQuestions();
+    document.getElementById('result').innerHTML = '';
+    window.location.hash = '#quiz';
   }
 
-  var resultDiv = document.getElementById("result");
-  var total = selectedQuestions.length;
-  var percent = Math.round((score/total)*100);
+  function displayQuestions(){
+    const container = document.getElementById('quizContainer');
+    container.innerHTML = '';
+    selectedQuestions.forEach((q, i) => {
+      const box = document.createElement('div');
+      box.className = 'feature-card';
+      let html = `<h3 dir="ltr">${i+1}. ${q.question}</h3>`;
+      q.choices.forEach(choice => {
+        html += `<label style="display:block;margin:.25rem 0"><input type="radio" name="q${i}" value="${choice}"> ${choice}</label>`;
+      });
+      box.innerHTML = html;
+      container.appendChild(box);
+    });
+    const checkBtn = document.createElement('a');
+    checkBtn.className = 'btn btn-primary';
+    checkBtn.textContent = 'Check Answers';
+    checkBtn.href = '#result';
+    checkBtn.style.display = 'inline-block';
+    checkBtn.style.marginTop = '1rem';
+    checkBtn.addEventListener('click', (e) => { e.preventDefault(); checkAnswers(); });
+    container.appendChild(checkBtn);
+  }
 
-  var color = "blue";
-  if(percent >= 80) color = "green";
-  else if(percent >= 50) color = "orange";
-  else color = "red";
+  function checkAnswers(){
+    let score = 0;
+    for(let i=0;i<selectedQuestions.length;i++){
+      const sel = document.querySelector(`input[name="q${i}"]:checked`);
+      if(sel && sel.value === selectedQuestions[i].answer) score++;
+    }
+    const total = selectedQuestions.length || 1;
+    const percent = Math.round((score/total)*100);
+    let color = '#1e88e5';
+    if(percent >= 80) color = 'green';
+    else if(percent >= 50) color = 'orange';
+    else color = 'red';
+    document.getElementById('result').innerHTML = `Your score: <span style="color:${color}">${score} / ${total} (${percent}%)</span>`;
+  }
 
-  resultDiv.innerHTML = "Your score: <span style='color:"+color+"'>" + score + " / " + total + " ("+percent+"%)</span>";
-}
-</script>
-
-</body>
+  // hook start button
+  document.addEventListener('DOMContentLoaded', () => {
+    const startBtn = document.getElementById('startBtn');
+    if(startBtn) startBtn.addEventListener('click', (e) => { e.preventDefault(); startQuiz(); });
+  });
+  </script>
+ </body>
 </html>
