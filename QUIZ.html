@@ -114,8 +114,37 @@
 
   let selectedQuestions = [];
 
-  function startQuiz(){
+  async function startQuiz(){
     const count = Number(document.getElementById('questionCount').value) || 5;
+    document.getElementById('result').innerHTML = 'Loading quiz...';
+
+    // try server-side endpoint first
+    try {
+      const source = 'Words'; // default source; you can make this selectable later
+      const resp = await fetch(`quiz.php?source=${encodeURIComponent(source)}&count=${count}`);
+      if (resp.ok) {
+        const data = await resp.json();
+        if (data && Array.isArray(data.questions) && data.questions.length > 0) {
+          selectedQuestions = data.questions.map(q => ({
+            question: q.question,
+            choices: q.choices.slice(),
+            answer: q.answer
+          }));
+          // shuffle choices for each question
+          selectedQuestions.forEach(q => shuffle(q.choices));
+          displayQuestions();
+          document.getElementById('result').innerHTML = '';
+          window.location.hash = '#quiz';
+          return;
+        }
+      }
+      // fall through to local fallback
+    } catch (err) {
+      // network or parse error -> fall back
+      console.warn('Quiz endpoint failed, using local fallback:', err);
+    }
+
+    // fallback to embedded questions if server-side failed
     selectedQuestions = allQuestions.slice();
     shuffle(selectedQuestions);
     selectedQuestions = selectedQuestions.slice(0, count);
