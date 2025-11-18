@@ -13,20 +13,20 @@
  <body>
   <header class="site-header">
    <nav class="navbar" aria-label="Main navigation">
-    <ul id="nav-links" class="nav-links">
-     <li><a href="sign/SignUp_LogIn_Form.html">Login</a></li>
-     <li><a href="QUIZ.html">Quizzes</a></li>
-     <li class="dropdown">
-       <a class="dropbtn">Regions</a>
-       <ul class="dropdown-content">
-         <li><a href="North.html">Northern Region</a></li>
-         <li><a href="South.html">Southern Region</a></li>
-         <li><a href="West.html">Western Region</a></li>
-         <li><a href="East.html">Eastern Region</a></li>
-         <li><a href="Central.html">Central Region</a></li>
-       </ul>
-     </li>
-     <li><a href="index.html">Home</a></li>
+     <ul id="nav-links" class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li class="dropdown">
+        <a class="dropbtn">Regions</a>
+        <ul class="dropdown-content">
+          <li><a href="North.html">Northern Region</a></li>
+          <li><a href="South.html">Southern Region</a></li>
+          <li><a href="West.html">Western Region</a></li>
+          <li><a href="East.html">Eastern Region</a></li>
+          <li><a href="Central.html">Central Region</a></li>
+        </ul>
+      </li>
+      <li><a href="QUIZ.html">Quizzes</a></li>
+      <li><a href="sign/SignUp_LogIn_Form.html">Login</a></li>
     </ul>
     <a class="brand" href="index.html" aria-label="Home">Saudi Culture</a>
     <button class="menu-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Open/close menu">☰</button>
@@ -46,6 +46,34 @@
          <option value="10">10 questions</option>
          <option value="15">15 questions</option>
          <option value="20">20 questions</option>
+       </select>
+       <label>Select region:</label>
+       <select id="regionFilter">
+  <option value="all">All Regions</option>
+  <option value="randomRegion">Random from All Regions</option>
+  <option value="west">West</option>
+  <option value="east">East</option>
+  <option value="north">North</option>
+  <option value="south">South</option>
+  <option value="center">Central</option>
+</select>
+
+       <label style="margin-top:12px;display:block">Select question type:</label>
+       <select id="typeFilter">
+         <option value="all">All Types</option>
+         <option value="randomType">Random from All Types</option>
+         <option value="mcq">Multiple Choice</option>
+         <option value="tf">True/False</option>
+         <option value="fill">Fill in the Blank</option>
+       </select>
+       
+       <label style="margin-top:12px;display:block">Select category:</label>
+       <select id="categoryFilter">
+         <option value="all">All Categories</option>
+         <option value="food">Food</option>
+         <option value="clothes">Clothes</option>
+         <option value="celebration">Celebration</option>
+         <option value="games">Games</option>
        </select>
        <div style="margin-top:12px">
          <a class="btn btn-primary" id="startBtn" href="#quiz">Start Quiz</a>
@@ -68,14 +96,14 @@
 
   <footer class="site-footer" aria-label="footer">
    <div class="container footer-grid">
-    <div>
-     <strong>Saudi Culture</strong>
-     <p>© 2025 All rights reserved</p>
-    </div>
     <ul class="footer-links">
      <li><a href="#top">Back to Top</a></li>
      <li><a href="#main">Questions</a></li>
     </ul>
+    <div style="text-align:right">
+     <strong>Saudi Culture</strong>
+     <p>© 2025 All rights reserved</p>
+    </div>
    </div>
   </footer>
 
