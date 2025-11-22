@@ -25,6 +25,9 @@ body {
   background: var(--sand-50);
 }
 
+/* prevent page horizontal scrolling caused by full-bleed elements */
+body { overflow-x: hidden; }
+
 .skip-link {
   position: absolute;
   top: -100px;
@@ -140,9 +143,9 @@ body {
 .section-intro { background: var(--sand-50); }
 
 .features {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 1rem;
+  /* When using the slider we render a single slider element inside .features;
+     keep block flow to avoid the parent grid placing the slider into a small column. */
+  display: block;
   margin-top: 1.25rem;
 }
 .feature-card {
@@ -398,6 +401,55 @@ body {
   font-weight: bold;
   transition: 0.5s;
 }
+
+/* Questions slider: arrange 20 cards per slide as 4 columns x 5 rows */
+/* Make the slider span the full viewport width even when inside a constrained container */
+.questions-slider { /* keep slider within the normal page flow and container width to avoid overflow */
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+/* Display 4 columns x 5 rows grid (20 items per slide). Cards will stretch to occupy the full width. */
+.qs-slide {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-auto-rows: minmax(80px, auto);
+  gap: 1rem;
+  padding: 1rem 1.25rem 1.5rem;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 1600px;
+  margin: 0 auto;
+}
+.qs-slide .feature-card { padding: 1rem; width: 100%; box-sizing: border-box; }
+
+.qs-controls { display:flex; gap:1rem; justify-content:center; align-items:center; margin-top: .75rem; }
+.qs-prev, .qs-next { background: var(--sand-100); border: 1px solid var(--sand-200); padding: .4rem .6rem; border-radius: .5rem; cursor: pointer; }
+.qs-prev:hover, .qs-next:hover { filter: brightness(.97); }
+.qs-dots { display:flex; gap:.35rem; }
+.qs-dot { background: transparent; border: 1px solid var(--sand-200); padding: .35rem .6rem; border-radius: .4rem; cursor: pointer; }
+.qs-dot.active { background: var(--green-600); color: #fff; border-color: transparent; }
+
+/* responsive: fewer columns on smaller screens */
+/* keep single-column across viewports for full-width questions */
+@media (min-width: 1200px) {
+  .qs-slide { grid-template-columns: repeat(4, 1fr); }
+}
+@media (max-width: 1199px) and (min-width: 900px) {
+  .qs-slide { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 899px) and (min-width: 520px) {
+  .qs-slide { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 519px) {
+  .qs-slide { grid-template-columns: 1fr; }
+}
+
+/* Make controls span full width and appear above the slider (they are appended above in DOM) */
+.qs-controls { width: 100%; max-width: 1100px; margin: 0 auto; padding: .5rem 0; box-sizing: border-box; display:flex; justify-content:center; }
 
 .arrows button:hover {
   background-color: #fff;

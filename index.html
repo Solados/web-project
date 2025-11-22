@@ -156,44 +156,9 @@
      <h2 dir="ltr">take a overview about Kingdom OF Saudi Arabia</h2>
      <p dir="ltr">
        The Kingdom of Saudi Arabia is a nation of rich heritage and rapid development, located in the heart of the Arabian Peninsula. It is the birthplace of Islam and home to Makkah and Madinah, combining deep traditions with a modern vision for the future.     </p>
-     <div class="features">
-      
-      <article class="feature-card" aria-label="In Saudi culture, which hand is traditionally used when eating?">
-       <div class="icon" aria-hidden="true">☕</div>
-       <h3 dir="ltr">In Saudi culture, which hand is traditionally used when eating?</h3>
-       <br>
-       <p dir="ltr">Right hand</p>
-      </article>
-      <article class="feature-card" aria-label="What is a common gesture of hospitality offered to guests in Saudi homes?">
-       <div class="icon" aria-hidden="true">☕</div>
-       <h3 dir="ltr">What is a common gesture of hospitality offered to guests in Saudi homes?</h3>
-       <p dir="ltr">Serving Qahwa (coffee) and dates</p>
-      </article>
-      <article class="feature-card" aria-label="What is the traditional clothing for an Imam in Saudi Arabia?">
-       <div class="icon" aria-hidden="true">👘</div>
-       <h3 dir="ltr">What is the traditional clothing for an Imam in Saudi Arabia?	</h3>
-       <br>
-       <p dir="ltr">Bisht</p>
-      </article>
-      <article class="feature-card" aria-label="What is the traditional clothing for Saudi women in the street?	">
-       <div class="icon" aria-hidden="true">👘</div>
-       <h3 dir="ltr">What is the traditional clothing for Saudi women in the street?</h3>
-       <br>
-       <p dir="ltr">Abaya</p>
-      </article>
-      <article class="feature-card" aria-label="What is the name of the traditional board game in Saudi Arabia?">
-       <div class="icon" aria-hidden="true">🥁</div>
-       <h3 dir="ltr">What is the name of the traditional board game in Saudi Arabia?</h3>
-       <br>
-       <p dir="ltr">Keram</p>
-      </article>
-      <article class="feature-card" aria-label="What is the traditional activity Saudis enjoy in winter?	">
-       <div class="icon" aria-hidden="true">🥁</div>
-       <h3 dir="ltr">What is the traditional activity Saudis enjoy in winter?	</h3>
-       <br>
-       <p dir="ltr">Al-Kashta (desert picnic)</p>
-      </article>
-     </div>
+    <div class="features">
+     <!-- Dynamic slider will populate this container with question cards -->
+    </div>
     </div>
    </section>
 
@@ -221,6 +186,123 @@
   </footer>
 
   <script src="assets/script.js"></script>
+  <script>
+  (async function loadQuestionsSlider(){
+    // Loads questions from quiz.php and builds a simple slider showing 20 per slide.
+    const container = document.querySelector('.features');
+    if(!container) return;
+
+    // clear sample cards already in HTML so we append only fetched content
+    container.innerHTML = '';
+
+    try{
+      // request up to 100 questions so we can page by 20
+      const resp = await fetch('/quiz.php?source=GENERAL&count=100');
+      if(!resp.ok) throw new Error('Server returned ' + resp.status);
+      const data = await resp.json();
+      const questions = (data && Array.isArray(data.questions)) ? data.questions : [];
+      if(questions.length === 0) return;
+
+      const pageSize = 20;
+      const pages = Math.ceil(questions.length / pageSize);
+
+      // wrapper for slides
+      const slider = document.createElement('div');
+      slider.className = 'questions-slider';
+
+      for(let p=0;p<pages;p++){
+        const slide = document.createElement('div');
+        slide.className = 'qs-slide';
+        if(p !== 0) slide.style.display = 'none';
+
+        const start = p*pageSize;
+        const end = Math.min(start + pageSize, questions.length);
+        for(let i=start;i<end;i++){
+          const q = questions[i];
+          const article = document.createElement('article');
+          article.className = 'feature-card';
+
+          const icon = document.createElement('div');
+          icon.className = 'icon';
+          icon.setAttribute('aria-hidden','true');
+          icon.textContent = '❓';
+
+          const h3 = document.createElement('h3');
+          h3.setAttribute('dir','ltr');
+          h3.textContent = q.question || '';
+
+          const pEl = document.createElement('p');
+          pEl.setAttribute('dir','ltr');
+          pEl.textContent = q.answer || '';
+
+          article.appendChild(icon);
+          article.appendChild(h3);
+          article.appendChild(pEl);
+          slide.appendChild(article);
+        }
+
+        slider.appendChild(slide);
+      }
+
+      // add controls
+      const controls = document.createElement('div');
+      controls.className = 'qs-controls';
+
+      const prev = document.createElement('button');
+      prev.className = 'qs-prev';
+      prev.textContent = '<';
+      const next = document.createElement('button');
+      next.className = 'qs-next';
+      next.textContent = '>';
+
+      const dots = document.createElement('div');
+      dots.className = 'qs-dots';
+
+      for(let i=0;i<pages;i++){
+        const dot = document.createElement('button');
+        dot.className = 'qs-dot';
+        dot.dataset.index = i;
+        dot.textContent = i+1;
+        if(i===0) dot.classList.add('active');
+        dots.appendChild(dot);
+      }
+
+      controls.appendChild(prev);
+      controls.appendChild(dots);
+      controls.appendChild(next);
+
+      // place controls above the slides so the pager appears at the top
+      container.appendChild(controls);
+      container.appendChild(slider);
+
+      // slider logic
+      let current = 0;
+      const slides = slider.querySelectorAll('.qs-slide');
+      const dotButtons = dots.querySelectorAll('.qs-dot');
+
+      function show(index){
+        if(index < 0) index = slides.length - 1;
+        if(index >= slides.length) index = 0;
+        slides.forEach((s, i) => s.style.display = (i===index) ? '' : 'none');
+        dotButtons.forEach((d, i) => d.classList.toggle('active', i===index));
+        current = index;
+        // scroll into view for better mobile UX
+        slider.scrollIntoView({behavior:'smooth'});
+      }
+
+      prev.addEventListener('click', () => show(current-1));
+      next.addEventListener('click', () => show(current+1));
+      dotButtons.forEach(d => d.addEventListener('click', (e) => show(Number(e.target.dataset.index))));
+
+    } catch (err){
+      console.warn('Could not load GENERAL questions for slider:', err);
+      // if fail, keep the existing static content (we cleared it earlier), so show a message
+      const msg = document.createElement('p');
+      msg.textContent = 'Unable to load questions from server.';
+      container.appendChild(msg);
+    }
+  })();
+  </script>
  </body>
  </html>
 

@@ -149,10 +149,20 @@ foreach ($rows as $r) {
     // try columns in this order (based on Words.csv structure)
     $colsToTry = ['Location_Recognition_question','Cultural_Interpretation_question','Contextual_Usage_question','Fill_in_Blank_question','True_False_question','Meaning_question'];
     $parsed = null;
-    foreach ($colsToTry as $c) {
-        if (isset($r[$c]) && trim($r[$c]) !== '') {
-            $parsed = parseQuestionBlock($r[$c]);
-            if ($parsed !== null) break;
+
+    // If the CSV uses a simple 'Question' + 'Answer' structure (like GENERAL.csv), use it directly
+    if (isset($r['Question']) && trim($r['Question']) !== '') {
+        $answer = isset($r['Answer']) ? $r['Answer'] : '';
+        $parsed = ['question' => trim($r['Question']), 'choices' => [], 'answer' => trim($answer)];
+    }
+
+    // otherwise try the more complex columns
+    if ($parsed === null) {
+        foreach ($colsToTry as $c) {
+            if (isset($r[$c]) && trim($r[$c]) !== '') {
+                $parsed = parseQuestionBlock($r[$c]);
+                if ($parsed !== null) break;
+            }
         }
     }
     // fallback: if no parsed MCQ, try to build a simple meaning question
