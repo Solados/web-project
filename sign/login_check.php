@@ -1,8 +1,11 @@
 <?php
+header('Content-Type: application/json');
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Get form data
     if (!isset($_POST['email']) || !isset($_POST['password'])) {
-        exit('Email and password are required.');
+        echo json_encode(['success' => false, 'message' => 'Email and password are required.']);
+        exit();
     }
 
     $email = htmlspecialchars($_POST['email']);
@@ -13,13 +16,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
     // Check if file exists
     if (!file_exists($filename)) {
-        exit('Error: No user accounts found.');
+        echo json_encode(['success' => false, 'message' => 'Error: No user accounts found.']);
+        exit();
     }
 
     // Open file in read mode
     $file = fopen($filename, 'r');
     if ($file === false) {
-        exit('Unable to open user data file.');
+        echo json_encode(['success' => false, 'message' => 'Unable to open user data file.']);
+        exit();
     }
 
     $userFound = false;
@@ -44,14 +49,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     fclose($file);
 
     if ($userFound) {
-        // Success! You might want to:
-        // 1. Start a session
+        // Success! Start a session
         session_start();
         $_SESSION['user_email'] = $email;
-        // 2. Redirect to a dashboard or home page
-        header('Location: /index.html');
+        echo json_encode(['success' => true, 'message' => 'Login successful.']);
         exit();
     } else {
-        echo "Error: Invalid email or password.";
+        echo json_encode(['success' => false, 'message' => 'Error: Invalid email or password.']);
+        exit();
     }
 }

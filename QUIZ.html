@@ -56,12 +56,15 @@
        <label>Select region/source:</label>
        <select id="regionFilter">
          <option value="Words">Built-in (fallback)</option>
-         <option value="GENERAL">GENERAL</option>
+         <option value="GENERAL">GENERAL (English)</option>
          <option value="CENTERAL">Central</option>
-         <option value="NORTH">NORTH</option>
-         <option value="SOUTH">SOUTH</option>
-         <option value="EAST">EAST</option>
-         <option value="WEST">WEST</option>
+         <option value="NORTH">NORTH (English)</option>
+         <option value="SOUTH">SOUTH (English)</option>
+         <option value="EAST">EAST (English)</option>
+         <option value="WEST">WEST (English)</option>
+         <option value="Words">Words (Arabic)</option>
+         <option value="Phrases">Phrases (Arabic)</option>
+         <option value="Proverbs">Proverbs (Arabic)</option>
          <option value="RANDOM">Random Region</option>
        </select>
 
@@ -83,6 +86,13 @@
          <option value="clothes">Clothes</option>
          <option value="celebration">Celebration</option>
          <option value="games">Games</option>
+       </select>
+
+       <!-- Language -->
+       <label style="margin-top:12px;display:block">Select language:</label>
+       <select id="langSelect">
+         <option value="ar">Arabic</option>
+         <option value="en">English</option>
        </select>
 
        <!-- Start Quiz Button -->
@@ -123,6 +133,7 @@
   </footer>
   <!-- Site scripts -->
   <script src="assets/script.js"></script>
+  <script src="assets/quiz-parser.js"></script>
 
   <!-- Quiz Script -->
   <script>
@@ -166,6 +177,30 @@
 
     const resultEl = document.getElementById('result');
     resultEl.innerHTML = 'Loading quiz...';
+    const lang = document.getElementById('langSelect') ? document.getElementById('langSelect').value : 'ar';
+
+    // try client-side CSV loader first (works without PHP)
+    if (typeof fetchQuestions === 'function'){
+      try{
+        const clientQ = await fetchQuestions(source, count, lang);
+        if(Array.isArray(clientQ) && clientQ.length>0){
+          selectedQuestions = clientQ.map(q => ({
+            question: q.question,
+            choices: Array.isArray(q.choices) ? q.choices.slice() : [],
+            answer: q.answer || null
+          }));
+          selectedQuestions.forEach(q => shuffle(q.choices));
+          displayQuestions();
+          resultEl.innerHTML = '';
+          window.location.hash = '#quiz';
+          return;
+        } else {
+          resultEl.innerHTML = 'No questions returned from client parser, trying server...';
+        }
+      }catch(e){
+        console.warn('client-side parser failed:', e);
+      }
+    }
 
     // try server-side endpoint first with a timeout
     const controller = new AbortController();
