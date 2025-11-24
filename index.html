@@ -156,9 +156,7 @@
      <h2 dir="ltr">take a overview about Kingdom OF Saudi Arabia</h2>
      <p dir="ltr">
        The Kingdom of Saudi Arabia is a nation of rich heritage and rapid development, located in the heart of the Arabian Peninsula. It is the birthplace of Islam and home to Makkah and Madinah, combining deep traditions with a modern vision for the future.     </p>
-    <div class="features">
-     <!-- Dynamic slider will populate this container with question cards -->
-    </div>
+    <div class="features"></div>
     </div>
    </section>
 
@@ -186,123 +184,118 @@
   </footer>
 
   <script src="assets/script.js"></script>
+    
   <script>
-  (async function loadQuestionsSlider(){
-    // Loads questions from quiz.php and builds a simple slider showing 20 per slide.
-    const container = document.querySelector('.features');
-    if(!container) return;
+  /* الصفحة الرئيسية تستخدم home_questions.php */
 
-    // clear sample cards already in HTML so we append only fetched content
-    container.innerHTML = '';
+  async function loadHomePage(page = 0) {
+      const resp = await fetch(`api/home_questions.php?page=${page}`);
+      return resp.json();
+  }
 
-    try{
-      // request up to 100 questions so we can page by 20
-      const resp = await fetch('/quiz.php?source=GENERAL&count=100');
-      if(!resp.ok) throw new Error('Server returned ' + resp.status);
-      const data = await resp.json();
-      const questions = (data && Array.isArray(data.questions)) ? data.questions : [];
-      if(questions.length === 0) return;
+  /* إنشاء السلايدر */
+  function createSlider(current, totalPages, changePage) {
+    const wrap = document.createElement("div");
+    wrap.className = "qs-pagination";
 
-      const pageSize = 20;
-      const pages = Math.ceil(questions.length / pageSize);
+    // أول صفحة «
+    const first = document.createElement("button");
+    first.textContent = "«";
+    first.disabled = current === 0;
+    first.onclick = () => changePage(0);
+    wrap.appendChild(first);
 
-      // wrapper for slides
-      const slider = document.createElement('div');
-      slider.className = 'questions-slider';
+    // السابق ‹
+    const prev = document.createElement("button");
+    prev.textContent = "‹";
+    prev.disabled = current === 0;
+    prev.onclick = () => changePage(current - 1);
+    wrap.appendChild(prev);
 
-      for(let p=0;p<pages;p++){
-        const slide = document.createElement('div');
-        slide.className = 'qs-slide';
-        if(p !== 0) slide.style.display = 'none';
+    // حساب نطاق (خمسة أزرار فقط)
+    let start = current - 2;
+    let end = current + 2;
 
-        const start = p*pageSize;
-        const end = Math.min(start + pageSize, questions.length);
-        for(let i=start;i<end;i++){
-          const q = questions[i];
-          const article = document.createElement('article');
-          article.className = 'feature-card';
-
-          const icon = document.createElement('div');
-          icon.className = 'icon';
-          icon.setAttribute('aria-hidden','true');
-          icon.textContent = '❓';
-
-          const h3 = document.createElement('h3');
-          h3.setAttribute('dir','ltr');
-          h3.textContent = q.question || '';
-
-          const pEl = document.createElement('p');
-          pEl.setAttribute('dir','ltr');
-          pEl.textContent = q.answer || '';
-
-          article.appendChild(icon);
-          article.appendChild(h3);
-          article.appendChild(pEl);
-          slide.appendChild(article);
-        }
-
-        slider.appendChild(slide);
-      }
-
-      // add controls
-      const controls = document.createElement('div');
-      controls.className = 'qs-controls';
-
-      const prev = document.createElement('button');
-      prev.className = 'qs-prev';
-      prev.textContent = '<';
-      const next = document.createElement('button');
-      next.className = 'qs-next';
-      next.textContent = '>';
-
-      const dots = document.createElement('div');
-      dots.className = 'qs-dots';
-
-      for(let i=0;i<pages;i++){
-        const dot = document.createElement('button');
-        dot.className = 'qs-dot';
-        dot.dataset.index = i;
-        dot.textContent = i+1;
-        if(i===0) dot.classList.add('active');
-        dots.appendChild(dot);
-      }
-
-      controls.appendChild(prev);
-      controls.appendChild(dots);
-      controls.appendChild(next);
-
-      // place controls above the slides so the pager appears at the top
-      container.appendChild(controls);
-      container.appendChild(slider);
-
-      // slider logic
-      let current = 0;
-      const slides = slider.querySelectorAll('.qs-slide');
-      const dotButtons = dots.querySelectorAll('.qs-dot');
-
-      function show(index){
-        if(index < 0) index = slides.length - 1;
-        if(index >= slides.length) index = 0;
-        slides.forEach((s, i) => s.style.display = (i===index) ? '' : 'none');
-        dotButtons.forEach((d, i) => d.classList.toggle('active', i===index));
-        current = index;
-        // scroll into view for better mobile UX
-        slider.scrollIntoView({behavior:'smooth'});
-      }
-
-      prev.addEventListener('click', () => show(current-1));
-      next.addEventListener('click', () => show(current+1));
-      dotButtons.forEach(d => d.addEventListener('click', (e) => show(Number(e.target.dataset.index))));
-
-    } catch (err){
-      console.warn('Could not load GENERAL questions for slider:', err);
-      // if fail, keep the existing static content (we cleared it earlier), so show a message
-      const msg = document.createElement('p');
-      msg.textContent = 'Unable to load questions from server.';
-      container.appendChild(msg);
+    if (start < 0) {
+        end += (0 - start);
+        start = 0;
     }
-  })();
+
+    if (end >= totalPages) {
+        start -= (end - totalPages + 1);
+        end = totalPages - 1;
+    }
+
+    if (start < 0) start = 0;
+
+    // الصفحات
+    for (let i = start; i <= end; i++) {
+        const b = document.createElement("button");
+        b.textContent = i + 1;
+        if (i === current) b.classList.add("active");
+        b.onclick = () => changePage(i);
+        wrap.appendChild(b);
+    }
+
+    // التالي ›
+    const next = document.createElement("button");
+    next.textContent = "›";
+    next.disabled = current === totalPages - 1;
+    next.onclick = () => changePage(current + 1);
+    wrap.appendChild(next);
+
+    // آخر صفحة »
+    const last = document.createElement("button");
+    last.textContent = "»";
+    last.disabled = current === totalPages - 1;
+    last.onclick = () => changePage(totalPages - 1);
+    wrap.appendChild(last);
+
+    return wrap;
+}
+
+
+  /* عرض الأسئلة */
+  async function render(pageIndex = 0) {
+      const container = document.querySelector(".features");
+
+      // إزالة أي سلايدر قديم
+      document.querySelectorAll(".qs-pagination").forEach(e => e.remove());
+
+      container.innerHTML = "";
+
+      const data = await loadHomePage(pageIndex);
+      const questions = data.questions;
+      const totalPages = Math.ceil(data.total / 20);
+
+      const topSlider = createSlider(pageIndex, totalPages, render);
+      container.before(topSlider);
+
+      questions.forEach(q => {
+          const card = document.createElement("article");
+          card.className = "feature-card";
+
+          const h = document.createElement("h3");
+          h.textContent = q.question;
+          h.dir = "auto";
+
+          const p = document.createElement("p");
+          p.textContent = q.answer;
+          p.dir = "auto";
+
+          card.append(h, p);
+          container.appendChild(card);
+      });
+
+      const bottomSlider = createSlider(pageIndex, totalPages, render);
+      container.after(bottomSlider);
+  }
+
+  /* تشغيل الصفحة */
+  render(0);
   </script>
+
+
  </body>
  </html>
 
