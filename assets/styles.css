@@ -625,13 +625,13 @@ body { overflow-x: hidden; }
 }
 
 
-/* القائمة المنسدلة */
+/* Dropdown */
 .dropdown {
   position: relative;
-  text-align: center; /* لضمان محاذاة الزر نفسه في الوسط */
+  text-align: center; /* ensure the toggle button is centered */
 }
 
-/* محتوى القائمة */
+/* Dropdown content */
 .dropdown-content {
   position: absolute;
   top: 100%;
@@ -652,21 +652,21 @@ body { overflow-x: hidden; }
   transition: max-height 0.28s ease, opacity 0.18s ease, transform 0.2s ease;
 }
 
-/* الروابط داخل القائمة */
+/* Links inside dropdown */
 .dropdown-content li a {
   color: #004d40;
   text-decoration: none;
   display: block;
   padding: 10px 16px;
-  text-align: center; /* نصوص المناطق في الوسط */
+  text-align: center; /* center link text */
 }
 
-/* تأثير عند المرور على الرابط */
+/* Hover effect for link */
 .dropdown-content li a:hover {
   background-color: #f1f1f1;
 }
 
-/* عند فتح القائمة */
+/* When dropdown is open */
 .dropdown.show .dropdown-content {
   max-height: 400px;
   opacity: 1;
@@ -674,7 +674,7 @@ body { overflow-x: hidden; }
 }
 
 
-/* تنسيق سلايدر عرض الاسئلة */
+/* Questions slider layout */
 .qs-pagination {
   display: flex;
   gap: 8px;
