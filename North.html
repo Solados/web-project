@@ -171,85 +171,100 @@
   <script src="assets/script.js"></script>
 
   <script>
-  /* اسم ملف المنطقة */
-  const REGION_FILE = "NORTH";
+const REGION_FILE = "NORTH";
 
-  /* جلب 20 سؤال حسب رقم الصفحة */
-  async function loadRegionPage(page = 0) {
-      const resp = await fetch(`api/region_questions.php?file=${REGION_FILE}&page=${page}`);
-      return resp.json();
+async function loadPage(pageIndex = 0) {
+  const resp = await fetch(`api/region_questions.php?file=${REGION_FILE}&page=${pageIndex}`);
+  return resp.json();
+}
+
+function createSlider(current, totalPages, changePage) {
+  const wrap = document.createElement("div");
+  wrap.className = "qs-pagination";
+
+  const first = document.createElement("button");
+  first.textContent = "«";
+  first.disabled = current === 0;
+  first.onclick = () => changePage(0);
+  wrap.appendChild(first);
+
+  const prev = document.createElement("button");
+  prev.textContent = "‹";
+  prev.disabled = current === 0;
+  prev.onclick = () => changePage(current - 1);
+  wrap.appendChild(prev);
+
+  let start = current - 2;
+  let end = current + 2;
+
+  if (start < 0) {
+    end += (0 - start);
+    start = 0;
+  }
+  if (end >= totalPages) {
+    start -= (end - totalPages + 1);
+    end = totalPages - 1;
+  }
+  if (start < 0) start = 0;
+
+  for (let i = start; i <= end; i++) {
+    const btn = document.createElement("button");
+    btn.textContent = i + 1;
+    if (i === current) btn.classList.add("active");
+    btn.onclick = () => changePage(i);
+    wrap.appendChild(btn);
   }
 
-  /* إنشاء سلايدر علوي + سفلي */
-  function createSlider(current, totalPages, changePage) {
-      const wrap = document.createElement("div");
-      wrap.className = "qs-pagination";
+  const next = document.createElement("button");
+  next.textContent = "›";
+  next.disabled = current === totalPages - 1;
+  next.onclick = () => changePage(current + 1);
+  wrap.appendChild(next);
 
-      const prev = document.createElement("button");
-      prev.textContent = "‹";
-      prev.disabled = current === 0;
-      prev.onclick = () => changePage(current - 1);
-      wrap.appendChild(prev);
+  const last = document.createElement("button");
+  last.textContent = "»";
+  last.disabled = current === totalPages - 1;
+  last.onclick = () => changePage(totalPages - 1);
+  wrap.appendChild(last);
 
-      for (let i = 0; i < totalPages; i++) {
-          const b = document.createElement("button");
-          b.textContent = i + 1;
-          if (i === current) b.classList.add("active");
-          b.onclick = () => changePage(i);
-          wrap.appendChild(b);
-      }
+  return wrap;
+}
 
-      const next = document.createElement("button");
-      next.textContent = "›";
-      next.disabled = current === totalPages - 1;
-      next.onclick = () => changePage(current + 1);
-      wrap.appendChild(next);
+async function render(pageIndex = 0) {
+  const container = document.querySelector(".features");
+  document.querySelectorAll(".qs-pagination").forEach(el => el.remove());
 
-      return wrap;
-  }
+  const data = await loadPage(pageIndex);
+  const totalPages = Math.ceil(data.total / 20);
 
-  /* رسم البطاقات + السلايدر */
-  async function render(pageIndex = 0) {
-      const container = document.querySelector(".features");
+  const topSlider = createSlider(pageIndex, totalPages, render);
+  container.before(topSlider);
 
-      // إزالة أي سلايدر قديم قبل إضافة الجديد
-      document.querySelectorAll(".qs-pagination").forEach(e => e.remove());
+  container.innerHTML = "";
 
-      container.innerHTML = "";
+  data.questions.forEach(q => {
+    const card = document.createElement("article");
+    card.className = "feature-card";
 
-      const data = await loadRegionPage(pageIndex);
-      const questions = data.questions;
-      const totalPages = Math.ceil(data.total / 20);
+    const h3 = document.createElement("h3");
+    h3.textContent = q.question;
+    h3.dir = "auto";
 
-      // السلايدر العلوي
-      const topSlider = createSlider(pageIndex, totalPages, render);
-      container.before(topSlider);
+    const p = document.createElement("p");
+    p.textContent = q.answer;
+    p.dir = "auto";
 
-      // عرض البطاقات
-      questions.forEach(q => {
-          const card = document.createElement("article");
-          card.className = "feature-card enhanced-card";
+    card.appendChild(h3);
+    card.appendChild(p);
+    container.appendChild(card);
+  });
 
-          const h = document.createElement("h3");
-          h.textContent = q.question;
-          h.dir = "auto";
+  const bottomSlider = createSlider(pageIndex, totalPages, render);
+  container.after(bottomSlider);
+}
 
-          const p = document.createElement("p");
-          p.textContent = q.answer;
-          p.dir = "auto";
-
-          card.append(h, p);
-          container.appendChild(card);
-      });
-
-      // السلايدر السفلي
-      const bottomSlider = createSlider(pageIndex, totalPages, render);
-      container.after(bottomSlider);
-  }
-
-  /* تشغيل الصفحة لأول مرة */
-  render(0);
-  </script>
+render(0);
+</script>
 
   
  </body>
