@@ -17,7 +17,7 @@
     <button class="menu-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="فتح/إغلاق القائمة">☰</button>
     <ul id="nav-links" class="nav-links">
      <li><a href="sign/SignUp_LogIn_Form.html">Login</a></li>
-     <li><a href="QUIZ.html">Quizzes</a></li>
+     <li><a href="#">Quizzes</a></li>
           <li class="dropdown">
         <a class="dropbtn">Regions</a>
         <ul class="dropdown-content">
@@ -83,28 +83,28 @@
       <div class="item">
         <img src="image/Al-Riyadh.jpg" alt="Central Region">
         <div class="content" dir="ltr">
-          <div class="title">Al-Riyadh</div>
+          <div class="topic">Al-Riyadh</div>
           <div class="description">Capital city & heritage</div>
         </div>
       </div>
       <div class="item">
         <img src="image/Al-Rass.jpg" alt="Northern Region">
         <div class="content" dir="ltr">
-          <div class="title">Al-Rass</div>
+          <div class="topic">Al-Rass</div>
           <div class="description">Historic city & Najdi heritage</div>
         </div>
       </div>
       <div class="item">
         <img src="image/Qassim.jpg" alt="Western Region">
         <div class="content" dir="ltr">
-          <div class="title">Unaizah</div>
+          <div class="topic">Unaizah</div>
           <div class="description">Agriculture & culture</div>
         </div>
       </div>
       <div class="item">
         <img src="image/Buraidah.jpg" alt="Southern Region">
         <div class="content" dir="ltr">
-          <div class="title">Buraidah</div>
+          <div class="topic">Buraidah</div>
           <div class="description">Dates & heritage</div>
         </div>
       </div>
@@ -124,44 +124,7 @@
      <h2 dir="ltr">take a overview about Kingdom OF Saudi Arabia</h2>
      <p dir="ltr">
        The Kingdom of Saudi Arabia is a nation of rich heritage and rapid development, located in the heart of the Arabian Peninsula. It is the birthplace of Islam and home to Makkah and Madinah, combining deep traditions with a modern vision for the future.     </p>
-     <div class="features">
-      
-      <article class="feature-card" aria-label="In Saudi culture, which hand is traditionally used when eating?">
-       <div class="icon" aria-hidden="true">☕</div>
-       <h3 dir="ltr">In Saudi culture, which hand is traditionally used when eating?</h3>
-       <br>
-       <p dir="ltr">Right hand</p>
-      </article>
-      <article class="feature-card" aria-label="What is a common gesture of hospitality offered to guests in Saudi homes?">
-       <div class="icon" aria-hidden="true">☕</div>
-       <h3 dir="ltr">What is a common gesture of hospitality offered to guests in Saudi homes?</h3>
-       <p dir="ltr">Serving Qahwa (coffee) and dates</p>
-      </article>
-      <article class="feature-card" aria-label="What is the traditional clothing for an Imam in Saudi Arabia?">
-       <div class="icon" aria-hidden="true">👘</div>
-       <h3 dir="ltr">What is the traditional clothing for an Imam in Saudi Arabia?	</h3>
-       <br>
-       <p dir="ltr">Bisht</p>
-      </article>
-      <article class="feature-card" aria-label="What is the traditional clothing for Saudi women in the street?	">
-       <div class="icon" aria-hidden="true">👘</div>
-       <h3 dir="ltr">What is the traditional clothing for Saudi women in the street?</h3>
-       <br>
-       <p dir="ltr">Abaya</p>
-      </article>
-      <article class="feature-card" aria-label="What is the name of the traditional board game in Saudi Arabia?">
-       <div class="icon" aria-hidden="true">🥁</div>
-       <h3 dir="ltr">What is the name of the traditional board game in Saudi Arabia?</h3>
-       <br>
-       <p dir="ltr">Keram</p>
-      </article>
-      <article class="feature-card" aria-label="What is the traditional activity Saudis enjoy in winter?	">
-       <div class="icon" aria-hidden="true">🥁</div>
-       <h3 dir="ltr">What is the traditional activity Saudis enjoy in winter?	</h3>
-       <br>
-       <p dir="ltr">Al-Kashta (desert picnic)</p>
-      </article>
-     </div>
+     <div class="features"></div>
     </div>
    </section>
 
@@ -189,6 +152,89 @@
   </footer>
 
   <script src="assets/script.js"></script>
+
+  <script>
+  /* اسم ملف المنطقة */
+  const REGION_FILE = "CENTERAL";
+
+  /* جلب 20 سؤال حسب رقم الصفحة */
+  async function loadRegionPage(page = 0) {
+      const resp = await fetch(`api/region_questions.php?file=${REGION_FILE}&page=${page}`);
+      return resp.json();
+  }
+
+  /* إنشاء سلايدر علوي + سفلي */
+  function createSlider(current, totalPages, changePage) {
+      const wrap = document.createElement("div");
+      wrap.className = "qs-pagination";
+
+      const prev = document.createElement("button");
+      prev.textContent = "‹";
+      prev.disabled = current === 0;
+      prev.onclick = () => changePage(current - 1);
+      wrap.appendChild(prev);
+
+      for (let i = 0; i < totalPages; i++) {
+          const b = document.createElement("button");
+          b.textContent = i + 1;
+          if (i === current) b.classList.add("active");
+          b.onclick = () => changePage(i);
+          wrap.appendChild(b);
+      }
+
+      const next = document.createElement("button");
+      next.textContent = "›";
+      next.disabled = current === totalPages - 1;
+      next.onclick = () => changePage(current + 1);
+      wrap.appendChild(next);
+
+      return wrap;
+  }
+
+  /* رسم البطاقات + السلايدر */
+  async function render(pageIndex = 0) {
+      const container = document.querySelector(".features");
+
+      // إزالة أي سلايدر قديم قبل إضافة الجديد
+      document.querySelectorAll(".qs-pagination").forEach(e => e.remove());
+
+      container.innerHTML = "";
+
+      const data = await loadRegionPage(pageIndex);
+      const questions = data.questions;
+      const totalPages = Math.ceil(data.total / 20);
+
+      // السلايدر العلوي
+      const topSlider = createSlider(pageIndex, totalPages, render);
+      container.before(topSlider);
+
+      // عرض البطاقات
+      questions.forEach(q => {
+          const card = document.createElement("article");
+          card.className = "feature-card enhanced-card";
+
+          const h = document.createElement("h3");
+          h.textContent = q.question;
+          h.dir = "auto";
+
+          const p = document.createElement("p");
+          p.textContent = q.answer;
+          p.dir = "auto";
+
+          card.append(h, p);
+          container.appendChild(card);
+      });
+
+      // السلايدر السفلي
+      const bottomSlider = createSlider(pageIndex, totalPages, render);
+      container.after(bottomSlider);
+  }
+
+  /* تشغيل الصفحة لأول مرة */
+  render(0);
+  </script>
+
+
  </body>
  </html>
 

@@ -13,20 +13,20 @@
  <body>
   <header class="site-header">
    <nav class="navbar" aria-label="Main navigation">
-    <ul id="nav-links" class="nav-links">
-     <li><a href="sign/SignUp_LogIn_Form.html">Login</a></li>
-     <li><a href="QUIZ.html">Quizzes</a></li>
-     <li class="dropdown">
-       <a class="dropbtn">Regions</a>
-       <ul class="dropdown-content">
-         <li><a href="North.html">Northern Region</a></li>
-         <li><a href="South.html">Southern Region</a></li>
-         <li><a href="West.html">Western Region</a></li>
-         <li><a href="East.html">Eastern Region</a></li>
-         <li><a href="Central.html">Central Region</a></li>
-       </ul>
-     </li>
-     <li><a href="index.html">Home</a></li>
+     <ul id="nav-links" class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li class="dropdown">
+        <a class="dropbtn">Regions</a>
+        <ul class="dropdown-content">
+          <li><a href="North.html">Northern Region</a></li>
+          <li><a href="South.html">Southern Region</a></li>
+          <li><a href="West.html">Western Region</a></li>
+          <li><a href="East.html">Eastern Region</a></li>
+          <li><a href="Central.html">Central Region</a></li>
+        </ul>
+      </li>
+      <li><a href="QUIZ.html">Quizzes</a></li>
+      <li><a href="sign/SignUp_LogIn_Form.html">Login</a></li>
     </ul>
     <a class="brand" href="index.html" aria-label="Home">Saudi Culture</a>
     <button class="menu-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Open/close menu">☰</button>
@@ -36,10 +36,14 @@
   <main id="main">
    <section class="section section-intro">
     <div class="container">
+
     <h2>Test your knowledge</h2>
     <p>Choose the number of questions then start the quiz. Results will be shown after completion.</p>
+
      <div class="two-col" style="margin-top:1rem">
+      <!-- Settings Panel -->
       <div>
+       <!-- Number of questions -->
        <label>Select number of questions:</label>
        <select id="questionCount">
          <option value="5">5 questions</option>
@@ -47,10 +51,57 @@
          <option value="15">15 questions</option>
          <option value="20">20 questions</option>
        </select>
+
+       <!-- Region filter: mapped to CSV filenames (see data/) -->
+       <label>Select region/source:</label>
+       <select id="regionFilter">
+         <option value="Words">Built-in (fallback)</option>
+         <option value="GENERAL">GENERAL (English)</option>
+         <option value="CENTERAL">Central</option>
+         <option value="NORTH">NORTH (English)</option>
+         <option value="SOUTH">SOUTH (English)</option>
+         <option value="EAST">EAST (English)</option>
+         <option value="WEST">WEST (English)</option>
+         <option value="Words">Words (Arabic)</option>
+         <option value="Phrases">Phrases (Arabic)</option>
+         <option value="Proverbs">Proverbs (Arabic)</option>
+         <option value="RANDOM">Random Region</option>
+       </select>
+
+       <!-- Question Type -->
+       <label style="margin-top:12px;display:block">Select question type:</label>
+       <select id="typeFilter">
+         <option value="all">All Types</option>
+         <option value="randomType">Random from All Types</option>
+         <option value="mcq">Multiple Choice</option>
+         <option value="tf">True/False</option>
+         <option value="fill">Fill in the Blank</option>
+       </select>
+
+       <!-- Category Filter -->
+       <label style="margin-top:12px;display:block">Select category:</label>
+       <select id="categoryFilter">
+         <option value="all">All Categories</option>
+         <option value="food">Food</option>
+         <option value="clothes">Clothes</option>
+         <option value="celebration">Celebration</option>
+         <option value="games">Games</option>
+       </select>
+
+       <!-- Language -->
+       <label style="margin-top:12px;display:block">Select language:</label>
+       <select id="langSelect">
+         <option value="ar">Arabic</option>
+         <option value="en">English</option>
+       </select>
+
+       <!-- Start Quiz Button -->
        <div style="margin-top:12px">
          <a class="btn btn-primary" id="startBtn" href="#quiz">Start Quiz</a>
        </div>
       </div>
+
+      <!-- Informational Text -->
       <div>
       <p>This quiz displays questions in Arabic from a general question bank. Questions are chosen randomly and presented as multiple-choice options.</p>
       </div>
@@ -58,6 +109,7 @@
     </div>
    </section>
 
+   <!-- Quiz Section -->
    <section id="quiz" class="section section-alt">
     <div class="container">
      <div id="quizContainer"></div>
@@ -66,45 +118,37 @@
    </section>
   </main>
 
+  <!-- Footer -->
   <footer class="site-footer" aria-label="footer">
    <div class="container footer-grid">
-    <div>
-     <strong>Saudi Culture</strong>
-     <p>© 2025 All rights reserved</p>
-    </div>
     <ul class="footer-links">
      <li><a href="#top">Back to Top</a></li>
      <li><a href="#main">Questions</a></li>
     </ul>
+    <div style="text-align:right">
+     <strong>Saudi Culture</strong>
+     <p>© 2025 All rights reserved</p>
+    </div>
    </div>
   </footer>
-
+  <!-- Site scripts -->
   <script src="assets/script.js"></script>
-  <script>
-  // Quiz data and logic (kept inline so page works with existing assets)
-  const allQuestions = [
-    { question:"ما هي عاصمة السعودية؟", choices:["الرياض","جدة","مكة","الدمام"], answer:"الرياض" },
-    { question:"أكبر محيط في العالم؟", choices:["الهادئ","الأطلسي","الهندي","المتجمد"], answer:"الهادئ" },
-    { question:"من هو مخترع المصباح الكهربائي؟", choices:["توماس إديسون","نيوتن","أينشتاين","تسلا"], answer:"توماس إديسون" },
-    { question:"كم عدد الكواكب في المجموعة الشمسية؟", choices:["7","8","9","10"], answer:"8" },
-    { question:"أسرع حيوان بري؟", choices:["الفهد","الأسد","النمر","الغزال"], answer:"الفهد" },
-    { question:"أين يقع برج إيفل؟", choices:["باريس","لندن","روما","برلين"], answer:"باريس" },
-    { question:"ما هو أكبر كوكب في المجموعة الشمسية؟", choices:["الأرض","المشتري","زحل","الزهرة"], answer:"المشتري" },
-    { question:"ما هي لغة البرمجة الأكثر استخداماً؟", choices:["Python","C++","Java","HTML"], answer:"Python" },
-    { question:"ما هو أسرع طائر في العالم؟", choices:["النســر","الصقر","النعامة","الكناري"], answer:"الصقر" },
-    { question:"ما هو الحيوان الذي لا يشرب الماء؟", choices:["الجمل","الكنغر","الذئب","الفهد"], answer:"الجمل" },
-    { question:"ما هي العملة الرسمية في اليابان؟", choices:["ين","دولار","يورو","جنيه"], answer:"ين" },
-    { question:"كم عدد الحروف في الأبجدية العربية؟", choices:["28","30","26","24"], answer:"28" },
-    { question:"ما هو أكبر حيوان على الأرض؟", choices:["الحوت الأزرق","الفيل","الزرافة","القرش"], answer:"الحوت الأزرق" },
-    { question:"من هو مؤسس شركة مايكروسوفت؟", choices:["بيل غيتس","ستيف جوبز","إيلون ماسك","مارك زوكربيرغ"], answer:"بيل غيتس" },
-    { question:"ما هو أسرع حيوان في الماء؟", choices:["سمكة أبو سيف","الدلفين","القرش","الحوت"], answer:"سمكة أبو سيف" },
-    { question:"أين تقع الأهرامات؟", choices:["مصر","المغرب","السعودية","اليمن"], answer:"مصر" },
-    { question:"ما هو العنصر الكيميائي الذي رمزه O؟", choices:["أكسجين","هيدروجين","نيتروجين","ذهب"], answer:"أكسجين" },
-    { question:"ما هي عاصمة فرنسا؟", choices:["باريس","لندن","روما","مدريد"], answer:"باريس" },
-    { question:"من كتب رواية 1984؟", choices:["جورج أورويل","تولستوي","شكسبير","هاروكي موراكامي"], answer:"جورج أورويل" },
-    { question:"ما هو الكوكب الأحمر؟", choices:["المريخ","الزهرة","المشتري","الأرض"], answer:"المريخ" }
-  ];
+  <script src="assets/quiz-parser.js"></script>
 
+  <!-- Quiz Script -->
+  <script>
+  /*
+    Array of quiz questions.
+    Each question object contains:
+    - question: The question text
+    - choices: Multiple-choice answers
+    - answer: The correct answer
+  */
+  
+  /*
+    Function to shuffle array elements
+    (Used to randomize question order and choice order)
+  */
   function shuffle(arr){
     for(let i=arr.length-1;i>0;i--){
       const j = Math.floor(Math.random()*(i+1));
@@ -112,62 +156,179 @@
     }
   }
 
+  // Array to store randomly selected questions
   let selectedQuestions = [];
 
-  function startQuiz(){
+  async function startQuiz(){
     const count = Number(document.getElementById('questionCount').value) || 5;
+    const regionSelect = document.getElementById('regionFilter');
+    const regionValue = regionSelect ? regionSelect.value : 'Words';
+
+    // helper list of known region CSVs (matches files under data/)
+    const regionFiles = ['GENERAL','CENTERAL','NORTH','SOUTH','EAST','WEST'];
+
+    // determine source to request from server
+    let source = 'Words';
+    if (regionValue === 'RANDOM') {
+      source = regionFiles[Math.floor(Math.random()*regionFiles.length)];
+    } else if (regionValue && regionValue !== 'Words') {
+      source = regionValue;
+    }
+
+    const resultEl = document.getElementById('result');
+    resultEl.innerHTML = 'Loading quiz...';
+    const lang = document.getElementById('langSelect') ? document.getElementById('langSelect').value : 'ar';
+
+    // try client-side CSV loader first (works without PHP)
+    if (typeof fetchQuestions === 'function'){
+      try{
+        const clientQ = await fetchQuestions(source, count, lang);
+        if(Array.isArray(clientQ) && clientQ.length>0){
+          selectedQuestions = clientQ.map(q => ({
+            question: q.question,
+            choices: Array.isArray(q.choices) ? q.choices.slice() : [],
+            answer: q.answer || null
+          }));
+          selectedQuestions.forEach(q => shuffle(q.choices));
+          displayQuestions();
+          resultEl.innerHTML = '';
+          window.location.hash = '#quiz';
+          return;
+        } else {
+          resultEl.innerHTML = 'No questions returned from client parser, trying server...';
+        }
+      }catch(e){
+        console.warn('client-side parser failed:', e);
+      }
+    }
+
+    // try server-side endpoint first with a timeout
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 6000); // 6s timeout
+
+    try {
+      const resp = await fetch(`quiz.php?source=${encodeURIComponent(source)}&count=${count}`, { signal: controller.signal });
+      clearTimeout(timeout);
+      if (resp.ok) {
+        const data = await resp.json();
+        if (data && Array.isArray(data.questions) && data.questions.length > 0) {
+          selectedQuestions = data.questions.map(q => ({
+            question: q.question,
+            choices: Array.isArray(q.choices) ? q.choices.slice() : [],
+            answer: q.answer || null
+          }));
+          // shuffle choices for each question
+          selectedQuestions.forEach(q => shuffle(q.choices));
+          displayQuestions();
+          resultEl.innerHTML = '';
+          window.location.hash = '#quiz';
+          return;
+        } else {
+          resultEl.innerHTML = 'No questions returned from server, using local fallback.';
+        }
+      } else {
+        resultEl.innerHTML = `Server returned ${resp.status}, using local fallback.`;
+      }
+    } catch (err) {
+      clearTimeout(timeout);
+      if (err.name === 'AbortError') {
+        resultEl.innerHTML = 'Server request timed out (6s). Using local fallback.';
+      } else {
+        resultEl.innerHTML = 'Could not reach quiz endpoint. Using local fallback.';
+      }
+      console.warn('quiz.php fetch failed or timed out:', err);
+    }
+
+    // fallback to embedded questions when server-side generation fails or times out
     selectedQuestions = allQuestions.slice();
     shuffle(selectedQuestions);
     selectedQuestions = selectedQuestions.slice(0, count);
     selectedQuestions.forEach(q => shuffle(q.choices));
     displayQuestions();
-    document.getElementById('result').innerHTML = '';
+    // clear any lingering loading text
+    setTimeout(() => { if (resultEl && resultEl.innerHTML.startsWith('Loading')) resultEl.innerHTML = ''; }, 300);
     window.location.hash = '#quiz';
   }
 
+  /*
+    Displays the selected questions on the page
+  */
   function displayQuestions(){
     const container = document.getElementById('quizContainer');
     container.innerHTML = '';
+
     selectedQuestions.forEach((q, i) => {
       const box = document.createElement('div');
       box.className = 'feature-card';
+
       let html = `<h3 dir="ltr">${i+1}. ${q.question}</h3>`;
+
       q.choices.forEach(choice => {
-        html += `<label style="display:block;margin:.25rem 0"><input type="radio" name="q${i}" value="${choice}"> ${choice}</label>`;
+        html += `
+          <label style="display:block;margin:.25rem 0">
+            <input type="radio" name="q${i}" value="${choice}"> ${choice}
+          </label>`;
       });
+
       box.innerHTML = html;
       container.appendChild(box);
     });
+
+    // Add "Check Answers" button
     const checkBtn = document.createElement('a');
     checkBtn.className = 'btn btn-primary';
     checkBtn.textContent = 'Check Answers';
     checkBtn.href = '#result';
     checkBtn.style.display = 'inline-block';
     checkBtn.style.marginTop = '1rem';
-    checkBtn.addEventListener('click', (e) => { e.preventDefault(); checkAnswers(); });
+
+    // Prevent default link behavior and check answers instead
+    checkBtn.addEventListener('click', (e) => { 
+      e.preventDefault(); 
+      checkAnswers(); 
+    });
+
     container.appendChild(checkBtn);
   }
 
+  /*
+    Checks the user's answers:
+    - Counts correct responses
+    - Calculates percentage
+    - Colors the score based on performance
+  */
   function checkAnswers(){
     let score = 0;
+
     for(let i=0;i<selectedQuestions.length;i++){
       const sel = document.querySelector(`input[name="q${i}"]:checked`);
       if(sel && sel.value === selectedQuestions[i].answer) score++;
     }
+
     const total = selectedQuestions.length || 1;
     const percent = Math.round((score/total)*100);
-    let color = '#1e88e5';
+
+    // Choose color based on percentage
+    let color = '#1e88e5'; // default blue
     if(percent >= 80) color = 'green';
     else if(percent >= 50) color = 'orange';
     else color = 'red';
-    document.getElementById('result').innerHTML = `Your score: <span style="color:${color}">${score} / ${total} (${percent}%)</span>`;
+
+    document.getElementById('result').innerHTML =
+      `Your score: <span style="color:${color}">${score} / ${total} (${percent}%)</span>`;
   }
 
-  // hook start button
+  /*
+    Activates the Start button on page load
+  */
   document.addEventListener('DOMContentLoaded', () => {
     const startBtn = document.getElementById('startBtn');
-    if(startBtn) startBtn.addEventListener('click', (e) => { e.preventDefault(); startQuiz(); });
+    if(startBtn) startBtn.addEventListener('click', (e) => { 
+      e.preventDefault(); 
+      startQuiz(); 
+    });
   });
   </script>
+
  </body>
 </html>

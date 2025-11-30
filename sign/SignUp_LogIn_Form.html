@@ -10,7 +10,7 @@
 
       <div class="container">
           <div class="form-box login">
-              <form action="login_check.php" method="post" onsubmit="return validateForm()"aria-label="Login form">
+              <form id="loginForm" onsubmit="handleLoginSubmit(event)" aria-label="Login form">
                   <h1>Login</h1>
                   <div class="input-box">
                       <label for="email">E-mail</label>
@@ -24,6 +24,7 @@
                       <i class='bx bxs-lock-alt' ></i>
                   </div>
                   <button type="submit" class="btn">Login</button>
+                  <div id="loginError" style="color: red; margin-top: 10px; text-align: center; display: none;"></div>
               </form>
           </div>
 
