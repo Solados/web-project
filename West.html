@@ -164,7 +164,17 @@
     <h2 dir="ltr">Overview of the Kingdom of Saudi Arabia</h2>
      <p dir="ltr">
        The Kingdom of Saudi Arabia is a nation of rich heritage and rapid development, located in the heart of the Arabian Peninsula. It is the birthplace of Islam and home to Makkah and Madinah, combining deep traditions with a modern vision for the future.     </p>
-     <div class="features"></div>
+     
+      <div class="question-filter">
+      <label>Filter:</label>
+      <select id="filterSelect">
+        <option value="all">All Questions</option>
+        <option value="english">English Only</option>
+        <option value="arabic">Arabic Only</option>
+      </select>
+      </div>
+     
+       <div class="features"></div>
     </div>
    </section>
 
@@ -200,10 +210,13 @@
 </script>
 
   <script>
-const REGION_FILE = "WEST";
+const REGION_FILE = "WEST"; 
+let currentFilter = "all";
 
 async function loadPage(pageIndex = 0) {
-  const resp = await fetch(`api/region_questions.php?file=${REGION_FILE}&page=${pageIndex}`);
+  const resp = await fetch(
+    `api/region_questions.php?file=${REGION_FILE}&page=${pageIndex}&lang=${currentFilter}`
+  );
   return resp.json();
 }
 
@@ -226,14 +239,8 @@ function createSlider(current, totalPages, changePage) {
   let start = current - 2;
   let end = current + 2;
 
-  if (start < 0) {
-    end += (0 - start);
-    start = 0;
-  }
-  if (end >= totalPages) {
-    start -= (end - totalPages + 1);
-    end = totalPages - 1;
-  }
+  if (start < 0) { end += (0 - start); start = 0; }
+  if (end >= totalPages) { start -= (end - totalPages + 1); end = totalPages - 1; }
   if (start < 0) start = 0;
 
   for (let i = start; i <= end; i++) {
@@ -261,7 +268,6 @@ function createSlider(current, totalPages, changePage) {
 
 async function render(pageIndex = 0) {
   const container = document.querySelector(".features");
-
   document.querySelectorAll(".qs-pagination").forEach(el => el.remove());
 
   const data = await loadPage(pageIndex);
@@ -292,6 +298,11 @@ async function render(pageIndex = 0) {
   const bottomSlider = createSlider(pageIndex, totalPages, render);
   container.after(bottomSlider);
 }
+
+document.getElementById("filterSelect").addEventListener("change", () => {
+  currentFilter = document.getElementById("filterSelect").value;
+  render(0);
+});
 
 render(0);
 </script>

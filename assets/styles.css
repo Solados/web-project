@@ -702,3 +702,18 @@ body { overflow-x: hidden; }
   border-color: #4CAF50;
   font-weight: bold;
 }
+
+.question-filter {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 1rem 0;
+}
+
+.question-filter select {
+  padding: .4rem .6rem;
+  border-radius: .5rem;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+}
