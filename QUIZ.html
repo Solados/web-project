@@ -191,10 +191,14 @@
     resultEl.innerHTML = 'Loading quiz...';
     const lang = document.getElementById('langSelect') ? document.getElementById('langSelect').value : 'ar';
 
+    // read UI filters
+    const type = document.getElementById('typeFilter') ? document.getElementById('typeFilter').value : 'all';
+    const category = document.getElementById('categoryFilter') ? document.getElementById('categoryFilter').value : 'all';
+
     // try client-side CSV loader first (works without PHP)
     if (typeof fetchQuestions === 'function'){
       try{
-        const clientQ = await fetchQuestions(source, count, lang);
+        const clientQ = await fetchQuestions(source, count, lang, type, category);
         if(Array.isArray(clientQ) && clientQ.length>0){
           selectedQuestions = clientQ.map(q => ({
             question: q.question,
@@ -219,7 +223,8 @@
     const timeout = setTimeout(() => controller.abort(), 6000); // 6s timeout
 
     try {
-      const resp = await fetch(`quiz.php?source=${encodeURIComponent(source)}&count=${count}`, { signal: controller.signal });
+      const qs = new URLSearchParams({ source: source, count: String(count), type: type || '', category: category || '' });
+      const resp = await fetch(`quiz.php?${qs.toString()}`, { signal: controller.signal });
       clearTimeout(timeout);
       if (resp.ok) {
         const data = await resp.json();
@@ -275,12 +280,22 @@
 
       let html = `<h3 dir="ltr">${i+1}. ${q.question}</h3>`;
 
-      q.choices.forEach(choice => {
-        html += `
+      // If the question has choices, render radios; otherwise render an open-answer textarea
+      if (Array.isArray(q.choices) && q.choices.length > 0) {
+        q.choices.forEach(choice => {
+          html += `
           <label style="display:block;margin:.25rem 0">
             <input type="radio" name="q${i}" value="${choice}"> ${choice}
           </label>`;
-      });
+        });
+      } else {
+        // open / fill-in-the-blank input
+        html += `
+          <div style="margin-top:.5rem">
+            <textarea name="q${i}_open" placeholder="Write your answer here..." 
+              style="width:100%;min-height:88px;padding:.5rem;border:1px solid #e0e0e0;border-radius:6px;font-size:1rem;font-family:inherit;resize:vertical"></textarea>
+          </div>`;
+      }
 
       box.innerHTML = html;
       container.appendChild(box);
@@ -313,8 +328,22 @@
     let score = 0;
 
     for(let i=0;i<selectedQuestions.length;i++){
-      const sel = document.querySelector(`input[name="q${i}"]:checked`);
-      if(sel && sel.value === selectedQuestions[i].answer) score++;
+      const q = selectedQuestions[i];
+      if (Array.isArray(q.choices) && q.choices.length > 0) {
+        const sel = document.querySelector(`input[name="q${i}"]:checked`);
+        if(sel && sel.value === q.answer) score++;
+      } else {
+        // open answer grading: compare trimmed, case-insensitive if answer exists
+        const ta = document.querySelector(`textarea[name="q${i}_open"]`);
+        if (ta) {
+          const user = (ta.value || '').trim();
+          const corr = (q.answer || '').trim();
+          if (corr !== '') {
+            if (user !== '' && user.toLowerCase() === corr.toLowerCase()) score++;
+          }
+          // if no correct answer provided, we cannot auto-grade; leave as incorrect
+        }
+      }
     }
 
     const total = selectedQuestions.length || 1;

@@ -6,6 +6,9 @@ header('Content-Type: application/json; charset=utf-8');
 
 $source = isset($_GET['source']) ? $_GET['source'] : 'Words';
 $count = isset($_GET['count']) ? (int)$_GET['count'] : 5;
+// optional filters
+$type = isset($_GET['type']) ? trim($_GET['type']) : '';
+$category = isset($_GET['category']) ? trim($_GET['category']) : '';
 
 // basic sanitize: allow only letters, numbers, dash and underscore
 if (!preg_match('/^[A-Za-z0-9_\-]+$/', $source)) {
@@ -54,6 +57,39 @@ fclose($fp);
 if (count($rows) === 0) {
     echo json_encode(['error' => 'No data rows']);
     exit;
+}
+
+// Apply server-side filtering for type and category if present
+if ($type !== '' || $category !== '') {
+    // build lowercase header map
+    $lowerMap = [];
+    foreach ($header as $col) {
+        $lowerMap[mb_strtolower($col)] = $col;
+    }
+
+    // possible header keys
+    $typeKeys = ['type','question_type','qtype','questiontype'];
+    $catKeys = ['category','categories','topic','tag','tags','category_name'];
+
+    $typeCol = null;
+    foreach ($typeKeys as $k) { if (isset($lowerMap[$k])) { $typeCol = $lowerMap[$k]; break; } }
+    $catCol = null;
+    foreach ($catKeys as $k) { if (isset($lowerMap[$k])) { $catCol = $lowerMap[$k]; break; } }
+
+    $rows = array_filter($rows, function($r) use ($type, $category, $typeCol, $catCol) {
+        if ($type !== '' && $typeCol !== null) {
+            $val = isset($r[$typeCol]) ? $r[$typeCol] : '';
+            if ($val === '' || mb_stripos($val, $type) === false) return false;
+        }
+        if ($category !== '' && $catCol !== null) {
+            $val = isset($r[$catCol]) ? $r[$catCol] : '';
+            if ($val === '' || mb_stripos($val, $category) === false) return false;
+        }
+        return true;
+    });
+
+    // reindex
+    $rows = array_values($rows);
 }
 
 // shuffle and take $count
@@ -165,18 +201,17 @@ foreach ($rows as $r) {
             }
         }
     }
-    // fallback: if no parsed MCQ, try to build a simple meaning question
-    if ($parsed === null) {
-        $term = isset($r['Term']) ? $r['Term'] : '';
-        $meaning = isset($r['Meaning_of_term']) ? $r['Meaning_of_term'] : '';
-        if ($term !== '' && $meaning !== '') {
-            $parsed = ['question' => "ما معنى الكلمة: $term؟", 'choices' => [$meaning, 'معنى خاطئ 1', 'معنى خاطئ 2', 'معنى خاطئ 3'], 'answer' => $meaning];
-        }
-    }
     if ($parsed !== null) {
+        // include type/category if present in row
+        if (isset($r['type'])) {
+            $parsed['type'] = $r['type'];
+        }
+        if (isset($r['category'])) {
+            $parsed['category'] = $r['category'];
+        }
         $questionsOut[] = $parsed;
     }
-}
+
 
 echo json_encode(['questions' => $questionsOut], JSON_UNESCAPED_UNICODE);
 
