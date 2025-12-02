@@ -29,6 +29,11 @@
      <li><a href="index.html">Home</a></li>
     </ul>
     <a class="brand" href="index.html" aria-label="Home">Saudi Culture</a>
+    <!-- Search -->
+    <form class="nav-search-form" role="search">
+      <input class="nav-search-input" type="search" name="q" placeholder="Search regions or quiz" aria-label="Search">
+      <button class="nav-search-btn" type="submit">Go</button>
+    </form>
     <button class="menu-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Open/close menu">☰</button>
    </nav>
   </header>
@@ -51,6 +56,7 @@
          <a class="btn btn-primary" id="startBtn" href="#quiz">Start Quiz</a>
        </div>
       </div>
+<<<<<<< Updated upstream
       <div>
       <p>This quiz displays questions in Arabic from a general question bank. Questions are chosen randomly and presented as multiple-choice options.</p>
       </div>
@@ -59,6 +65,20 @@
    </section>
 
    <section id="quiz" class="section section-alt">
+=======
+      <!-- Quiz search -->
+      <div style="margin-top:1rem;">
+        <label>Search questions across all pages:</label>
+        <div style="display:flex;gap:.5rem;align-items:center;margin-top:.4rem;">
+          <input id="quizSearchInput" type="search" placeholder="Search questions (keywords)" style="flex:1;padding:.45rem .6rem;border:1px solid var(--sand-200);border-radius:.5rem">
+          <button id="quizSearchBtn" class="btn btn-outline">Search</button>
+        </div>
+        <div id="quizSearchResults" class="quiz-search-results" style="margin-top:.5rem;max-height:220px;overflow:auto;"></div>
+      </div>
+      </section>
+  <!-- Quiz Section -->
+  <section id="quiz" class="section section-alt">
+>>>>>>> Stashed changes
     <div class="container">
      <div id="quizContainer"></div>
      <div id="result" style="margin-top:1rem;font-weight:700"></div>
@@ -112,10 +132,128 @@
     }
   }
 
+<<<<<<< Updated upstream
+=======
+  function escapeRegEx(s){ return String(s).replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
+
+  function applyHighlightToBox(box, term){
+    if (!term) return;
+    try {
+      const re = new RegExp(escapeRegEx(term), 'gi');
+      // question header
+      const h3 = box.querySelector('h3');
+      if (h3) h3.innerHTML = h3.textContent.replace(re, m => `<mark class="search-highlight">${m}</mark>`);
+      // choices
+      const choiceLabels = box.querySelectorAll('.q-choice');
+      choiceLabels.forEach(label => {
+        const text = label.textContent;
+        const inner = text.replace(re, m => `<mark class="search-highlight">${m}</mark>`);
+        label.innerHTML = inner;
+      });
+    } catch (e) {
+      // invalid regex or other error: ignore
+    }
+  }
+
+  // Array to store randomly selected questions
+>>>>>>> Stashed changes
   let selectedQuestions = [];
+  // When displaying paginated content, this is the global question start index (0-based)
+  let currentPageStart = 0;
+  // state for search navigation jumps
+  let searchJump = { active: false, targetGlobal: null, qterm: '' };
 
   function startQuiz(){
     const count = Number(document.getElementById('questionCount').value) || 5;
+<<<<<<< Updated upstream
+=======
+    const regionSelect = document.getElementById('regionFilter');
+    const regionValue = regionSelect ? regionSelect.value : 'Words';
+
+    // helper list of known region CSVs (matches files under data/)
+    const regionFiles = ['GENERAL','CENTERAL','NORTH','SOUTH','EAST','WEST'];
+
+    // determine source to request from server
+    let source = 'Words';
+    if (regionValue === 'RANDOM') {
+      source = regionFiles[Math.floor(Math.random()*regionFiles.length)];
+    } else if (regionValue && regionValue !== 'Words') {
+      source = regionValue;
+    }
+
+    const resultEl = document.getElementById('result');
+    resultEl.innerHTML = 'Loading quiz...';
+    const lang = document.getElementById('langSelect') ? document.getElementById('langSelect').value : 'ar';
+
+    // read UI filters
+    const type = document.getElementById('typeFilter') ? document.getElementById('typeFilter').value : 'all';
+    const category = document.getElementById('categoryFilter') ? document.getElementById('categoryFilter').value : 'all';
+
+    // try client-side CSV loader first (works without PHP)
+    if (typeof fetchQuestions === 'function'){
+      try{
+        const clientQ = await fetchQuestions(source, count, lang, type, category);
+        if(Array.isArray(clientQ) && clientQ.length>0){
+          selectedQuestions = clientQ.map(q => ({
+            question: q.question,
+            choices: Array.isArray(q.choices) ? q.choices.slice() : [],
+            answer: q.answer || null
+          }));
+          selectedQuestions.forEach(q => shuffle(q.choices));
+          displayQuestions();
+          resultEl.innerHTML = '';
+          window.location.hash = '#quiz';
+          return;
+        } else {
+          resultEl.innerHTML = 'No questions returned from client parser, trying server...';
+        }
+      }catch(e){
+        console.warn('client-side parser failed:', e);
+      }
+    }
+
+    // try server-side endpoint first with a timeout
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 6000); // 6s timeout
+
+    try {
+      const qs = new URLSearchParams({ source: source, count: String(count), type: type || '', category: category || '' });
+      const resp = await fetch(`quiz.php?${qs.toString()}`, { signal: controller.signal });
+      clearTimeout(timeout);
+      if (resp.ok) {
+        const data = await resp.json();
+        if (data && Array.isArray(data.questions) && data.questions.length > 0) {
+          selectedQuestions = data.questions.map(q => ({
+            question: q.question,
+            choices: Array.isArray(q.choices) ? q.choices.slice() : [],
+            answer: q.answer || null
+          }));
+          // when loading server page results, assume this is page 1 start
+          currentPageStart = 0;
+          // shuffle choices for each question
+          selectedQuestions.forEach(q => shuffle(q.choices));
+          displayQuestions();
+          resultEl.innerHTML = '';
+          window.location.hash = '#quiz';
+          return;
+        } else {
+          resultEl.innerHTML = 'No questions returned from server, using local fallback.';
+        }
+      } else {
+        resultEl.innerHTML = `Server returned ${resp.status}, using local fallback.`;
+      }
+    } catch (err) {
+      clearTimeout(timeout);
+      if (err.name === 'AbortError') {
+        resultEl.innerHTML = 'Server request timed out (6s). Using local fallback.';
+      } else {
+        resultEl.innerHTML = 'Could not reach quiz endpoint. Using local fallback.';
+      }
+      console.warn('quiz.php fetch failed or timed out:', err);
+    }
+
+    // fallback to embedded questions when server-side generation fails or times out
+>>>>>>> Stashed changes
     selectedQuestions = allQuestions.slice();
     shuffle(selectedQuestions);
     selectedQuestions = selectedQuestions.slice(0, count);
@@ -131,10 +269,32 @@
     selectedQuestions.forEach((q, i) => {
       const box = document.createElement('div');
       box.className = 'feature-card';
+<<<<<<< Updated upstream
       let html = `<h3 dir="ltr">${i+1}. ${q.question}</h3>`;
       q.choices.forEach(choice => {
         html += `<label style="display:block;margin:.25rem 0"><input type="radio" name="q${i}" value="${choice}"> ${choice}</label>`;
       });
+=======
+
+      // attach a data attribute to allow direct navigation by global index
+      box.setAttribute('data-global-index', String(currentPageStart + i));
+
+      // helper escape
+      function e(s){ return String(s==null?'':s).replace(/[&<>\"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+
+      let html = `<h3 dir="ltr">${i+1}. ${e(q.question)}</h3>`;
+
+      // If the question has choices, render radios; otherwise render an open-answer textarea
+        if (Array.isArray(q.choices) && q.choices.length > 0) {
+          q.choices.forEach((choice, ci) => {
+            html += `\n          <label data-choice-index="${ci}" class="q-choice" style="display:block;margin:.25rem 0">\n            <input type="radio" name="q${i}" value="${e(choice)}"> ${e(choice)}\n          </label>`;
+          });
+      } else {
+        // open / fill-in-the-blank input
+        html += `\n          <div style="margin-top:.5rem">\n            <textarea name="q${i}_open" placeholder="Write your answer here..." \n              style="width:100%;min-height:88px;padding:.5rem;border:1px solid #e0e0e0;border-radius:6px;font-size:1rem;font-family:inherit;resize:vertical"></textarea>\n          </div>`;
+      }
+
+>>>>>>> Stashed changes
       box.innerHTML = html;
       container.appendChild(box);
     });
@@ -146,6 +306,24 @@
     checkBtn.style.marginTop = '1rem';
     checkBtn.addEventListener('click', (e) => { e.preventDefault(); checkAnswers(); });
     container.appendChild(checkBtn);
+
+    // if a search jump is active, try to locate and highlight the target question
+    if (searchJump.active && searchJump.targetGlobal !== null) {
+      setTimeout(() => {
+        const container = document.getElementById('quizContainer');
+        const box = container.querySelector(`[data-global-index="${searchJump.targetGlobal}"]`) || container.querySelectorAll('[data-global-index]')[searchJump.targetGlobal - currentPageStart];
+        if (box) {
+          // highlight term in question and choices
+          applyHighlightToBox(box, searchJump.qterm);
+          box.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          box.focus && box.focus();
+        }
+        // reset jump state
+        searchJump.active = false;
+        searchJump.targetGlobal = null;
+        searchJump.qterm = '';
+      }, 150);
+    }
   }
 
   function checkAnswers(){
@@ -163,7 +341,85 @@
     document.getElementById('result').innerHTML = `Your score: <span style="color:${color}">${score} / ${total} (${percent}%)</span>`;
   }
 
+<<<<<<< Updated upstream
   // hook start button
+=======
+  // --- Quiz-wide search handling ---
+  (function setupQuizSearch(){
+    const input = document.getElementById('quizSearchInput');
+    const btn = document.getElementById('quizSearchBtn');
+    const results = document.getElementById('quizSearchResults');
+    let acTimer = null;
+
+    function renderResults(data, q) {
+      results.innerHTML = '';
+      if (!data || !Array.isArray(data.hits) || data.hits.length === 0) { results.innerHTML = '<div style="padding:.5rem">No results</div>'; return; }
+      data.hits.forEach(h => {
+        const div = document.createElement('div');
+        div.className = 'search-result-item';
+        div.style.padding = '.5rem';
+        div.style.borderBottom = '1px solid var(--sand-100)';
+        div.style.cursor = 'pointer';
+
+        // Show only the question text (server snippet contains highlights if available)
+        const header = `<div style="font-weight:700">Page ${h.page} — ${escapeHtml(h.source)}</div>`;
+        const body = h.snippet && h.snippet.trim() !== '' ? h.snippet : escapeHtml(h.question || '');
+        div.innerHTML = header + `<div style="font-size:.95rem;margin-top:.25rem">${body}</div>`;
+
+        // click behavior: set jump state and load page; highlighting will be applied after page render
+        div.addEventListener('click', async function () {
+          searchJump.active = true;
+          searchJump.targetGlobal = h.global_index;
+          searchJump.qterm = input.value.trim();
+          const page = h.page || 1;
+          try {
+            const resp = await fetch(`quiz_page.php?page=${page}&per_page=20`);
+            if (!resp.ok) throw new Error('page fetch failed');
+            const js = await resp.json();
+            if (!js.questions || js.questions.length === 0) { alert('Could not load page'); return; }
+            currentPageStart = (page - 1) * 20;
+            selectedQuestions = js.questions.map(qObj => ({ question: qObj.question, choices: qObj.choices || [], answer: qObj.answer || null }));
+            selectedQuestions.forEach(q => shuffle(q.choices));
+            displayQuestions();
+            results.innerHTML = '';
+          } catch (err) {
+            console.error(err);
+            alert('Failed to load quiz page');
+          }
+        });
+        results.appendChild(div);
+      });
+    }
+
+    function escapeHtml(s){ return String(s).replace(/[&<>\"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+    function escapeRegEx(s){ return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
+
+    async function doSearch(q){
+      if (!q || q.trim() === '') { results.innerHTML = ''; return; }
+      try {
+        const res = await fetch(`quiz_search.php?q=${encodeURIComponent(q)}&limit=40`);
+        if (!res.ok) { results.innerHTML = '<div style="padding:.5rem">Search failed</div>'; return; }
+        const data = await res.json();
+        renderResults(data, q);
+      } catch (err) {
+        console.error(err);
+        results.innerHTML = '<div style="padding:.5rem">Search error</div>';
+      }
+    }
+
+    // debounce input
+    input.addEventListener('input', function (e) {
+      clearTimeout(acTimer);
+      const v = e.target.value;
+      acTimer = setTimeout(() => doSearch(v), 220);
+    });
+    btn.addEventListener('click', function (e) { e.preventDefault(); doSearch(input.value); });
+  })();
+
+  /*
+    Activates the Start button on page load
+  */
+>>>>>>> Stashed changes
   document.addEventListener('DOMContentLoaded', () => {
     const startBtn = document.getElementById('startBtn');
     if(startBtn) startBtn.addEventListener('click', (e) => { e.preventDefault(); startQuiz(); });
