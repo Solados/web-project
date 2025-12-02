@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login/Signup Form</title>
+    <link rel="stylesheet" href="SignUp_LogIn_Form.css">
+</head>
+  <body>
+
+      <div class="container">
+          <div class="form-box login">
+              <form id="loginForm" onsubmit="handleLoginSubmit(event)" aria-label="Login form">
+                  <h1>Login</h1>
+                  <div class="input-box">
+                      <label for="email">E-mail</label>
+                  <input id="email" name="email" type="email" placeholder="E-mail" required />
+                      <i class='bx bxs-envelope' ></i>
+                  </div>
+                  
+                  <div class="input-box">
+                       <label for="password">Password</label>
+                  <input id="password" name="password" type="password" placeholder="password" required />
+                      <i class='bx bxs-lock-alt' ></i>
+                  </div>
+                  <button type="submit" class="btn">Login</button>
+                  <div id="loginError" style="color: red; margin-top: 10px; text-align: center; display: none;"></div>
+              </form>
+          </div>
+
+          <div class="form-box register">
+              <form action="save_signup.php" method="post" onsubmit="return validateForm()" aria-label="Sign-up form">
+                  <h1>Sign in</h1>
+                  <div class="input-box">
+                      <label for="username">Username</label>
+                  <input id="username" name="username" type="text" placeholder="username" required />
+                      <i class='bx bxs-user'></i>
+                  </div>
+
+                  <div class="input-box">
+                  <label for="email">E-mail</label>
+                  <input id="email" name="email" type="email" placeholder="E-mail" required />
+                      <i class='bx bxs-envelope' ></i>
+                  </div>
+
+                  <div class="input-box">
+                        <label for="password">Password</label>
+                  <input id="password" name="password" type="password" placeholder="password" required />
+                      <i class='bx bxs-lock-alt' ></i>
+                  </div>
+                  <button type="submit" class="btn">Register</button>
+              </form>
+          </div>
+
+          <div class="toggle-box">
+              <div class="toggle-panel toggle-left">
+                  <h2>Hello, Welcome!</h2>
+                  <p>Don't have an account?</p>
+                  <button class="btn register-btn">Register</button>
+              </div>
+
+              <div class="toggle-panel toggle-right">
+                  <h2>Welcome Back!</h2>
+                  <p>Already have an account?</p>
+                  <button class="btn login-btn">Login</button>
+              </div>
+          </div>
+      </div>
+
+      <script src="SignUp_LogIn_Form.js"></script>
+  </body>
+</html>

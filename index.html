@@ -1,17 +1,302 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ksa</title>
+<!doctype html>
+<html lang="ar" dir="rtl">
+ <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Saudi Culture | Home Page</title>
+  <meta name="description" content="اكتشف العادات، التقاليد، والمناطق في المملكة العربية السعودية.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/styles.css">
+ </head>
+ <body>
+  <header class="site-header">
+   <nav class="navbar" aria-label="التنقل الرئيسي">
+    <a class="brand" href="#top" aria-label="العودة إلى الأعلى">Saudi Culture</a>
+    <button class="menu-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="فتح/إغلاق القائمة">☰</button>
+    <ul id="nav-links" class="nav-links">
+     <li><a href="sign/SignUp_LogIn_Form.html">Login</a></li>
+      <li><a href="QUIZ.html">Quizzes</a></li>
+          <li class="dropdown">
+        <a class="dropbtn">Regions</a>
+        <ul class="dropdown-content">
+          <li><a href="North.html">Northern Region</a></li>
+          <li><a href="South.html">Southern Region</a></li>
+          <li><a href="West.html">Western Region</a></li>
+          <li><a href="East.html">Eastern Region</a></li>
+          <li><a href="Central.html">Central Region</a></li>
+        </ul>
+      </li>
+     <li><a href="index.html">Home</a></li>
+    </ul>
+   </nav>
+  </header>
 
-<link rel="stylesheet" href="testcss.css"/>
-</head>
-<body>
+  <!-- carousel slider -->
+  <div id="top" class="carousel">
+    <!-- list item -->
+    <div class="list">
+      <div class="item">
+        <img src="image/Central.jpeg" alt="Central Region">
+        <div class="content" dir="ltr">
+          <div class="author">Kingdom of Saudi Arabia</div>
+          <div class="topic">Central Region</div>
+          <div class="des">
+            The Central Region centers on Riyadh and Al-Qassim, blending modern urban life with fertile oases and historic sites. Visitors find museums, markets, traditional crafts, and festivals that showcase Saudi culture, cuisine, and hospitality alongside modern amenities and growing cultural attractions.
+          </div>
+          <div class="buttons">
+            <button onclick="document.getElementById('about').scrollIntoView({behavior: 'smooth'})">Explore</button>
+          </div>
+        </div>
+      </div>
+      <div class="item">
+        <img src="image/North.jpg" alt="Northern Region">
+        <div class="content" dir="ltr">
+          <div class="author">Kingdom of Saudi Arabia</div>
+          <div class="topic">Northern Region</div>
+          <div class="des">
+            The Northern Region includes Tabuk, Al-Jouf, and vast desert areas with archaeological sites and olive groves. Travelers discover ancient ruins, rock art, natural valleys, guided tours showcasing local cuisine and crafts, seasonal landscapes, and authentic rural hospitality.
+          </div>
+          <div class="buttons">
+            <button onclick="document.getElementById('about').scrollIntoView({behavior: 'smooth'})">Explore</button>
+          </div>
+        </div>
+      </div>
+      <div class="item">
+        <img src="image/West.jpeg" alt="Western Region">
+        <div class="content" dir="ltr">
+          <div class="author">Kingdom of Saudi Arabia</div>
+          <div class="topic">Western Region</div>
+          <div class="des">
+            The Western Region features Makkah, Madinah, Jeddah and Taif, combining sacred sites, historic neighborhoods, Red Sea coastline, and mountain retreats. Visitors experience pilgrimage services, coastal promenades, cultural heritage, rose gardens, festivals and markets throughout the year.
+          </div>
+          <div class="buttons">
+            <button onclick="document.getElementById('about').scrollIntoView({behavior: 'smooth'})">Explore</button>
+          </div>
+        </div>
+      </div>
+      <div class="item">
+        <img src="image/South.jpeg" alt="Southern Region">
+        <div class="content" dir="ltr">
+          <div class="author">Kingdom of Saudi Arabia</div>
+          <div class="topic">Southern Region</div>
+          <div class="des">
+            The Southern Region offers Asir, Jazan, Najran, and Al-Baha with mountains, terraced farms, tropical islands, and historic forts. Visitors enjoy hiking, festivals, coastal excursions, traditional markets, unique architecture, and local crafts that highlight regional biodiversity and cultural traditions throughout the year.
+          </div>
+          <div class="buttons">
+            <button onclick="document.getElementById('about').scrollIntoView({behavior: 'smooth'})">Explore</button>
+          </div>
+        </div>
+      </div>
+      <div class="item">
+        <img src="image/East.jpeg" alt="Eastern Region">
+        <div class="content" dir="ltr">
+          <div class="author">Kingdom of Saudi Arabia</div>
+          <div class="topic">Eastern Region</div>
+          <div class="des">
+            The Eastern Province includes Dammam, Khobar, Qatif, and Al-Ahsa, blending modern cities, industrial centers, and a vast historic oasis. Visitors find waterfront promenades, heritage sites, date palms, cultural festivals, and coastal attractions reflecting economic growth and traditional life throughout the year.
+          </div>
+          <div class="buttons">
+            <button onclick="document.getElementById('about').scrollIntoView({behavior: 'smooth'})">Explore</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- list thumbnail -->
+    <div class="thumbnail">
+      <div class="item">
+        <img src="image/Central.jpeg" alt="Central Region">
+        <div class="content" dir="ltr">
+          <div class="title">Central Region</div>
+          <div class="description">Riyadh, Qassim, Hail</div>
+        </div>
+      </div>
+      <div class="item">
+        <img src="image/North.jpg" alt="Northern Region">
+        <div class="content" dir="ltr">
+          <div class="title">Northern Region</div>
+          <div class="description">Hail, Tabuk, Umluj</div>
+        </div>
+      </div>
+      <div class="item">
+        <img src="image/West.jpeg" alt="Western Region">
+        <div class="content" dir="ltr">
+          <div class="title">Western Region</div>
+          <div class="description">Makkah, Madinah, Jeddah, Taif</div>
+        </div>
+      </div>
+      <div class="item">
+        <img src="image/South.jpeg" alt="Southern Region">
+        <div class="content" dir="ltr">
+          <div class="title">Southern Region</div>
+          <div class="description">Asir, Jazan, Najran, Al-Baha</div>
+        </div>
+      </div>
+      <div class="item">
+        <img src="image/East.jpeg" alt="Eastern Region">
+        <div class="content" dir="ltr">
+          <div class="title">Eastern Region</div>
+          <div class="description">Dammam, Khobar, Qatif, Al-Ahsa</div>
+        </div>
+      </div>
+    </div>
+    <!-- next prev -->
+    <div class="arrows">
+      <button id="prev"><</button>
+      <button id="next">></button>
+    </div>
+    <!-- time running -->
+    <div class="time"></div>
+  </div>
 
-<h1>hisham is king</h1>
+  <main id="main">
+   <section id="about" class="section section-intro">
+    <div class="container">
+     <h2 dir="ltr">take a overview about Kingdom OF Saudi Arabia</h2>
+     <p dir="ltr">
+       The Kingdom of Saudi Arabia is a nation of rich heritage and rapid development, located in the heart of the Arabian Peninsula. It is the birthplace of Islam and home to Makkah and Madinah, combining deep traditions with a modern vision for the future.     </p>
+    <div class="features"></div>
+    </div>
+   </section>
 
 
-</body>
-</html>
+   <section id="visit" class="section section-cta">
+    <div class="container cta">
+     <h2>Challenge your knowledge of Saudi culture</h2>
+     <p>.Test your knowledge of Saudi culture with an engaging, authentic experience</p>
+    <a class="btn btn-primary" href="QUIZ.html">Start now</a>
+    </div>
+   </section>
+  </main>
+
+  <footer class="site-footer" aria-label="footer">
+   <div class="container footer-grid">
+    <div>
+     <strong>Saudi Culture</strong>
+     <p>© 2025 All rights reserved</p>
+    </div>
+    <ul class="footer-links">
+     <li><a href="#top">Back to Top</a></li>
+     <li><a href="#main">Questions & Answers</a></li>
+    </ul>
+   </div>
+  </footer>
+
+  <script src="assets/script.js"></script>
+    
+  <script>
+  /* الصفحة الرئيسية تستخدم home_questions.php */
+
+  async function loadHomePage(page = 0) {
+      const resp = await fetch(`api/home_questions.php?page=${page}`);
+      return resp.json();
+  }
+
+  /* إنشاء السلايدر */
+  function createSlider(current, totalPages, changePage) {
+    const wrap = document.createElement("div");
+    wrap.className = "qs-pagination";
+
+    // أول صفحة «
+    const first = document.createElement("button");
+    first.textContent = "«";
+    first.disabled = current === 0;
+    first.onclick = () => changePage(0);
+    wrap.appendChild(first);
+
+    // السابق ‹
+    const prev = document.createElement("button");
+    prev.textContent = "‹";
+    prev.disabled = current === 0;
+    prev.onclick = () => changePage(current - 1);
+    wrap.appendChild(prev);
+
+    // حساب نطاق (خمسة أزرار فقط)
+    let start = current - 2;
+    let end = current + 2;
+
+    if (start < 0) {
+        end += (0 - start);
+        start = 0;
+    }
+
+    if (end >= totalPages) {
+        start -= (end - totalPages + 1);
+        end = totalPages - 1;
+    }
+
+    if (start < 0) start = 0;
+
+    // الصفحات
+    for (let i = start; i <= end; i++) {
+        const b = document.createElement("button");
+        b.textContent = i + 1;
+        if (i === current) b.classList.add("active");
+        b.onclick = () => changePage(i);
+        wrap.appendChild(b);
+    }
+
+    // التالي ›
+    const next = document.createElement("button");
+    next.textContent = "›";
+    next.disabled = current === totalPages - 1;
+    next.onclick = () => changePage(current + 1);
+    wrap.appendChild(next);
+
+    // آخر صفحة »
+    const last = document.createElement("button");
+    last.textContent = "»";
+    last.disabled = current === totalPages - 1;
+    last.onclick = () => changePage(totalPages - 1);
+    wrap.appendChild(last);
+
+    return wrap;
+}
+
+
+  /* عرض الأسئلة */
+  async function render(pageIndex = 0) {
+      const container = document.querySelector(".features");
+
+      // إزالة أي سلايدر قديم
+      document.querySelectorAll(".qs-pagination").forEach(e => e.remove());
+
+      container.innerHTML = "";
+
+      const data = await loadHomePage(pageIndex);
+      const questions = data.questions;
+      const totalPages = Math.ceil(data.total / 20);
+
+      const topSlider = createSlider(pageIndex, totalPages, render);
+      container.before(topSlider);
+
+      questions.forEach(q => {
+          const card = document.createElement("article");
+          card.className = "feature-card";
+
+          const h = document.createElement("h3");
+          h.textContent = q.question;
+          h.dir = "auto";
+
+          const p = document.createElement("p");
+          p.textContent = q.answer;
+          p.dir = "auto";
+
+          card.append(h, p);
+          container.appendChild(card);
+      });
+
+      const bottomSlider = createSlider(pageIndex, totalPages, render);
+      container.after(bottomSlider);
+  }
+
+  /* تشغيل الصفحة */
+  render(0);
+  </script>
+
+
+ </body>
+ </html>
+
+

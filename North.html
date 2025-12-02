@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+ <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Saudi Culture | Home Page</title>
+  <meta name="description" content="اكتشف العادات، التقاليد، والمناطق في المملكة العربية السعودية.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/styles.css">
+ </head>
+ <body>
+  <header class="site-header">
+   <nav class="navbar" aria-label="التنقل الرئيسي">
+    <a class="brand" href="#top" aria-label="العودة إلى الأعلى">Saudi Culture</a>
+    <button class="menu-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="فتح/إغلاق القائمة">☰</button>
+    <ul id="nav-links" class="nav-links">
+     <li><a href="sign/SignUp_LogIn_Form.html">Login</a></li>
+      <li><a href="QUIZ.html">Quizzes</a></li>
+          <li class="dropdown">
+        <a class="dropbtn">Regions</a>
+        <ul class="dropdown-content">
+          <li><a href="North.html">Northern Region</a></li>
+          <li><a href="South.html">Southern Region</a></li>
+          <li><a href="West.html">Western Region</a></li>
+          <li><a href="East.html">Eastern Region</a></li>
+          <li><a href="Central.html">Central Region</a></li>
+        </ul>
+      </li>
+     <li><a href="index.html">Home</a></li>
+    </ul>
+   </nav>
+  </header>
+
+  <!-- carousel slider -->
+  <div id="top" class="carousel">
+    <!-- list item -->
+    <div class="list">
+      <div class="item">
+        <img src="image/Hail.jpg" alt="Hail">
+        <div class="content" dir="ltr">
+          <div class="author">Northern of Saudi Arabia</div>
+          <div class="topic">Hail</div>
+          <div class="des">
+            Hail features ancient forts and UNESCO-listed rock art near Jubbah, with wide desert landscapes and seasonal wildflowers. Visitors enjoy archaeological sites, traditional souks, tribal festivals, and guided tours that highlight centuries of desert history, local crafts, and authentic northern Saudi culture.
+          </div>
+        </div>
+      </div>
+      <div class="item">
+        <img src="image/Tabuk.jpg" alt="Tabuk">
+        <div class="content" dir="ltr">
+          <div class="author">Northern of Saudi Arabia</div>
+          <div class="topic">Tabuk</div>
+          <div class="des">
+            Tabuk sits at the kingdom's northwest edge, offering Al-Lawz Mountains, Wadi Al Disah, and historical forts. Visitors discover hiking trails, ancient ruins, a mild climate, coastal access to the Red Sea, and emerging development projects that combine nature, heritage, and modern opportunities.
+          </div>
+        </div>
+      </div>
+      <div class="item">
+        <img src="image/sakaka.jpg" alt="Sakaka">
+        <div class="content" dir="ltr">
+          <div class="author">Northern of Saudi Arabia</div>
+          <div class="topic">Sakaka</div>
+          <div class="des">
+            Sakaka in Al-Jouf is known for expansive olive groves, the Rajajil standing stones, museums, and rural markets. Visitors explore archaeological sites, taste traditional olive-oil cuisine, attend seasonal festivals, and experience local hospitality through guided tours and handicrafts exhibitions.
+          </div>
+        </div>
+      </div>
+      <div class="item">
+        <img src="image/Arar.jpg" alt="Arar">
+        <div class="content" dir="ltr">
+          <div class="author">Northern of Saudi Arabia</div>
+          <div class="topic">Arar</div>
+          <div class="des">
+            Arar is a frontier city with strong Bedouin traditions, lively bazaars, and broad desert panoramas. Wadi Arar runs about 190 kilometers nearby. Visitors enjoy local markets, nomadic crafts, seasonal festivals, authentic cultural experiences, and welcoming northern hospitality.
+          </div>
+        </div>
+      </div>
+      <div class="item">
+        <img src="image/Umluj.jpg" alt="Umluj">
+        <div class="content" dir="ltr">
+          <div class="author">Northern of Saudi Arabia</div>
+          <div class="topic">Umluj</div>
+          <div class="des">
+            Umluj is a coastal Red Sea town famed for clear waters, coral reefs, and scattered islands ideal for snorkeling and boat trips. Visitors find sandy beaches, fishing villages, seafood, island excursions, and tranquil marine scenery that contrasts with inland desert destinations.
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- list thumbnail -->
+    <div class="thumbnail">
+      <div class="item">
+        <img src="image/Hail.jpg" alt="Central Region">
+        <div class="content" dir="ltr">
+          <div class="topic">Hail</div>
+          <div class="description">Historic forts & rock art</div>
+        </div>
+      </div>
+      <div class="item">
+        <img src="image/Tabuk.jpg" alt="Northern Region">
+        <div class="content" dir="ltr">
+          <div class="topic">Tabuk</div>
+          <div class="description">Snowy peaks & ancient valleys</div>
+        </div>
+      </div>
+      <div class="item">
+        <img src="image/sakaka.jpg" alt="Western Region">
+        <div class="content" dir="ltr">
+          <div class="topic">Sakaka</div>
+          <div class="description">Olive groves & archaeology</div>
+        </div>
+      </div>
+      <div class="item">
+        <img src="image/Arar.jpg" alt="Southern Region">
+        <div class="content" dir="ltr">
+          <div class="topic">Arar</div>
+          <div class="description">Wadi Arar & desert markets</div>
+        </div>
+      </div>
+      <div class="item">
+        <img src="image/Umluj.jpg" alt="Eastern Region">
+        <div class="content" dir="ltr">
+          <div class="topic">Umluj</div>
+          <div class="description">Red Sea islands & Umluj</div>
+        </div>
+      </div>
+    </div>
+    <!-- next prev -->
+    <div class="arrows">
+      <button id="prev"><</button>
+      <button id="next">></button>
+    </div>
+    <!-- time running -->
+    <div class="time"></div>
+  </div>
+
+  <main id="main">
+   <section id="about" class="section section-intro">
+    <div class="container">
+     <h2 dir="ltr">take a overview about Kingdom OF Saudi Arabia</h2>
+     <p dir="ltr">
+       The Kingdom of Saudi Arabia is a nation of rich heritage and rapid development, located in the heart of the Arabian Peninsula. It is the birthplace of Islam and home to Makkah and Madinah, combining deep traditions with a modern vision for the future.     </p>
+     <div class="features"></div>
+    </div>
+   </section>
+
+
+   <section id="visit" class="section section-cta">
+    <div class="container cta">
+     <h2>Challenge your knowledge of Saudi culture</h2>
+     <p>.Test your knowledge of Saudi culture with an engaging, authentic experience</p>
+    <a class="btn btn-primary" href="QUIZ.html">Start now</a>
+    </div>
+   </section>
+  </main>
+
+  <footer class="site-footer" aria-label="footer">
+   <div class="container footer-grid">
+    <div>
+     <strong>Saudi Culture</strong>
+     <p>© 2025 All rights reserved</p>
+    </div>
+    <ul class="footer-links">
+     <li><a href="#top">Back to Top</a></li>
+     <li><a href="#main">Questions & Answers</a></li>
+    </ul>
+   </div>
+  </footer>
+
+  <script src="assets/script.js"></script>
+
+  <script>
+  /* اسم ملف المنطقة */
+  const REGION_FILE = "NORTH";
+
+  /* جلب 20 سؤال حسب رقم الصفحة */
+  async function loadRegionPage(page = 0) {
+      const resp = await fetch(`api/region_questions.php?file=${REGION_FILE}&page=${page}`);
+      return resp.json();
+  }
+
+  /* إنشاء سلايدر علوي + سفلي */
+  function createSlider(current, totalPages, changePage) {
+      const wrap = document.createElement("div");
+      wrap.className = "qs-pagination";
+
+      const prev = document.createElement("button");
+      prev.textContent = "‹";
+      prev.disabled = current === 0;
+      prev.onclick = () => changePage(current - 1);
+      wrap.appendChild(prev);
+
+      for (let i = 0; i < totalPages; i++) {
+          const b = document.createElement("button");
+          b.textContent = i + 1;
+          if (i === current) b.classList.add("active");
+          b.onclick = () => changePage(i);
+          wrap.appendChild(b);
+      }
+
+      const next = document.createElement("button");
+      next.textContent = "›";
+      next.disabled = current === totalPages - 1;
+      next.onclick = () => changePage(current + 1);
+      wrap.appendChild(next);
+
+      return wrap;
+  }
+
+  /* رسم البطاقات + السلايدر */
+  async function render(pageIndex = 0) {
+      const container = document.querySelector(".features");
+
+      // إزالة أي سلايدر قديم قبل إضافة الجديد
+      document.querySelectorAll(".qs-pagination").forEach(e => e.remove());
+
+      container.innerHTML = "";
+
+      const data = await loadRegionPage(pageIndex);
+      const questions = data.questions;
+      const totalPages = Math.ceil(data.total / 20);
+
+      // السلايدر العلوي
+      const topSlider = createSlider(pageIndex, totalPages, render);
+      container.before(topSlider);
+
+      // عرض البطاقات
+      questions.forEach(q => {
+          const card = document.createElement("article");
+          card.className = "feature-card enhanced-card";
+
+          const h = document.createElement("h3");
+          h.textContent = q.question;
+          h.dir = "auto";
+
+          const p = document.createElement("p");
+          p.textContent = q.answer;
+          p.dir = "auto";
+
+          card.append(h, p);
+          container.appendChild(card);
+      });
+
+      // السلايدر السفلي
+      const bottomSlider = createSlider(pageIndex, totalPages, render);
+      container.after(bottomSlider);
+  }
+
+  /* تشغيل الصفحة لأول مرة */
+  render(0);
+  </script>
+
+  
+ </body>
+ </html>
