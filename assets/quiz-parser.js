@@ -80,6 +80,7 @@
     const qIdx = hmap['question'];
     const ansIdx = hmap['answer'];
     const choicesIdx = hmap['choices'];
+    const typeIdx = hmap['type'];
     const questions = [];
 
     for (const r of rows) {
@@ -110,7 +111,11 @@
       // only add if we have at least 2 choices
       if (choices.length >= 2) {
         shuffle(choices);
-        questions.push({ question: qText, choices, answer: correct });
+        const qObj = { question: qText, choices, answer: correct };
+        if (typeIdx !== undefined) qObj.type = (rows[0] && rows[0][typeIdx]) ? (r[typeIdx] || '').trim() : (r[typeIdx] || '');
+        // include any type value present on this row
+        if (typeIdx !== undefined) qObj.type = (r[typeIdx] || '').trim();
+        questions.push(qObj);
         if (questions.length >= count) break;
       }
     }
@@ -186,6 +191,7 @@
   // Build from Terms+Meanings (Words.csv style) with MCQ extraction
   function buildFromTerms(hmap, rows, count, lang) {
     const termIdx = hmap['term'];
+    const typeIdx = hmap['type'];
     // detect possible meaning column names
     const meaningKeys = ['meaning_of_term', 'meaning', 'translation', 'definition'];
     let meaningIdx = undefined;
@@ -211,6 +217,7 @@
         const blockText = row[qIdx];
         const mcq = extractMCQFromBlock(blockText);
         if (mcq) {
+          if (typeIdx !== undefined) mcq.type = (row[typeIdx] || '').trim();
           questions.push(mcq);
         }
       }
@@ -231,7 +238,9 @@
           let choices = [correct].concat(distractors).slice(0, 4);
           shuffle(choices);
           const qText = (lang === 'en') ? `What is the meaning of "${it.term}"?` : `ما معنى "${it.term}"؟`;
-          questions.push({ question: qText, choices, answer: correct });
+          const qObj = { question: qText, choices, answer: correct };
+          if (typeIdx !== undefined) qObj.type = (it.type || '').trim();
+          questions.push(qObj);
         }
       }
     }
@@ -240,7 +249,8 @@
   }
 
   // Public API
-  async function fetchQuestions(source, count, lang) {
+  // fetchQuestions(source, count, lang, type, category)
+  async function fetchQuestions(source, count, lang, type, category) {
     count = Number(count) || 5;
     lang = String(lang || 'ar');
     let file = 'data/Words.csv';
@@ -252,20 +262,57 @@
       if (!parsed.header || parsed.header.length === 0) throw new Error('No header');
       const hmap = headerMap(parsed.header);
 
-      // choose builder
+      // filter rows client-side based on type/category if possible
+      let filteredRows = parsed.rows.slice();
+
+      // helper to find a matching header key from candidates
+      function findHeaderKey(candidates) {
+        for (const k of candidates) {
+          if (k in hmap) return k;
+        }
+        return null;
+      }
+
+      // apply category filter
+      if (type && String(type).toLowerCase() !== 'all') {
+        const typeKeys = ['type', 'question_type', 'qtype', 'questiontype'];
+        const found = findHeaderKey(typeKeys);
+        if (found !== null) {
+          const idx = hmap[found];
+          filteredRows = filteredRows.filter(r => {
+            const val = (r[idx] || '') + '';
+            return val.toLowerCase().indexOf(String(type).toLowerCase()) !== -1;
+          });
+        }
+      }
+
+      if (category && String(category).toLowerCase() !== 'all') {
+        const catKeys = ['category', 'categories', 'topic', 'tag', 'tags', 'category_name'];
+        const found = findHeaderKey(catKeys);
+        if (found !== null) {
+          const idx = hmap[found];
+          filteredRows = filteredRows.filter(r => {
+            const val = (r[idx] || '') + '';
+            return val.toLowerCase().indexOf(String(category).toLowerCase()) !== -1;
+          });
+        }
+      }
+
+      // choose builder using filtered rows
       if ('question' in hmap && 'answer' in hmap) {
         // data already in QA format (likely English)
-        return buildFromQA(hmap, parsed.rows, count);
+        return buildFromQA(hmap, filteredRows, count);
       }
 
       if ('term' in hmap) {
-        return buildFromTerms(hmap, parsed.rows, count, lang);
+        return buildFromTerms(hmap, filteredRows, count, lang);
       }
 
       // generic fallback: try treat first col as question and second as answer
       if (parsed.rows.length > 0) {
         const questions = [];
         const pool = parsed.rows.map(r => r[1] || '').filter(Boolean);
+        const typeIdx = hmap['type'];
         shuffle(pool);
         for (let i = 0; i < Math.min(count, parsed.rows.length); i++) {
           const row = parsed.rows[i];
@@ -274,7 +321,9 @@
           const distract = pool.filter(x => x !== a).slice(0, 3);
           let choices = [a].concat(distract).slice(0, 4);
           shuffle(choices);
-          questions.push({ question: (lang === 'en' ? q : q), choices, answer: a });
+          const qObj = { question: (lang === 'en' ? q : q), choices, answer: a };
+          if (typeIdx !== undefined) qObj.type = (row[typeIdx] || '').trim();
+          questions.push(qObj);
         }
         return questions;
       }

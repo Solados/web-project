@@ -1,25 +1,31 @@
 <!doctype html>
+<!-- Head -->
 <html lang="ar" dir="rtl">
  <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Saudi Culture | Home Page</title>
-  <meta name="description" content="اكتشف العادات، التقاليد، والمناطق في المملكة العربية السعودية.">
+  <meta name="description" content="Discover customs, traditions, and regions of the Kingdom of Saudi Arabia.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/styles.css">
  </head>
+ <!-- Body -->
  <body>
+  <!-- Header -->
   <header class="site-header">
-   <nav class="navbar" aria-label="التنقل الرئيسي">
-    <a class="brand" href="#top" aria-label="العودة إلى الأعلى">Saudi Culture</a>
-    <button class="menu-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="فتح/إغلاق القائمة">☰</button>
+   <!-- Navigation -->
+   <nav class="navbar" aria-label="Main navigation">
+    <a class="brand" href="#top" aria-label="Back to top">Saudi Culture</a>
+    <button class="menu-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Toggle menu">☰</button>
+    <!-- Nav list -->
     <ul id="nav-links" class="nav-links">
      <li><a href="sign/SignUp_LogIn_Form.html">Login</a></li>
       <li><a href="QUIZ.html">Quizzes</a></li>
           <li class="dropdown">
         <a class="dropbtn">Regions</a>
+        <!-- Regions dropdown list -->
         <ul class="dropdown-content">
           <li><a href="North.html">Northern Region</a></li>
           <li><a href="South.html">Southern Region</a></li>
@@ -33,10 +39,11 @@
    </nav>
   </header>
 
-  <!-- carousel slider -->
+  <!-- Slider -->
   <div id="top" class="carousel">
     <!-- list item -->
     <div class="list">
+      <!-- (Hail slide) -->
       <div class="item">
         <img src="image/Hail.jpg" alt="Hail">
         <div class="content" dir="ltr">
@@ -47,6 +54,7 @@
           </div>
         </div>
       </div>
+      <!-- (Tabuk slide) -->
       <div class="item">
         <img src="image/Tabuk.jpg" alt="Tabuk">
         <div class="content" dir="ltr">
@@ -57,6 +65,7 @@
           </div>
         </div>
       </div>
+      <!-- (Sakaka slide) -->
       <div class="item">
         <img src="image/sakaka.jpg" alt="Sakaka">
         <div class="content" dir="ltr">
@@ -67,6 +76,7 @@
           </div>
         </div>
       </div>
+      <!-- (Arar slide) -->
       <div class="item">
         <img src="image/Arar.jpg" alt="Arar">
         <div class="content" dir="ltr">
@@ -77,6 +87,7 @@
           </div>
         </div>
       </div>
+      <!-- (Umluj slide) -->
       <div class="item">
         <img src="image/Umluj.jpg" alt="Umluj">
         <div class="content" dir="ltr">
@@ -88,8 +99,9 @@
         </div>
       </div>
     </div>
-    <!-- list thumbnail -->
+    <!-- Thumbnails -->
     <div class="thumbnail">
+      <!-- Thumb: Hail -->
       <div class="item">
         <img src="image/Hail.jpg" alt="Central Region">
         <div class="content" dir="ltr">
@@ -97,6 +109,7 @@
           <div class="description">Historic forts & rock art</div>
         </div>
       </div>
+      <!-- Thumb: Tabuk -->
       <div class="item">
         <img src="image/Tabuk.jpg" alt="Northern Region">
         <div class="content" dir="ltr">
@@ -104,6 +117,7 @@
           <div class="description">Snowy peaks & ancient valleys</div>
         </div>
       </div>
+      <!-- Thumb: Sakaka -->
       <div class="item">
         <img src="image/sakaka.jpg" alt="Western Region">
         <div class="content" dir="ltr">
@@ -111,6 +125,7 @@
           <div class="description">Olive groves & archaeology</div>
         </div>
       </div>
+      <!-- Thumb: Arar -->
       <div class="item">
         <img src="image/Arar.jpg" alt="Southern Region">
         <div class="content" dir="ltr">
@@ -135,10 +150,12 @@
     <div class="time"></div>
   </div>
 
+  <!-- Main -->
   <main id="main">
-   <section id="about" class="section section-intro">
+   <!-- Overview section -->
+   <section id="overview" class="section section-intro">
     <div class="container">
-     <h2 dir="ltr">take a overview about Kingdom OF Saudi Arabia</h2>
+    <h2 dir="ltr">Overview of the Kingdom of Saudi Arabia</h2>
      <p dir="ltr">
        The Kingdom of Saudi Arabia is a nation of rich heritage and rapid development, located in the heart of the Arabian Peninsula. It is the birthplace of Islam and home to Makkah and Madinah, combining deep traditions with a modern vision for the future.     </p>
      <div class="features"></div>
@@ -146,7 +163,8 @@
    </section>
 
 
-   <section id="visit" class="section section-cta">
+  <!-- CTA section -->
+  <section id="visit" class="section section-cta">
     <div class="container cta">
      <h2>Challenge your knowledge of Saudi culture</h2>
      <p>.Test your knowledge of Saudi culture with an engaging, authentic experience</p>
@@ -155,6 +173,7 @@
    </section>
   </main>
 
+  <!-- Footer -->
   <footer class="site-footer" aria-label="footer">
    <div class="container footer-grid">
     <div>
@@ -169,87 +188,106 @@
   </footer>
 
   <script src="assets/script.js"></script>
+<!-- Chatbase Script -->
+  <script>
+(function(){if(!window.chatbase||window.chatbase("getState")!=="initialized"){window.chatbase=(...arguments)=>{if(!window.chatbase.q){window.chatbase.q=[]}window.chatbase.q.push(arguments)};window.chatbase=new Proxy(window.chatbase,{get(target,prop){if(prop==="q"){return target.q}return(...args)=>target(prop,...args)}})}const onLoad=function(){const script=document.createElement("script");script.src="https://www.chatbase.co/embed.min.js";script.id="PkSRl6nFY3Csgenh8koIS";script.domain="www.chatbase.co";document.body.appendChild(script)};if(document.readyState==="complete"){onLoad()}else{window.addEventListener("load",onLoad)}})();
+</script>
 
   <script>
-  /* اسم ملف المنطقة */
-  const REGION_FILE = "NORTH";
+const REGION_FILE = "NORTH";
 
-  /* جلب 20 سؤال حسب رقم الصفحة */
-  async function loadRegionPage(page = 0) {
-      const resp = await fetch(`api/region_questions.php?file=${REGION_FILE}&page=${page}`);
-      return resp.json();
+async function loadPage(pageIndex = 0) {
+  const resp = await fetch(`api/region_questions.php?file=${REGION_FILE}&page=${pageIndex}`);
+  return resp.json();
+}
+
+function createSlider(current, totalPages, changePage) {
+  const wrap = document.createElement("div");
+  wrap.className = "qs-pagination";
+
+  const first = document.createElement("button");
+  first.textContent = "«";
+  first.disabled = current === 0;
+  first.onclick = () => changePage(0);
+  wrap.appendChild(first);
+
+  const prev = document.createElement("button");
+  prev.textContent = "‹";
+  prev.disabled = current === 0;
+  prev.onclick = () => changePage(current - 1);
+  wrap.appendChild(prev);
+
+  let start = current - 2;
+  let end = current + 2;
+
+  if (start < 0) {
+    end += (0 - start);
+    start = 0;
+  }
+  if (end >= totalPages) {
+    start -= (end - totalPages + 1);
+    end = totalPages - 1;
+  }
+  if (start < 0) start = 0;
+
+  for (let i = start; i <= end; i++) {
+    const btn = document.createElement("button");
+    btn.textContent = i + 1;
+    if (i === current) btn.classList.add("active");
+    btn.onclick = () => changePage(i);
+    wrap.appendChild(btn);
   }
 
-  /* إنشاء سلايدر علوي + سفلي */
-  function createSlider(current, totalPages, changePage) {
-      const wrap = document.createElement("div");
-      wrap.className = "qs-pagination";
+  const next = document.createElement("button");
+  next.textContent = "›";
+  next.disabled = current === totalPages - 1;
+  next.onclick = () => changePage(current + 1);
+  wrap.appendChild(next);
 
-      const prev = document.createElement("button");
-      prev.textContent = "‹";
-      prev.disabled = current === 0;
-      prev.onclick = () => changePage(current - 1);
-      wrap.appendChild(prev);
+  const last = document.createElement("button");
+  last.textContent = "»";
+  last.disabled = current === totalPages - 1;
+  last.onclick = () => changePage(totalPages - 1);
+  wrap.appendChild(last);
 
-      for (let i = 0; i < totalPages; i++) {
-          const b = document.createElement("button");
-          b.textContent = i + 1;
-          if (i === current) b.classList.add("active");
-          b.onclick = () => changePage(i);
-          wrap.appendChild(b);
-      }
+  return wrap;
+}
 
-      const next = document.createElement("button");
-      next.textContent = "›";
-      next.disabled = current === totalPages - 1;
-      next.onclick = () => changePage(current + 1);
-      wrap.appendChild(next);
+async function render(pageIndex = 0) {
+  const container = document.querySelector(".features");
+  document.querySelectorAll(".qs-pagination").forEach(el => el.remove());
 
-      return wrap;
-  }
+  const data = await loadPage(pageIndex);
+  const totalPages = Math.ceil(data.total / 20);
 
-  /* رسم البطاقات + السلايدر */
-  async function render(pageIndex = 0) {
-      const container = document.querySelector(".features");
+  const topSlider = createSlider(pageIndex, totalPages, render);
+  container.before(topSlider);
 
-      // إزالة أي سلايدر قديم قبل إضافة الجديد
-      document.querySelectorAll(".qs-pagination").forEach(e => e.remove());
+  container.innerHTML = "";
 
-      container.innerHTML = "";
+  data.questions.forEach(q => {
+    const card = document.createElement("article");
+    card.className = "feature-card";
 
-      const data = await loadRegionPage(pageIndex);
-      const questions = data.questions;
-      const totalPages = Math.ceil(data.total / 20);
+    const h3 = document.createElement("h3");
+    h3.textContent = q.question;
+    h3.dir = "auto";
 
-      // السلايدر العلوي
-      const topSlider = createSlider(pageIndex, totalPages, render);
-      container.before(topSlider);
+    const p = document.createElement("p");
+    p.textContent = q.answer;
+    p.dir = "auto";
 
-      // عرض البطاقات
-      questions.forEach(q => {
-          const card = document.createElement("article");
-          card.className = "feature-card enhanced-card";
+    card.appendChild(h3);
+    card.appendChild(p);
+    container.appendChild(card);
+  });
 
-          const h = document.createElement("h3");
-          h.textContent = q.question;
-          h.dir = "auto";
+  const bottomSlider = createSlider(pageIndex, totalPages, render);
+  container.after(bottomSlider);
+}
 
-          const p = document.createElement("p");
-          p.textContent = q.answer;
-          p.dir = "auto";
-
-          card.append(h, p);
-          container.appendChild(card);
-      });
-
-      // السلايدر السفلي
-      const bottomSlider = createSlider(pageIndex, totalPages, render);
-      container.after(bottomSlider);
-  }
-
-  /* تشغيل الصفحة لأول مرة */
-  render(0);
-  </script>
+render(0);
+</script>
 
   
  </body>
