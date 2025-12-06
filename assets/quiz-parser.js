@@ -3,12 +3,29 @@
 // Each question: { question: string, choices: string[], answer: string }
 
 (function (window) {
-  // small fallback set
-  const builtin = [
-    { question: 'ما معنى "كتاب"؟', choices: ['Book', 'Table', 'Window', 'Door'], answer: 'Book' },
-    { question: 'ما معنى "ماء"؟', choices: ['Water', 'Fire', 'Earth', 'Air'], answer: 'Water' },
-    { question: 'ما معنى "بيت"؟', choices: ['House', 'Car', 'Street', 'Food'], answer: 'House' }
-  ];
+  // small fallback set of questions in case of fetch/parse failure
+const builtin = [
+  { question: 'ما هي عاصمة المملكة العربية السعودية؟', choices: ['الرياض', 'جدة', 'مكة', 'الدمام'], answer: 'الرياض' },
+  { question: 'ما هو اليوم الوطني السعودي؟', choices: ['23 سبتمبر', '1 يناير', '5 يونيو', '12 ديسمبر'], answer: '23 سبتمبر' },
+  { question: 'ما هو اللباس التقليدي للرجال في السعودية؟', choices: ['الثوب', 'الكيمونو', 'الساري', 'البدلة'], answer: 'الثوب' },
+  { question: 'ما هو اللباس التقليدي للنساء في السعودية؟', choices: ['العباءة', 'الكيمونو', 'الساري', 'الجلابية'], answer: 'العباءة' },
+  { question: 'أي مدينة تُعرف بكونها أقدس مدينة في الإسلام؟', choices: ['مكة المكرمة', 'المدينة المنورة', 'الرياض', 'جدة'], answer: 'مكة المكرمة' },
+  { question: 'أي مدينة تحتضن المسجد النبوي؟', choices: ['المدينة المنورة', 'مكة المكرمة', 'الرياض', 'الدمام'], answer: 'المدينة المنورة' },
+  { question: 'ما هو اسم العملة السعودية؟', choices: ['الريال', 'الدينار', 'الجنيه', 'الدولار'], answer: 'الريال' },
+  { question: 'ما هو الطبق الشعبي السعودي الشهير؟', choices: ['الكبسة', 'البيتزا', 'السوشي', 'البرياني'], answer: 'الكبسة' },
+  { question: 'ما هو المشروب التقليدي الذي يُقدم مع التمر؟', choices: ['القهوة العربية', 'الشاي الأخضر', 'العصير', 'الحليب'], answer: 'القهوة العربية' },
+  { question: 'ما هو لون العلم السعودي؟', choices: ['أخضر', 'أحمر', 'أزرق', 'أبيض'], answer: 'أخضر' },
+  { question: 'ما هي العبارة المكتوبة على العلم السعودي؟', choices: ['لا إله إلا الله محمد رسول الله', 'الله أكبر', 'بسم الله الرحمن الرحيم', 'السلام عليكم'], answer: 'لا إله إلا الله محمد رسول الله' },
+  { question: 'ما هو الحيوان الوطني في السعودية؟', choices: ['الجمل', 'الأسد', 'الصقر', 'الحصان'], answer: 'الصقر' },
+  { question: 'ما هو أكبر ميناء بحري في السعودية؟', choices: ['ميناء جدة الإسلامي', 'ميناء الدمام', 'ميناء ينبع', 'ميناء جازان'], answer: 'ميناء جدة الإسلامي' },
+  { question: 'أي منطقة تشتهر بالورود في السعودية؟', choices: ['الطائف', 'الرياض', 'القصيم', 'حائل'], answer: 'الطائف' },
+  { question: 'ما هو اسم أكبر صحراء في السعودية؟', choices: ['الربع الخالي', 'صحراء النفود', 'صحراء سيناء', 'صحراء الكبرى'], answer: 'الربع الخالي' },
+  { question: 'ما هو نوع الرقص الشعبي السعودي؟', choices: ['العرضة', 'التانغو', 'السامبا', 'الفلامنكو'], answer: 'العرضة' },
+  { question: 'ما هو اسم أكبر جامعة في السعودية؟', choices: ['جامعة الملك سعود', 'جامعة الأزهر', 'جامعة القاهرة', 'جامعة دمشق'], answer: 'جامعة الملك سعود' },
+  { question: 'ما هو اسم برج مشهور في الرياض؟', choices: ['برج المملكة', 'برج خليفة', 'برج إيفل', 'برج لندن'], answer: 'برج المملكة' },
+  { question: 'أي مدينة سعودية تُعرف بعروس البحر الأحمر؟', choices: ['جدة', 'مكة', 'الدمام', 'المدينة'], answer: 'جدة' },
+  { question: 'ما هو اسم المهرجان الثقافي الذي يقام في الجنادرية؟', choices: ['مهرجان الجنادرية', 'مهرجان الطائف', 'مهرجان الرياض', 'مهرجان جدة'], answer: 'مهرجان الجنادرية' }
+];
 
   function shuffle(arr) {
     for (let i = arr.length - 1; i > 0; i--) {
@@ -77,18 +94,25 @@
 
   // Build questions when CSV has Question/Answer columns (GENERAL.csv style)
   function buildFromQA(hmap, rows, count) {
+    // support variations of the 'type' header (e.g., 'question type')
     const qIdx = hmap['question'];
     const ansIdx = hmap['answer'];
     const choicesIdx = hmap['choices'];
-    const typeIdx = hmap['type'];
     const questions = [];
 
+    // find possible type header index
+    let typeIdx = undefined;
+    for (const k of ['type', 'question type', 'question_type', 'qtype']) {
+      if (k in hmap) { typeIdx = hmap[k]; break; }
+    }
+
     for (const r of rows) {
+      if (qIdx === undefined) break;
       if (!r[qIdx]) continue;
       const qText = r[qIdx];
-      let correct = ansIdx !== undefined ? (r[ansIdx] || '').trim() : '';
+      const correct = ansIdx !== undefined ? (r[ansIdx] || '').trim() : '';
       let choices = [];
-      
+
       // If choices column exists and is not '–', parse it (use database choices as-is)
       if (choicesIdx !== undefined && r[choicesIdx] && r[choicesIdx] !== '–') {
         const raw = r[choicesIdx];
@@ -96,30 +120,23 @@
         if (parts.length >= 2) choices = parts;
       }
 
-      // If choices column is '–' or empty (no pre-defined choices in database), skip this row
-      // Do not generate distractors—only use database-provided content
-      if (choices.length === 0) {
-        continue; // Skip rows without explicit choices
+      // ensure unique and at most 4 when choices were provided
+      if (choices.length > 0) {
+        choices = Array.from(new Set(choices)).slice(0, 4);
+        // ensure correct answer exists in choices
+        if (correct && !choices.includes(correct)) {
+          // replace first element with the correct answer to guarantee presence
+          choices[0] = correct;
+        }
       }
 
-      // ensure unique and at most 4
-      choices = Array.from(new Set(choices)).slice(0, 4);
-      if (!choices.includes(correct)) {
-        choices[0] = correct; // ensure correct present
-      }
-      
-      // only add if we have at least 2 choices
-      if (choices.length >= 2) {
-        shuffle(choices);
-        const qObj = { question: qText, choices, answer: correct };
-        if (typeIdx !== undefined) qObj.type = (rows[0] && rows[0][typeIdx]) ? (r[typeIdx] || '').trim() : (r[typeIdx] || '');
-        // include any type value present on this row
-        if (typeIdx !== undefined) qObj.type = (r[typeIdx] || '').trim();
-        questions.push(qObj);
-        if (questions.length >= count) break;
-      }
+      // Build question object. If no choices were provided in the CSV, return as open-ended (choices: []).
+      const qObj = { question: qText, choices: Array.isArray(choices) ? choices.slice() : [], answer: correct };
+      if (typeIdx !== undefined) qObj.type = (r[typeIdx] || '').trim();
+      questions.push(qObj);
+      if (questions.length >= count) break;
     }
-    return questions;
+    return questions.slice(0, count);
   }
 
   // Extract MCQ from embedded Arabic question block (Words/Phrases/Proverbs.csv style)
@@ -284,6 +301,23 @@
             return val.toLowerCase().indexOf(String(type).toLowerCase()) !== -1;
           });
         }
+        else {
+          // Fallback heuristic when no explicit Question Type header exists:
+          // use presence/absence of the Choices column to determine MCQ vs Open-ended rows.
+          const choicesKeys = ['choices', 'choice', 'options'];
+          const choicesKey = findHeaderKey(choicesKeys);
+          if (choicesKey !== null) {
+            const cidx = hmap[choicesKey];
+            const tl = String(type).toLowerCase();
+            if (tl.indexOf('mcq') !== -1 || tl.indexOf('multiple') !== -1 || tl.indexOf('one correct') !== -1) {
+              // keep rows that have explicit choices (not the '–' placeholder)
+              filteredRows = filteredRows.filter(r => r[cidx] && String(r[cidx]).trim() !== '' && String(r[cidx]).trim() !== '–');
+            } else if (tl.indexOf('open') !== -1 || tl.indexOf('fill') !== -1) {
+              // keep rows without explicit choices
+              filteredRows = filteredRows.filter(r => !r[cidx] || String(r[cidx]).trim() === '' || String(r[cidx]).trim() === '–');
+            }
+          }
+        }
       }
 
       if (category && String(category).toLowerCase() !== 'all') {
@@ -336,7 +370,68 @@
     }
   }
 
+  // fetchQuestionTypes(source) -> Promise<string[]>
+  // Returns distinct Question Type strings present in the CSV, or inferred types when missing.
+  async function fetchQuestionTypes(source) {
+    let file = 'data/Words.csv';
+    if (source && source !== 'Words') file = `data/${source}.csv`;
+    try {
+      const txt = await fetchText(file);
+      const parsed = parseCSV(txt);
+      const hmap = headerMap(parsed.header);
+      const out = new Set();
+
+      // look for explicit type headers
+      const typeKeys = ['type', 'question type', 'question_type', 'qtype', 'questiontype'];
+      let foundTypeKey = null;
+      for (const k of typeKeys) if (k in hmap) { foundTypeKey = k; break; }
+      if (foundTypeKey !== null) {
+        const idx = hmap[foundTypeKey];
+        for (const r of parsed.rows) {
+          const v = (r[idx] || '').trim();
+          if (v) out.add(v);
+        }
+        return Array.from(out).sort();
+      }
+
+      // fallback: infer types from choices column
+      const choicesKeys = ['choices', 'choice', 'options'];
+      let choicesKey = null;
+      for (const k of choicesKeys) if (k in hmap) { choicesKey = k; break; }
+      let hasMCQ = false, hasMulti = false, hasOpen = false;
+      const ansKey = ('answer' in hmap) ? hmap['answer'] : null;
+      for (const r of parsed.rows) {
+        if (choicesKey !== null) {
+          const c = (r[hmap[choicesKey]] || '').trim();
+          if (c && c !== '–') {
+            hasMCQ = true;
+            // detect multiple-correct by answer pattern (e.g., 'A and B', 'A, B', 'A and C')
+            if (ansKey !== null) {
+              const a = (r[ansKey] || '').toString();
+              if (/\band\b|,|and|\bs?and\b|\bوا\b/i.test(a) || /[A-D]\s*(and|,)/i.test(a)) {
+                hasMulti = true;
+              }
+            }
+          } else {
+            hasOpen = true;
+          }
+        } else {
+          // no choices column at all — assume open-ended
+          hasOpen = true;
+        }
+      }
+      if (hasOpen) out.add('Open-ended');
+      if (hasMCQ) out.add('MCQ (one correct)');
+      if (hasMulti) out.add('MCQ (multiple correct)');
+      return Array.from(out).sort();
+    } catch (e) {
+      console.warn('fetchQuestionTypes error:', e);
+      return [];
+    }
+  }
+
   window.fetchQuestions = fetchQuestions;
+  window.fetchQuestionTypes = fetchQuestionTypes;
   window.allQuestions = builtin.slice();
 
 })(window);

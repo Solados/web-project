@@ -16,14 +16,11 @@
   <!-- Header -->
   <header class="site-header">
    <!-- Navigation -->
-    <nav class="navbar" aria-label="Main navigation">
-     <a class="brand" href="#top" aria-label="Back to top">Saudi Culture</a>
-    <button class="menu-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Toggle menu">☰</button>
-      <!-- Nav list -->
-      <ul id="nav-links" class="nav-links">
-     <li><a href="sign/SignUp_LogIn_Form.html">Login</a></li>
-      <li><a href="QUIZ.html">Quizzes</a></li>
-          <li class="dropdown">
+   <nav class="navbar" aria-label="Main navigation">
+    <!-- Nav list -->
+    <ul id="nav-links" class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li class="dropdown">
         <a class="dropbtn">Regions</a>
         <!-- Regions dropdown list -->
         <ul class="dropdown-content">
@@ -34,8 +31,11 @@
           <li><a href="Central.html">Central Region</a></li>
         </ul>
       </li>
-     <li><a href="index.html">Home</a></li>
+      <li><a href="QUIZ.html">Quizzes</a></li>
+      <li><a href="sign/SignUp_LogIn_Form.html">Login</a></li>
     </ul>
+    <a class="brand" href="index.html" aria-label="Home">Saudi Culture</a>
+    <button class="menu-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Open/close menu">☰</button>
    </nav>
   </header>
 
@@ -114,7 +114,11 @@
   <!-- Footer -->
   <footer class="site-footer" aria-label="footer">
    <div class="container footer-grid">
-    <div>
+    <ul class="footer-links">
+     <li><a href="#top">Back to Top</a></li>
+     <li><a href="#main">Questions</a></li>
+    </ul>
+    <div style="text-align:right">
      <strong>Saudi Culture</strong>
      <p>© 2025 All rights reserved</p>
     </div>
@@ -173,13 +177,25 @@
     const lang = document.getElementById('langSelect') ? document.getElementById('langSelect').value : 'ar';
 
     // read UI filters
-    const type = document.getElementById('typeFilter') ? document.getElementById('typeFilter').value : 'all';
+    let type = document.getElementById('typeFilter') ? document.getElementById('typeFilter').value : 'all';
+    // Map UI shorthand to CSV Question Type strings used in the data files
+    function mapTypeFilter(val) {
+      if (!val) return 'all';
+      const v = String(val).toLowerCase();
+      if (v === 'all') return 'all';
+      if (v === 'mcq') return 'MCQ (one correct)';
+      if (v === 'multi' || v === 'multiple') return 'MCQ (multiple correct)';
+      if (v === 'fill' || v === 'open' || v === 'open-ended') return 'Open-ended';
+      // allow passing exact CSV strings as well
+      return val;
+    }
+    const mappedType = mapTypeFilter(type);
     const category = document.getElementById('categoryFilter') ? document.getElementById('categoryFilter').value : 'all';
 
     // try client-side CSV loader first (works without PHP)
     if (typeof fetchQuestions === 'function'){
       try{
-        const clientQ = await fetchQuestions(source, count, lang, type, category);
+          const clientQ = await fetchQuestions(source, count, lang, mappedType, category);
         if(Array.isArray(clientQ) && clientQ.length>0){
           selectedQuestions = clientQ.map(q => ({
             question: q.question,
@@ -204,7 +220,7 @@
     const timeout = setTimeout(() => controller.abort(), 6000); // 6s timeout
 
     try {
-      const qs = new URLSearchParams({ source: source, count: String(count), type: type || '', category: category || '' });
+      const qs = new URLSearchParams({ source: source, count: String(count), type: mappedType === 'all' ? '' : mappedType, category: category || '' });
       const resp = await fetch(`quiz.php?${qs.toString()}`, { signal: controller.signal });
       clearTimeout(timeout);
       if (resp.ok) {
@@ -259,7 +275,9 @@
       const box = document.createElement('div');
       box.className = 'feature-card';
 
-      let html = `<h3 dir="ltr">${i+1}. ${q.question}</h3>`;
+      // determine a short type label for the badge
+      const inferredType = (q.type && q.type.trim()) ? q.type.trim() : (Array.isArray(q.choices) && q.choices.length > 0 ? 'MCQ' : 'Open-ended');
+      let html = `<h3 dir="ltr">${i+1}. ${q.question} <span class="q-badge" style="font-size:.7rem;padding:.15rem .4rem;margin-left:.6rem;border-radius:4px;background:#efefef;color:#333;border:1px solid #ddd">${inferredType}</span></h3>`;
 
       // If the question has choices, render radios; otherwise render an open-answer textarea
       if (Array.isArray(q.choices) && q.choices.length > 0) {
@@ -349,6 +367,48 @@
       e.preventDefault(); 
       startQuiz(); 
     });
+
+    // Populate typeFilter dynamically using client discovery with server fallback
+    async function populateTypeFilter() {
+      const regionSelect = document.getElementById('regionFilter');
+      const typeSelect = document.getElementById('typeFilter');
+      if (!typeSelect || !regionSelect) return;
+      const src = regionSelect.value || 'Words';
+      // clear existing options
+      typeSelect.innerHTML = '';
+      const optAll = document.createElement('option'); optAll.value = 'all'; optAll.textContent = 'All Types';
+      typeSelect.appendChild(optAll);
+
+      let types = [];
+      if (typeof fetchQuestionTypes === 'function') {
+        try { types = await fetchQuestionTypes(src); } catch (e) { types = []; }
+      }
+      // server fallback
+      if ((!types || types.length === 0)) {
+        try {
+          const qs = new URLSearchParams({ action: 'types', source: src });
+          const resp = await fetch(`quiz.php?${qs.toString()}`);
+          if (resp.ok) {
+            const data = await resp.json(); if (data && Array.isArray(data.types)) types = data.types;
+          }
+        } catch (e) { /* ignore */ }
+      }
+
+      if (types && types.length > 0) {
+        for (const t of types) {
+          const o = document.createElement('option'); o.value = t; o.textContent = t; typeSelect.appendChild(o);
+        }
+      } else {
+        // fallback static options
+        const labels = [{v:'mcq',t:'Multiple Choice'},{v:'multi',t:'Multiple Answers (Choose more than one)'},{v:'fill',t:'Fill in the Blank'}];
+        for (const l of labels){ const o=document.createElement('option'); o.value=l.v; o.textContent=l.t; typeSelect.appendChild(o); }
+      }
+    }
+
+    // run on load and when region changes
+    populateTypeFilter();
+    const regionSelectEl = document.getElementById('regionFilter');
+    if (regionSelectEl) regionSelectEl.addEventListener('change', () => populateTypeFilter());
   });
   </script>
 
