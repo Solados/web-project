@@ -1,72 +1,140 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login/Signup Form</title>
+
+
+    <link rel="stylesheet" href="../assets/styles.css">
+
+    
     <link rel="stylesheet" href="SignUp_LogIn_Form.css">
+
+    
+    <style>
+        body {
+            background-image: url("../image/backgrounD.png");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            position: relative;
+        }
+
+        body::after {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background: rgba(255, 255, 255, 0.30);
+            pointer-events: none;
+        }
+    </style>
 </head>
-  <body>
 
-      <div class="container">
-          <div class="form-box login">
-              <form id="loginForm" onsubmit="handleLoginSubmit(event)" aria-label="Login form">
-                  <h1>Login</h1>
-                  <div class="input-box">
-                      <label for="email">E-mail</label>
-                  <input id="email" name="email" type="email" placeholder="E-mail" required />
-                      <i class='bx bxs-envelope' ></i>
-                  </div>
-                  
-                  <div class="input-box">
-                       <label for="password">Password</label>
-                  <input id="password" name="password" type="password" placeholder="password" required />
-                      <i class='bx bxs-lock-alt' ></i>
-                  </div>
-                  <button type="submit" class="btn">Login</button>
-                  <div id="loginError" style="color: red; margin-top: 10px; text-align: center; display: none;"></div>
-              </form>
-          </div>
+<body>
 
-          <div class="form-box register">
-              <form action="save_signup.php" method="post" onsubmit="return validateForm()" aria-label="Sign-up form">
-                  <h1>Sign in</h1>
-                  <div class="input-box">
-                      <label for="username">Username</label>
-                  <input id="username" name="username" type="text" placeholder="username" required />
-                      <i class='bx bxs-user'></i>
-                  </div>
+   
+    <header class="site-header">
+        <nav class="navbar" aria-label="Main navigation">
+            <a class="brand" href="../index.html" aria-label="Back to Home">Saudi Culture</a>
 
-                  <div class="input-box">
-                  <label for="email">E-mail</label>
-                  <input id="email" name="email" type="email" placeholder="E-mail" required />
-                      <i class='bx bxs-envelope' ></i>
-                  </div>
+            <button class="menu-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Toggle menu">☰</button>
 
-                  <div class="input-box">
-                        <label for="password">Password</label>
-                  <input id="password" name="password" type="password" placeholder="password" required />
-                      <i class='bx bxs-lock-alt' ></i>
-                  </div>
-                  <button type="submit" class="btn">Register</button>
-              </form>
-          </div>
+            <ul id="nav-links" class="nav-links">
+                <li><a href="SignUp_LogIn_Form.html">Login</a></li>
+                <li><a href="../QUIZ.html">Quizzes</a></li>
 
-          <div class="toggle-box">
-              <div class="toggle-panel toggle-left">
-                  <h1>Hello, Welcome!</h1>
-                  <p>Don't have an account?</p>
-                  <button class="btn register-btn">Register</button>
-              </div>
+                <li class="dropdown">
+                    <a class="dropbtn">Regions</a>
+                    <ul class="dropdown-content">
+                        <li><a href="../North.html">Northern Region</a></li>
+                        <li><a href="../South.html">Southern Region</a></li>
+                        <li><a href="../West.html">Western Region</a></li>
+                        <li><a href="../East.html">Eastern Region</a></li>
+                        <li><a href="../Central.html">Central Region</a></li>
+                    </ul>
+                </li>
 
-              <div class="toggle-panel toggle-right">
-                  <h1>Welcome Back!</h1>
-                  <p>Already have an account?</p>
-                  <button class="btn login-btn">Login</button>
-              </div>
-          </div>
-      </div>
+                <li><a href="../index.html">Home</a></li>
+            </ul>
+        </nav>
+    </header>
+  
 
-      <script src="SignUp_LogIn_Form.js"></script>
-  </body>
+    
+ 
+    <div class="container">
+
+        <!-- Login Form -->
+        <div class="form-box login">
+            <form id="loginForm" onsubmit="handleLoginSubmit(event)" aria-label="Login form">
+                <h1>Login</h1>
+
+                <div class="input-box">
+                    <label for="email">E-mail</label>
+                    <input id="email" name="email" type="email" placeholder="E-mail" required />
+                    <i class='bx bxs-envelope'></i>
+                </div>
+
+                <div class="input-box">
+                    <label for="password">Password</label>
+                    <input id="password" name="password" type="password" placeholder="password" required />
+                    <i class='bx bxs-lock-alt'></i>
+                </div>
+
+                <button type="submit" class="btn">Login</button>
+
+                <div id="loginError" style="color: red; margin-top: 10px; text-align: center; display: none;"></div>
+            </form>
+        </div>
+
+        <!-- Register Form -->
+        <div class="form-box register">
+            <form action="save_signup.php" method="post" onsubmit="return validateForm()" aria-label="Sign-up form">
+                <h1>Sign in</h1>
+
+                <div class="input-box">
+                    <label for="username">Username</label>
+                    <input id="username" name="username" type="text" placeholder="username" required />
+                    <i class='bx bxs-user'></i>
+                </div>
+
+                <div class="input-box">
+                    <label for="email">E-mail</label>
+                    <input id="email" name="email" type="email" placeholder="E-mail" required />
+                    <i class='bx bxs-envelope'></i>
+                </div>
+
+                <div class="input-box">
+                    <label for="password">Password</label>
+                    <input id="password" name="password" type="password" placeholder="password" required />
+                    <i class='bx bxs-lock-alt'></i>
+                </div>
+
+                <button type="submit" class="btn">Register</button>
+            </form>
+        </div>
+
+        <!-- Toggle Panel -->
+        <div class="toggle-box">
+            <div class="toggle-panel toggle-left">
+                <h1>Hello, Welcome!</h1>
+                <p>Don't have an account?</p>
+                <button class="btn register-btn">Register</button>
+            </div>
+
+            <div class="toggle-panel toggle-right">
+                <h1>Welcome Back!</h1>
+                <p>Already have an account?</p>
+                <button class="btn login-btn">Login</button>
+            </div>
+        </div>
+
+    </div>
+
+  
+    <script src="SignUp_LogIn_Form.js"></script>
+
+</body>
 </html>
+
