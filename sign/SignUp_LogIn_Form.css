@@ -54,7 +54,7 @@ body{
 .container h1{
     font-size: 28px;
     margin: 0 0 0.5rem;
-    color: var(--green-700);
+    color: var(--gold-500);
     font-weight: 700;
 }
 
@@ -279,4 +279,15 @@ body {
 
 .container {
   margin-top: 120px; /
+}
+.toggle-panel .btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 160px;
+    height: 46px;
+    background: transparent;
+    border: 2px solid #fff;
+    box-shadow: none;
+    font-size: 18px; 
 }

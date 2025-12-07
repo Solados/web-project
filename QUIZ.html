@@ -10,6 +10,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/styles.css">
+  <link rel="stylesheet" href="assets/quiz-style.css">
+
  </head>
  <!-- Body -->
  <body>
@@ -42,66 +44,68 @@
   <!-- Main -->
   <main id="main">
    <!-- Quiz intro -->
-   <section class="section section-intro">
-    <div class="container">
+   <section class="quiz-section">
+  <div class="quiz-gold-box">
 
-    <h2>Test your knowledge</h2>
-    <p>Choose the number of questions then start the quiz. Results will be shown after completion.</p>
+    <h2 class="quiz-gold-title">Test your knowledge</h2>
+    <p class="quiz-gold-sub">
+      Choose the number of questions then start the quiz.
+    </p>
 
-     <div class="two-col" style="margin-top:1rem">
-      <!-- Settings Panel -->
-      <div>
-       <!-- Number of questions -->
-       <label>Select number of questions:</label>
-       <select id="questionCount">
-         <option value="5">5 questions</option>
-         <option value="10">10 questions</option>
-         <option value="15">15 questions</option>
-         <option value="20">20 questions</option>
-       </select>
+    <label class="quiz-gold-label">Select number of questions:</label>
+    <div class="select-wrapper">
+      <select id="questionCount" class="quiz-gold-select">
+        <option value="5">5 questions</option>
+        <option value="10">10 questions</option>
+        <option value="15">15 questions</option>
+        <option value="20">20 questions</option>
+      </select>
+    </div>
 
-       <!-- Region filter: mapped to CSV filenames (see data/) -->
-       <label>Select region/source:</label>
-       <select id="regionFilter">
-         <option value="Words">Built-in (fallback)</option>
-         <option value="GENERAL">GENERAL (English)</option>
-         <option value="CENTERAL">Central</option>
-         <option value="NORTH">NORTH (English)</option>
-         <option value="SOUTH">SOUTH (English)</option>
-         <option value="EAST">EAST (English)</option>
-         <option value="WEST">WEST (English)</option>
-         <option value="Words">Words (Arabic)</option>
-         <option value="Phrases">Phrases (Arabic)</option>
-         <option value="Proverbs">Proverbs (Arabic)</option>
-         <option value="RANDOM">Random Region</option>
-       </select>
+    <label class="quiz-gold-label">Select region/source:</label>
+    <div class="select-wrapper">
+      <select id="regionFilter" class="quiz-gold-select">
+        <option value="Words">Built-in (fallback)</option>
+        <option value="GENERAL">GENERAL</option>
+        <option value="CENTERAL">Central</option>
+        <option value="NORTH">North</option>
+        <option value="SOUTH">South</option>
+        <option value="EAST">East</option>
+        <option value="WEST">West</option>
+        <option value="Phrases">Phrases</option>
+        <option value="Proverbs">Proverbs</option>
+        <option value="RANDOM">Random</option>
+      </select>
+    </div>
 
-       <!-- Question Type -->
-       <label style="margin-top:12px;display:block">Select question type:</label>
-       <select id="typeFilter">
-         <option value="all">All Types</option>
-         <option value="mcq">Multiple Choice</option>
-         <option value="fill">Fill in the Blank</option>
-         <option value="multi">Multiple Answers (Choose more than one)</option>
-       </select>
+    <label class="quiz-gold-label">Select question type:</label>
+    <div class="select-wrapper">
+      <select id="typeFilter" class="quiz-gold-select">
+        <option value="all">All Types</option>
+        <option value="mcq">Multiple Choice</option>
+        <option value="fill">Fill in the Blank</option>
+        <option value="multi">Multiple Answers</option>
+      </select>
+    </div>
 
-       <!-- Category Filter -->
-       <label style="margin-top:12px;display:block">Select category:</label>
-       <select id="categoryFilter">
-         <option value="all">All Categories</option>
-         <option value="food">Food</option>
-         <option value="clothes">Clothes</option>
-         <option value="celebration">Celebration</option>
-         <option value="games">Entertainment</option>
-       </select>
+    <label class="quiz-gold-label">Select category:</label>
+    <div class="select-wrapper">
+      <select id="categoryFilter" class="quiz-gold-select">
+        <option value="all">All Categories</option>
+        <option value="food">Food</option>
+        <option value="clothes">Clothes</option>
+        <option value="celebration">Celebration</option>
+        <option value="games">Entertainment</option>
+      </select>
+    </div>
+
+    <!-- زر البداية يجب أن يكون هنا داخل الصندوق -->
+    <button id="startBtn" class="quiz-gold-btn">Start Quiz</button>
+
+  </div>
+</section>
 
 
-       <!-- Start Quiz Button -->
-       <div style="margin-top:12px">
-         <a class="btn btn-primary" id="startBtn" href="#quiz">Start Quiz</a>
-       </div>
-      </div>
-      </section>
   <!-- Quiz Section -->
   <section id="quiz" class="section section-alt">
     <div class="container">

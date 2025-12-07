@@ -1,0 +1,262 @@
+:root {
+  --gold-light: #e8cfa3;
+  --gold: #d7b56d;
+  --gold-dark: #b38a42;
+
+  --sand-bg: #faf7f1;
+  --sand-border: #e6decd;
+
+  --text-main: #4b2d1b;
+  --text-sub: #6d4a34;
+
+  --shadow-gold: 0 8px 28px rgba(215,181,109,0.20);
+  --shadow-gold-hover: 0 12px 38px rgba(215,181,109,0.32);
+}
+
+/* -------------------------------
+   🌟 BACKGROUND: Animated Gold Gradient
+-------------------------------- */
+body {
+    background: linear-gradient(135deg, #f9f3e4, #e8cfa3, #d7b56d);
+    background-size: 300% 300%;
+    animation: gradientMove 12s ease-in-out infinite;
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* حركة الانزلاق الهادئ للخلفية */
+@keyframes gradientMove {
+    0%   { background-position: 0% 50%; }
+    50%  { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* --------------------------------
+   🌟 MOVING GOLD LINES (Soft Waves)
+--------------------------------- */
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+
+    background: repeating-linear-gradient(
+        135deg,
+        rgba(255,255,255,0.10) 0px,
+        rgba(255,255,255,0.10) 2px,
+        rgba(255,255,255,0.0) 2px,
+        rgba(255,255,255,0.0) 20px
+    );
+
+    animation: linesMove 18s linear infinite;
+    opacity: 0.45;
+}
+
+/* حركة الخطوط الذهبية */
+@keyframes linesMove {
+    0%   { transform: translateX(-20px); }
+    50%  { transform: translateX(20px); }
+    100% { transform: translateX(-20px); }
+}
+
+
+/* ============================
+      QUIZ GOLD CONTAINER
+   ============================ */
+
+.quiz-section {
+  display: flex;
+  justify-content: center;
+  padding-top: 140px;
+}
+
+.quiz-gold-box {
+  max-width: 500px;
+  width: 100%;
+  background: #ffffff;
+  padding: 28px 35px;
+  border-radius: 20px;
+  border: 1px solid rgba(215,181,109,0.35);
+  box-shadow: var(--shadow-gold);
+  transition: 0.3s ease;
+  animation: goldFadeIn 0.9s ease-out,
+             goldGlow 3s ease-in-out infinite;
+  position: relative;
+}
+
+.quiz-gold-box:hover {
+  box-shadow: var(--shadow-gold-hover);
+}
+
+@keyframes goldFadeIn {
+  0% { opacity: 0; transform: translateY(18px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes goldGlow {
+  0% { box-shadow: 0 10px 32px rgba(215,181,109,0.22); }
+  50% { box-shadow: 0 14px 40px rgba(215,181,109,0.38); }
+  100% { box-shadow: 0 10px 32px rgba(215,181,109,0.22); }
+}
+
+.quiz-gold-box::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 20px;
+  border: 1px solid rgba(215,181,109,0.45);
+  pointer-events: none;
+  animation: borderGlow 3.5s ease-in-out infinite;
+}
+
+@keyframes borderGlow {
+  0% { opacity: 0.4; }
+  50% { opacity: 0.9; }
+  100% { opacity: 0.4; }
+}
+
+/* ============================
+      TITLES & TEXT
+   ============================ */
+
+.quiz-gold-title {
+  text-align: center;
+  color: var(--text-main);
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.quiz-gold-sub {
+  text-align: center;
+  color: var(--text-sub);
+  font-size: 15px;
+  margin-bottom: 22px;
+}
+
+/* ============================
+      PREMIUM SELECT
+   ============================ */
+
+.select-wrapper {
+  position: relative;
+  display: block;
+    margin-bottom: 12px;
+}
+
+.quiz-gold-select {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1.8px solid rgba(215,181,109,0.55);
+  background: linear-gradient(180deg, #fff9ef, #f7e9cd);
+  color: #4b2d1b;
+  font-size: 15px;
+  appearance: none;
+  cursor: pointer;
+  transition: .25s ease;
+
+  background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L6 6L11 1' stroke='%23b38a42' stroke-width='2'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+}
+
+.quiz-gold-select:hover {
+  border-color: #d7b56d;
+  box-shadow: 0 0 6px rgba(215,181,109,0.45);
+}
+
+.quiz-gold-select:focus {
+  outline: none;
+  border-color: #b38a42;
+  box-shadow: 0 0 0 4px rgba(215,181,109,0.35);
+}
+
+/* Animation for dropdown items */
+.select-wrapper select option {
+  animation: dropdownFade 0.25s ease forwards;
+  transform-origin: top;
+}
+
+@keyframes dropdownFade {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ============================
+      BUTTON
+   ============================ */
+
+.quiz-gold-btn:hover {
+  transform: translateY(-3px);
+}
+
+.quiz-gold-btn::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -120%;
+  width: 80%;
+  height: 100%;
+  background: linear-gradient(120deg, transparent, rgba(255,255,255,0.6), transparent);
+  transform: skewX(-25deg);
+  animation: shimmer 2.3s infinite;
+}
+
+@keyframes shimmer {
+  0% { left: -120%; }
+  100% { left: 150%; }
+}
+
+.quiz-section {
+    display: flex;
+      align-items: center;
+    padding: 80px 0;
+    min-height: 70vh;
+}
+
+.quiz-gold-btn {
+margin-top: 18px;
+    margin-bottom: 10px;
+    width: 100%;
+  display: block;
+  padding: 12px 0;
+  margin-top: 16px;
+
+  font-size: 17px;
+  font-weight: 700;
+
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+
+  background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+  color: #fff;
+
+  box-shadow: 0 5px 16px rgba(179,138,66,0.35);
+  transition: 0.25s ease;
+
+  position: relative;
+  overflow: hidden;
+}
+
+.quiz-gold-btn:hover {
+  transform: translateY(-2px);
+}
+
+.quiz-gold-btn::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -120%;
+  width: 80%;
+  height: 100%;
+  background: linear-gradient(120deg, transparent, rgba(255,255,255,0.6), transparent);
+  transform: skewX(-25deg);
+  animation: shimmer 2.3s infinite;
+}
+
+@keyframes shimmer {
+  0% { left: -120%; }
+  100% { left: 150%; }
+}
