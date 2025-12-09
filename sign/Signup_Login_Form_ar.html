@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل الدخول / إنشاء حساب</title>
+
+    <link rel="stylesheet" href="../assets/styles.css">
+    <link rel="stylesheet" href="SignUp_LogIn_Form.css">
+
+    <style>
+        .toggle-panel .btn {
+    white-space: normal !important;  /* يسمح للنص بالالتفاف داخل الإطار */
+    width: 120px !important;         /* ضبط عرض مناسب للزر */
+    padding: 10px 5px !important;    /* تقليل مساحة الجوانب */
+    font-size: 15px !important;      /* تصغير بسيط للخط */
+    text-align: center;
+}
+            .form-box {
+        width: px !important; /* تكبير عرض الإطار */
+    }
+
+    .form-box h1 {
+        font: size 18px; ; /* تقليل حجم عنوان تسجيل الدخول */
+        text-align: center;
+        white-space: normal; /* يسمح للنص أن يلتف */
+    }
+        body {
+            background-image: url("../image/backgrounD.png");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            position: relative;
+        }
+
+        body::after {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background: rgba(255, 255, 255, 0.30);
+            pointer-events: none;
+        }
+
+        /* RTL Adjustment */
+        .navbar {
+            direction: rtl;
+        }
+        .nav-links {
+            direction: rtl;
+        }
+        .nav-links li a {
+            text-align: right;
+        }
+
+        .dropdown-content {
+            text-align: right;
+            direction: rtl;
+        }
+
+        .input-box {
+            text-align: right;
+        }
+
+        label {
+            display: block;
+            text-align: right;
+        }
+
+        .toggle-panel {
+            text-align: left;
+        }
+           /* محلي: تعديلات RTL لضمان توافق العناصر */
+    body { direction: rtl; text-align: right; }
+    .navbar { flex-direction: row-reverse; }
+    .nav-links { flex-direction: row-reverse; }
+    .dropdown-content { right: 0; left: auto; text-align: right; }
+    .carousel .content { text-align: right; direction: rtl; }
+    .thumbnail .content { text-align: right; direction: rtl; }
+    /* حافظت على بعض عناصر الـ qs-pagination لعرض أرقام الصفحات بشكل منطقي */
+    .qs-pagination { direction: ltr; }
+
+    </style>
+</head>
+
+<body>
+
+    <!-- Header -->
+  <header class="site-header">
+    <nav class="navbar" aria-label="التنقل الرئيسي">
+      <a class="brand" href="../index-ar.html" aria-label="العودة للرئيسية">الثقافة السعودية</a>
+      <button class="menu-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="قائمة">☰</button>
+
+      <ul id="nav-links" class="nav-links">
+
+        <li><a href="Signup_Login_Form_ar.html">تسجيل الدخول</a></li>
+        <li><a href="../QUIZ-ar.html">الاختبارات</a></li>
+
+        <li class="dropdown">
+          <a class="dropbtn">المناطق</a>
+          <ul class="dropdown-content" role="menu">
+            <li><a href="../North-ar.html" aria-current="page">المنطقة الشمالية</a></li>
+            <li><a href="../South-ar.html">المنطقة الجنوبية</a></li>
+            <li><a href="../West-ar.html">المنطقة الغربية</a></li>
+            <li><a href="../East-ar.html">المنطقة الشرقية</a></li>
+            <li><a href="../Central-ar.html">المنطقة الوسطى</a></li>
+          </ul>
+        </li>
+
+        <li><a href="../index-ar.html">الرئيسية</a></li>
+                        <!-- زر تبديل اللغة — يفتح الصفحة الإنجليزية المطابقة -->
+        <li><a href="SignUp_LogIn_Form.html" style="font-weight:700">English</a></li>
+
+
+      </ul>
+    </nav>
+  </header>
+
+    <div class="container">
+
+        <!-- Login Form -->
+        <div class="form-box login">
+            <form id="loginForm" onsubmit="handleLoginSubmit(event)" aria-label="Login form">
+                <h1>تسجيل الدخول</h1>
+
+                <div class="input-box">
+                    <label for="email">البريد الإلكتروني</label>
+                    <input id="email" name="email" type="email" placeholder="البريد الإلكتروني" required />
+                </div>
+
+                <div class="input-box">
+                    <label for="password">كلمة المرور</label>
+                    <input id="password" name="password" type="password" placeholder="كلمة المرور" required />
+                </div>
+
+                <button type="submit" class="btn">تسجيل الدخول</button>
+
+                <div id="loginError" style="color: red; margin-top: 10px; text-align: center; display: none;"></div>
+            </form>
+        </div>
+
+        <!-- Register Form -->
+        <div class="form-box register">
+            <form action="save_signup.php" method="post" onsubmit="return validateForm()" aria-label="Sign-up form">
+                <h1>إنشاء حساب</h1>
+
+                <div class="input-box">
+                    <label for="username">اسم المستخدم</label>
+                    <input id="username" name="username" type="text" placeholder="اسم المستخدم" required />
+                </div>
+
+                <div class="input-box">
+                    <label for="email">البريد الإلكتروني</label>
+                    <input id="email" name="email" type="email" placeholder="البريد الإلكتروني" required />
+                </div>
+
+                <div class="input-box">
+                    <label for="password">كلمة المرور</label>
+                    <input id="password" name="password" type="password" placeholder="كلمة المرور" required />
+                </div>
+
+                <button type="submit" class="btn">تسجيل</button>
+            </form>
+        </div>
+
+        <!-- Toggle Panel -->
+        <div class="toggle-box">
+
+            <div class="toggle-panel toggle-left">
+                <h1>مرحباً بك!</h1>
+                <p>ليس لديك حساب؟</p>
+                <button class="btn register-btn">إنشاء حساب</button>
+            </div>
+
+            <div class="toggle-panel toggle-right">
+                <h1>مرحباً بعودتك!</h1>
+                <p>هل لديك حساب مسبقاً؟</p>
+                <button class="btn login-btn">تسجيل الدخول</button>
+            </div>
+
+        </div>
+
+    </div>
+
+    <script src="SignUp_LogIn_Form.js"></script>
+
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
