@@ -221,6 +221,7 @@ const builtin = [
       if (keys.length >= 2) meaningIdx = 1;
     }
 
+    const hasChoicesColumn = Object.keys(hmap).some(k => ['choices', 'choice', 'options'].includes(k));
     const questions = [];
     const questionCols = Object.keys(hmap).filter(k => /question/i.test(k) || /سؤال/i.test(k));
 
@@ -244,22 +245,29 @@ const builtin = [
     if (questions.length < count) {
       const items = rows.map(r => ({ term: r[termIdx] || '', meaning: (meaningIdx !== undefined ? r[meaningIdx] : '') || '' })).filter(x => x.term && x.meaning);
       if (items.length > 0) {
-        shuffle(items);
-        const poolMeanings = items.map(i => i.meaning);
-        for (const it of items) {
-          if (questions.length >= count) break;
-          const correct = it.meaning;
-          const pool = poolMeanings.filter(m => m && m !== correct);
-          shuffle(pool);
-          const distractors = pool.slice(0, 3);
-          let choices = [correct].concat(distractors).slice(0, 4);
-          shuffle(choices);
-          const qText = (lang === 'en') ? `What is the meaning of "${it.term}"?` : `ما معنى "${it.term}"؟`;
-          const qObj = { question: qText, choices, answer: correct };
-          if (typeIdx !== undefined) qObj.type = (it.type || '').trim();
-          questions.push(qObj);
+          shuffle(items);
+          const poolMeanings = items.map(i => i.meaning);
+          for (const it of items) {
+            if (questions.length >= count) break;
+            const correct = it.meaning;
+            const pool = poolMeanings.filter(m => m && m !== correct);
+            shuffle(pool);
+            // If the source CSV does not include an explicit choices/options column
+            // do not synthesize/pad extra options — leave as open-ended (no choices).
+            let qObj;
+            const qText = (lang === 'en') ? `What is the meaning of "${it.term}"?` : `ما معنى "${it.term}"؟`;
+            if (!hasChoicesColumn) {
+              qObj = { question: qText, choices: [], answer: correct };
+            } else {
+              const distractors = pool.slice(0, 3);
+              let choices = [correct].concat(distractors).slice(0, 4);
+              shuffle(choices);
+              qObj = { question: qText, choices, answer: correct };
+            }
+            if (typeIdx !== undefined) qObj.type = (it.type || '').trim();
+            questions.push(qObj);
+          }
         }
-      }
     }
 
     return questions.slice(0, count);
@@ -270,14 +278,20 @@ const builtin = [
   async function fetchQuestions(source, count, lang, type, category) {
     count = Number(count) || 5;
     lang = String(lang || 'ar');
-    let file = 'data/Words.csv';
-    if (source && source !== 'Words') file = `data/${source}.csv`;
+    // Determine the correct data directory prefix depending on page location.
+    // If the page is served from the `quiz/` folder, use `../data/`, otherwise `data/`.
+    const _pathname = (window.location && window.location.pathname) ? window.location.pathname : '';
+    const dataPrefix = (_pathname.split && _pathname.split('/').indexOf('quiz') !== -1) ? '../data/' : 'data/';
+    let file = dataPrefix + 'Words.csv';
+    if (source && source !== 'Words') file = `${dataPrefix}${source}.csv`;
 
     try {
       const txt = await fetchText(file);
       const parsed = parseCSV(txt);
       if (!parsed.header || parsed.header.length === 0) throw new Error('No header');
       const hmap = headerMap(parsed.header);
+
+      const hasChoicesColumn = Object.keys(hmap).some(k => ['choices', 'choice', 'options'].includes(k));
 
       // filter rows client-side based on type/category if possible
       let filteredRows = parsed.rows.slice();
@@ -352,10 +366,15 @@ const builtin = [
           const row = parsed.rows[i];
           const q = row[0] || ('Question ' + (i + 1));
           const a = row[1] || pool[i] || 'Answer';
-          const distract = pool.filter(x => x !== a).slice(0, 3);
-          let choices = [a].concat(distract).slice(0, 4);
-          shuffle(choices);
-          const qObj = { question: (lang === 'en' ? q : q), choices, answer: a };
+          let qObj;
+          if (!hasChoicesColumn) {
+            qObj = { question: (lang === 'en' ? q : q), choices: [], answer: a };
+          } else {
+            const distract = pool.filter(x => x !== a).slice(0, 3);
+            let choices = [a].concat(distract).slice(0, 4);
+            shuffle(choices);
+            qObj = { question: (lang === 'en' ? q : q), choices, answer: a };
+          }
           if (typeIdx !== undefined) qObj.type = (row[typeIdx] || '').trim();
           questions.push(qObj);
         }
@@ -373,8 +392,10 @@ const builtin = [
   // fetchQuestionTypes(source) -> Promise<string[]>
   // Returns distinct Question Type strings present in the CSV, or inferred types when missing.
   async function fetchQuestionTypes(source) {
-    let file = 'data/Words.csv';
-    if (source && source !== 'Words') file = `data/${source}.csv`;
+    const _p2 = (window.location && window.location.pathname) ? window.location.pathname : '';
+    const dataPrefix2 = (_p2.split && _p2.split('/').indexOf('quiz') !== -1) ? '../data/' : 'data/';
+    let file = dataPrefix2 + 'Words.csv';
+    if (source && source !== 'Words') file = `${dataPrefix2}${source}.csv`;
     try {
       const txt = await fetchText(file);
       const parsed = parseCSV(txt);

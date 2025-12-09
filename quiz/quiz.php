@@ -21,7 +21,11 @@ if (!preg_match('/^[A-Za-z0-9_\-]+$/', $source)) {
 
 $count = max(1, min(100, $count));
 
-$dataDir = __DIR__ . DIRECTORY_SEPARATOR . 'data';
+$dataDir = realpath(__DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'data');
+if ($dataDir === false) {
+    // fallback to previous relative path (best-effort)
+    $dataDir = __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'data';
+}
 $csvFile = $dataDir . DIRECTORY_SEPARATOR . $source . '.csv';
 
 if (!file_exists($csvFile) || !is_readable($csvFile)) {
