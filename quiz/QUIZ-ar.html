@@ -160,7 +160,8 @@
     const count = Number(document.getElementById('questionCount').value) || 5;
     const regionSelect = document.getElementById('regionFilter');
     const regionValue = regionSelect ? regionSelect.value : 'Words';
-    const regionFiles = ['GENERAL','CENTERAL','NORTH','SOUTH','EAST','WEST'];
+    // Arabic page only uses these datasets
+    const regionFiles = ['Words','Phrases','Proverbs'];
 
     let source = 'Words';
     if (regionValue === 'RANDOM') {
@@ -359,12 +360,21 @@
       typeSelect.innerHTML = '';
       const optAll = document.createElement('option'); optAll.value = 'all'; optAll.textContent = 'كل الأنواع';
       typeSelect.appendChild(optAll);
+      // Always include the common UI filters for the Arabic page (Arabic labels)
+      const staticLabels = [
+        { v: 'mcq', t: 'اختيار من متعدد' },
+        { v: 'multi', t: 'اختيارات متعددة (اختَر أكثر من واحد)' },
+        { v: 'fill', t: 'املأ الفراغ' }
+      ];
+      for (const l of staticLabels) {
+        const o = document.createElement('option'); o.value = l.v; o.textContent = l.t; typeSelect.appendChild(o);
+      }
 
+      // Try to discover data-driven types and append them (don't remove the static UI labels).
       let types = [];
       if (typeof fetchQuestionTypes === 'function') {
         try { types = await fetchQuestionTypes(src); } catch (e) { types = []; }
       }
-
       if ((!types || types.length === 0)) {
         try {
           const qs = new URLSearchParams({ action: 'types', source: src });
@@ -376,16 +386,14 @@
       }
 
       if (types && types.length > 0) {
+        // Avoid adding duplicates: only append types whose text/value is not already present
+        const existing = new Set(Array.from(typeSelect.options).map(o => String(o.value)));
         for (const t of types) {
-          const o = document.createElement('option'); o.value = t; o.textContent = t; typeSelect.appendChild(o);
+          if (!existing.has(String(t))) {
+            const o = document.createElement('option'); o.value = t; o.textContent = t; typeSelect.appendChild(o);
+            existing.add(String(t));
+          }
         }
-      } else {
-        const labels = [
-          {v:'mcq',t:'اختيار من متعدد'},
-          {v:'multi',t:'اختيارات متعددة (اختَر أكثر من واحد)'},
-          {v:'fill',t:'املأ الفراغ'}
-        ];
-        for (const l of labels){ const o=document.createElement('option'); o.value=l.v; o.textContent=l.t; typeSelect.appendChild(o); }
       }
     }
 

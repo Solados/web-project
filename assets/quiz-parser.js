@@ -68,19 +68,60 @@ const builtin = [
   }
 
   // parse a CSV and return {header:[], rows:[[]]}
+  // Robust parser: supports quoted fields that contain commas and newlines.
   function parseCSV(text) {
-    const lines = text.split(/\r?\n/).filter(l => l.trim() !== '');
-    if (lines.length === 0) return { header: [], rows: [] };
-    const header = parseCSVLine(lines[0]);
+    if (!text || typeof text !== 'string') return { header: [], rows: [] };
     const rows = [];
-    for (let i = 1; i < lines.length; i++) {
-      try {
-        rows.push(parseCSVLine(lines[i]));
-      } catch (e) {
-        // skip malformed
+    let field = '';
+    let row = [];
+    let inQuote = false;
+    for (let i = 0; i < text.length; i++) {
+      const ch = text[i];
+      const next = text[i + 1];
+      if (ch === '"') {
+        if (inQuote && next === '"') {
+          // escaped quote
+          field += '"';
+          i++; // skip escaped quote
+          continue;
+        }
+        inQuote = !inQuote;
+        continue;
       }
+      if (!inQuote && ch === ',') {
+        row.push(field);
+        field = '';
+        continue;
+      }
+      if (!inQuote && (ch === '\n' || ch === '\r')) {
+        // handle CRLF
+        if (ch === '\r' && text[i + 1] === '\n') { i++; }
+        row.push(field);
+        rows.push(row);
+        row = [];
+        field = '';
+        continue;
+      }
+      field += ch;
     }
-    return { header, rows };
+    // push last field/row
+    // if there is any leftover (including possible final newline-less row)
+    if (inQuote) {
+      // unterminated quote — try to salvage
+      // treat remaining field as-is
+    }
+    if (field !== '' || row.length > 0) {
+      row.push(field);
+      rows.push(row);
+    }
+
+    if (rows.length === 0) return { header: [], rows: [] };
+    // normalize header and rows (trim but preserve internal spacing)
+    const header = rows[0].map(s => (s || '').toString().trim());
+    const dataRows = rows.slice(1).map(r => r.map(s => (s || '').toString().trim()));
+    // filter out completely empty rows
+    const filtered = dataRows.filter(r => r.some(c => c !== ''));
+    return { header, rows: filtered };
   }
 
   // normalize header name -> index map (lowercase trimmed)
@@ -163,33 +204,45 @@ const builtin = [
       }
     }
 
-    // find choices (lines with أ) ب) ج) د) or A) B) C) D))
+    // find choices (Arabic أ ب ج د or Latin A B C D with ) or . markers)
     for (const line of lines) {
       let match;
-      if ((match = line.match(/^[أ][\))]?\s*(.+)$/))) {
-        choices.push(match[1].trim());
-      } else if ((match = line.match(/^[ب][\))]?\s*(.+)$/))) {
-        choices.push(match[1].trim());
-      } else if ((match = line.match(/^[ج][\))]?\s*(.+)$/))) {
-        choices.push(match[1].trim());
-      } else if ((match = line.match(/^[د][\))]?\s*(.+)$/))) {
-        choices.push(match[1].trim());
+      // Arabic markers: أ ب ج د (with optional ) or ) or .)
+      if ((match = line.match(/^[\s\-]*([أابجد])\s*[)\.\-]\s*(.+)$/i))) {
+        choices.push(match[2].trim());
+        continue;
+      }
+      // Latin markers A B C D (A) or A. or A - )
+      if ((match = line.match(/^[\s\-]*([A-D])\s*[)\.\-]\s*(.+)$/i))) {
+        choices.push(match[2].trim());
+        continue;
+      }
+      // Some files list 'الخيارات:' followed by indented lines without markers; capture lines that look like option lines (start with Arabic letter then ) without space)
+      if ((match = line.match(/^[\s]*[A-Za-zأبجد][\)\.\-]?\s*(.+)$/i))) {
+        // only add if it looks like a short option (heuristic)
+        const txt = match[1].trim();
+        if (txt && txt.length < 200) choices.push(txt);
       }
     }
 
     // find correct answer
     for (const line of lines) {
       if (/الإجابة\s*الصحيحة\s*:/i.test(line)) {
-        const match = line.match(/الإجابة\s*الصحيحة\s*:\s*([أبجد])|الإجابة\s*الصحيحة\s*:\s*([^,]+)/i);
-        if (match) {
-          if (match[1]) {
-            // letter answer (أ = 0, ب = 1, ج = 2, د = 3)
-            const letterMap = { 'أ': 0, 'ب': 1, 'ج': 2, 'د': 3 };
-            const idx = letterMap[match[1]];
-            if (idx !== undefined && choices[idx]) answer = choices[idx];
-          } else if (match[2]) {
-            // text answer
-            answer = match[2].trim();
+        // try Arabic letter, then Latin letter, then text
+        const m = line.match(/الإجابة\s*الصحيحة\s*:\s*([أبجد])/i) || line.match(/الإجابة\s*الصحيحة\s*:\s*([A-D])/i) || line.match(/الإجابة\s*الصحيحة\s*:\s*(.+)$/i);
+        if (m) {
+          const val = (m[1] || '').toString().trim();
+          // map Arabic letters
+          const letterMap = { 'أ': 0, 'ا': 0, 'ب': 1, 'ج': 2, 'د': 3 };
+          if (val && (val in letterMap)) {
+            const idx = letterMap[val];
+            if (choices[idx]) answer = choices[idx];
+          } else if (/^[A-D]$/i.test(val)) {
+            const idx = ['A','B','C','D'].indexOf(val.toUpperCase());
+            if (idx !== -1 && choices[idx]) answer = choices[idx];
+          } else if (m[1]) {
+            // text answer — m[1] already contains the text in this branch
+            answer = m[1].trim();
             if (!choices.includes(answer)) {
               choices[0] = answer; // replace first if not in list
             }
