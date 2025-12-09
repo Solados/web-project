@@ -1,4 +1,14 @@
 <?php
+session_set_cookie_params([
+    'lifetime' => 86400, // 24 hours
+    'path' => '/',
+    'domain' => $_SERVER['HTTP_HOST'],
+    'secure' => isset($_SERVER['HTTPS']), // Use HTTPS if available
+    'httponly' => true, // Prevent JavaScript access
+    'samesite' => 'Strict'
+]);
+session_start(); 
+
 header('Content-Type: application/json');
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -43,15 +53,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $row[1] === $email && 
             password_verify($password, $row[2])) {
             $userFound = true;
+            $userName = $row[0]; // Store the name
             break;
         }
     }
     fclose($file);
 
     if ($userFound) {
-        // Success! Start a session
-        session_start();
-        $_SESSION['user_email'] = $email;
+    $_SESSION['user_email'] = $email;
+    $_SESSION['user_name'] = $row[0]; 
+    $_SESSION['logged_in'] = true;
         echo json_encode(['success' => true, 'message' => 'Login successful.']);
         exit();
     } else {

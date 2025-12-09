@@ -1,3 +1,4 @@
+<?php require_once 'php/check_session.php'; ?>
 <?php
 // quiz.php
 // Returns a JSON array of randomized quiz questions from CSV files in /data
