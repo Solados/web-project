@@ -5,6 +5,11 @@ header("Content-Type: application/json; charset=UTF-8;");
 $file = isset($_GET['file']) ? strtoupper(trim($_GET['file'])) : 'GENERAL';
 $page = isset($_GET['page']) ? max(0, intval($_GET['page'])) : 0;
 
+$lang = isset($_GET['lang']) ? strtolower(trim($_GET['lang'])) : 'all';
+if (!in_array($lang, ['all', 'english', 'arabic'])) {
+    $lang = 'all';
+}
+
 // عدد الأسئلة لكل صفحة
 $perPage = 20;
 
@@ -163,7 +168,11 @@ function loadEnglishQuestions($dataDir, $files) {
             $a = trim($r['Answer'] ?? '');
 
             if ($q !== '' && $a !== '') {
-                $output[] = ['question' => $q, 'answer' => $a];
+                $output[] = [
+                    'question' => $q,
+                    'answer'   => $a,
+                    'lang'     => 'english'
+                ];
             }
         }
     }
@@ -195,7 +204,8 @@ function loadArabicQuestions($dataDir, $dialectsLower) {
             if ($term !== "" && $mean !== "") {
                 $result[] = [
                     'question' => $term,
-                    'answer'   => $mean
+                    'answer'   => $mean,
+                    'lang'     => 'arabic'
                 ];
             }
 
@@ -221,7 +231,8 @@ function loadArabicQuestions($dataDir, $dialectsLower) {
                 if ($qText !== '' && $aText !== '') {
                     $result[] = [
                         'question' => $qText,
-                        'answer'   => $aText
+                        'answer'   => $aText,
+                        'lang'     => 'arabic'
                     ];
                 }
             }
@@ -241,6 +252,12 @@ $english = loadEnglishQuestions($dataDir, $config['englishFiles']);
 $arabic  = loadArabicQuestions($dataDir, $dialectsLower);
 
 $questions = array_merge($english, $arabic);
+
+if ($lang !== 'all') {
+    $questions = array_values(array_filter($questions, function($q) use ($lang) {
+        return isset($q['lang']) && $q['lang'] === $lang;
+    }));
+}
 
 // خلط
 shuffle($questions);

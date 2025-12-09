@@ -625,55 +625,6 @@ body { overflow-x: hidden; }
 }
 
 
-/* Dropdown */
-.dropdown {
-  position: relative;
-  text-align: center; /* ensure the toggle button is centered */
-}
-
-/* Dropdown content */
-.dropdown-content {
-  position: absolute;
-  top: 100%;
-  left: 0;                 /* align under the parent link for nav layouts */
-  transform: none;
-  background-color: white;
-  min-width: 180px;
-  box-shadow: 0 8px 16px rgba(0,0,0,0.2);
-  border-radius: 10px;
-  overflow: hidden;
-  list-style: none;
-  padding: 0;
-  margin: 0;
-
-  /* sliding animation */
-  max-height: 0;
-  opacity: 0;
-  transition: max-height 0.28s ease, opacity 0.18s ease, transform 0.2s ease;
-}
-
-/* Links inside dropdown */
-.dropdown-content li a {
-  color: #004d40;
-  text-decoration: none;
-  display: block;
-  padding: 10px 16px;
-  text-align: center; /* center link text */
-}
-
-/* Hover effect for link */
-.dropdown-content li a:hover {
-  background-color: #f1f1f1;
-}
-
-/* When dropdown is open */
-.dropdown.show .dropdown-content {
-  max-height: 400px;
-  opacity: 1;
-  transform: translateY(0);
-}
-
-
 /* Questions slider layout */
 .qs-pagination {
   display: flex;
@@ -701,4 +652,135 @@ body { overflow-x: hidden; }
   color: white;
   border-color: #4CAF50;
   font-weight: bold;
+}
+
+.question-filter {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 1rem 0;
+}
+
+.question-filter select {
+  padding: .4rem .6rem;
+  border-radius: .5rem;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+}
+/* =========================== */
+/*   FIXED NAVBAR              */
+/* =========================== */
+.site-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255,255,255,0.4);
+  z-index: 9999;
+}
+
+/* =========================== */
+/*   NAVBAR ITEMS              */
+/* =========================== */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 40px;
+}
+
+.navbar a {
+  color: #333;
+  text-decoration: none;
+  margin: 0 14px;
+  font-size: 17px;
+}
+
+/* إصلاح الهيدر بحيث لا يمنع القائمة من العمل */
+.site-header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 9999;
+}
+
+/* إصلاح ظهور القائمة فوق كل العناصر */
+.navbar {
+    position: relative;
+    z-index: 9999;
+}
+
+.nav-links {
+    position: relative;
+    z-index: 9999;
+}
+
+/* القائمة المنسدلة */
+.navbar .dropdown {
+    position: relative;
+    z-index: 99999;
+}
+
+.navbar .dropdown-content {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: #ffffff;
+    min-width: 200px;
+    padding: 10px 0;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    display: none;
+    z-index: 100000;
+}
+
+/* ظهور القائمة */
+.navbar .dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.navbar .dropdown {
+    position: relative;
+}
+
+.navbar .dropdown-content {
+    list-style: none;
+}
+
+/* التصميم الأصلي */
+.navbar .dropdown-content {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: #ffffff;
+    padding: 12px 0;
+    min-width: 230px;
+    border-radius: 18px;
+    box-shadow: 0 6px 25px rgba(0,0,0,0.18);
+    display: none;
+    z-index: 99999;
+}
+
+/* زر داخل القائمة */
+.navbar .dropdown-content li a {
+    display: block;
+    padding: 14px 20px;
+    color: #333;
+    font-size: 17px;
+    text-decoration: none;
+    transition: 0.2s ease;
+}
+
+/* عند المرور */
+.navbar .dropdown-content li a:hover {
+    background: #f3f3f3;
+}
+
+/* إظهار القائمة */
+.navbar .dropdown:hover .dropdown-content {
+    display: block;
 }

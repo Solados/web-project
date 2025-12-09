@@ -9,6 +9,8 @@ $count = isset($_GET['count']) ? (int)$_GET['count'] : 5;
 // optional filters
 $type = isset($_GET['type']) ? trim($_GET['type']) : '';
 $category = isset($_GET['category']) ? trim($_GET['category']) : '';
+// optional action (e.g., 'types' to list available question types)
+$action = isset($_GET['action']) ? trim($_GET['action']) : '';
 
 // basic sanitize: allow only letters, numbers, dash and underscore
 if (!preg_match('/^[A-Za-z0-9_\-]+$/', $source)) {
@@ -43,6 +45,10 @@ if ($header === false) {
     exit;
 }
 
+// build lowercase header map for lookups
+$lowerMap = [];
+foreach ($header as $col) { $lowerMap[mb_strtolower($col)] = $col; }
+
 $rows = [];
 while (($row = fgetcsv($fp)) !== false) {
     // map header to row
@@ -56,6 +62,49 @@ fclose($fp);
 
 if (count($rows) === 0) {
     echo json_encode(['error' => 'No data rows']);
+    exit;
+}
+
+// If the caller only wants available question types, return them
+if ($action === 'types') {
+    $types = [];
+    // check explicit type headers
+    $typeKeys = ['type','question type','question_type','qtype','questiontype'];
+    $foundType = null;
+    foreach ($typeKeys as $k) { if (isset($lowerMap[$k])) { $foundType = $lowerMap[$k]; break; } }
+    if ($foundType !== null) {
+        foreach ($rows as $r) {
+            $v = isset($r[$foundType]) ? trim($r[$foundType]) : '';
+            if ($v !== '') $types[$v] = true;
+        }
+        echo json_encode(['types' => array_values(array_keys($types))], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+
+    // fallback: infer from Choices/Answer
+    $choicesKeys = ['choices','choice','options'];
+    $choicesCol = null;
+    foreach ($choicesKeys as $k) { if (isset($lowerMap[$k])) { $choicesCol = $lowerMap[$k]; break; } }
+    $hasMCQ = false; $hasMulti = false; $hasOpen = false;
+    $ansCol = isset($lowerMap['answer']) ? $lowerMap['answer'] : null;
+    foreach ($rows as $r) {
+        if ($choicesCol !== null) {
+            $c = isset($r[$choicesCol]) ? trim($r[$choicesCol]) : '';
+            if ($c !== '' && $c !== '–') {
+                $hasMCQ = true;
+                $a = $ansCol ? (isset($r[$ansCol]) ? $r[$ansCol] : '') : '';
+                if (preg_match('/\band\b|,|and|\bوا\b/ui', $a) || preg_match('/[A-D]\s*(and|,)/i', $a)) $hasMulti = true;
+            } else {
+                $hasOpen = true;
+            }
+        } else {
+            $hasOpen = true;
+        }
+    }
+    if ($hasOpen) $types[] = 'Open-ended';
+    if ($hasMCQ) $types[] = 'MCQ (one correct)';
+    if ($hasMulti) $types[] = 'MCQ (multiple correct)';
+    echo json_encode(['types' => $types], JSON_UNESCAPED_UNICODE);
     exit;
 }
 
@@ -76,10 +125,29 @@ if ($type !== '' || $category !== '') {
     $catCol = null;
     foreach ($catKeys as $k) { if (isset($lowerMap[$k])) { $catCol = $lowerMap[$k]; break; } }
 
-    $rows = array_filter($rows, function($r) use ($type, $category, $typeCol, $catCol) {
-        if ($type !== '' && $typeCol !== null) {
-            $val = isset($r[$typeCol]) ? $r[$typeCol] : '';
-            if ($val === '' || mb_stripos($val, $type) === false) return false;
+    $rows = array_filter($rows, function($r) use ($type, $category, $typeCol, $catCol, $lowerMap) {
+        // type filtering: prefer explicit type column
+        if ($type !== '') {
+            if ($typeCol !== null) {
+                $val = isset($r[$typeCol]) ? $r[$typeCol] : '';
+                if ($val === '' || mb_stripos($val, $type) === false) return false;
+            } else {
+                // fallback: use Choices presence
+                $choicesKeys = ['choices','choice','options'];
+                $choicesCol = null;
+                foreach ($choicesKeys as $k) { if (isset($lowerMap[$k])) { $choicesCol = $lowerMap[$k]; break; } }
+                if ($choicesCol !== null) {
+                    $cval = isset($r[$choicesCol]) ? trim($r[$choicesCol]) : '';
+                    $tl = mb_strtolower($type);
+                    if (mb_stripos($tl, 'mcq') !== false || mb_stripos($tl, 'one correct') !== false || mb_stripos($tl, 'multiple') !== false) {
+                        // keep rows that have choices
+                        if ($cval === '' || $cval === '–') return false;
+                    } else if (mb_stripos($tl, 'open') !== false || mb_stripos($tl, 'fill') !== false) {
+                        // keep rows without choices
+                        if ($cval !== '' && $cval !== '–') return false;
+                    }
+                }
+            }
         }
         if ($category !== '' && $catCol !== null) {
             $val = isset($r[$catCol]) ? $r[$catCol] : '';
@@ -190,6 +258,18 @@ foreach ($rows as $r) {
     if (isset($r['Question']) && trim($r['Question']) !== '') {
         $answer = isset($r['Answer']) ? $r['Answer'] : '';
         $parsed = ['question' => trim($r['Question']), 'choices' => [], 'answer' => trim($answer)];
+        // if a Choices column exists (e.g., GENERAL.csv), parse it into choices
+        $choicesCol = null;
+        foreach (['choices','choice','options'] as $ck) { if (isset($lowerMap[$ck])) { $choicesCol = $lowerMap[$ck]; break; } }
+        if ($choicesCol !== null) {
+            $raw = isset($r[$choicesCol]) ? trim($r[$choicesCol]) : '';
+            if ($raw !== '' && $raw !== '–') {
+                // split by common separators and A./B./C./D. markers
+                $parts = preg_split('/\s*[;|\|]\s*|\s*A\.\s*|\s*B\.\s*|\s*C\.\s*|\s*D\.\s*/i', $raw);
+                $choices = array_values(array_filter(array_map('trim', $parts)));
+                if (count($choices) > 0) $parsed['choices'] = array_slice(array_unique($choices), 0, 4);
+            }
+        }
     }
 
     // otherwise try the more complex columns
@@ -202,16 +282,16 @@ foreach ($rows as $r) {
         }
     }
     if ($parsed !== null) {
-        // include type/category if present in row
-        if (isset($r['type'])) {
-            $parsed['type'] = $r['type'];
-        }
-        if (isset($r['category'])) {
-            $parsed['category'] = $r['category'];
-        }
+        // include type/category if present in row (check variants)
+        $typeKey = null;
+        foreach (['type','question type','question_type','qtype','questiontype'] as $k) { if (isset($lowerMap[$k])) { $typeKey = $lowerMap[$k]; break; } }
+        $catKey = null;
+        foreach (['category','categories','topic','tag','tags','category_name'] as $k) { if (isset($lowerMap[$k])) { $catKey = $lowerMap[$k]; break; } }
+        if ($typeKey !== null && isset($r[$typeKey])) $parsed['type'] = $r[$typeKey];
+        if ($catKey !== null && isset($r[$catKey])) $parsed['category'] = $r[$catKey];
         $questionsOut[] = $parsed;
     }
-
+}
 
 echo json_encode(['questions' => $questionsOut], JSON_UNESCAPED_UNICODE);
 

@@ -1,6 +1,6 @@
 <!doctype html>
 <!-- Head -->
-<html lang="ar" dir="rtl">
+<html lang="en" dir="ltr">
  <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -16,11 +16,11 @@
   <!-- Header -->
   <header class="site-header">
    <!-- Navigation -->
-   <nav class="navbar" aria-label="Main navigation">
-    <a class="brand" href="#top" aria-label="Back to top">Saudi Culture</a>
+    <nav class="navbar" aria-label="Main navigation">
+     <a class="brand" href="#top" aria-label="Back to top">Saudi Culture</a>
     <button class="menu-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Toggle menu">☰</button>
-    <!-- Nav list -->
-    <ul id="nav-links" class="nav-links">
+      <!-- Nav list -->
+      <ul id="nav-links" class="nav-links">
      <li><a href="sign/SignUp_LogIn_Form.html">Login</a></li>
      <li><a href="#">Quizzes</a></li>
           <li class="dropdown">
@@ -35,6 +35,7 @@
         </ul>
       </li>
      <li><a href="index.html">Home</a></li>
+     <li><a href="East-ar.html" style="font-weight:700">اللغة العربية</a></li>
     </ul>
    </nav>
   </header>
@@ -159,7 +160,17 @@
     <h2 dir="ltr">Overview of the Kingdom of Saudi Arabia</h2>
      <p dir="ltr">
        The Kingdom of Saudi Arabia is a nation of rich heritage and rapid development, located in the heart of the Arabian Peninsula. It is the birthplace of Islam and home to Makkah and Madinah, combining deep traditions with a modern vision for the future.     </p>
-     <div class="features"></div>
+     
+      <div class="question-filter">
+      <label>Filter:</label>
+      <select id="filterSelect">
+        <option value="all">All Questions</option>
+        <option value="english">English Only</option>
+        <option value="arabic">Arabic Only</option>
+      </select>
+      </div>
+     
+       <div class="features"></div>
     </div>
    </section>
 
@@ -195,10 +206,13 @@
 </script>
 
   <script>
-const REGION_FILE = "EAST";
+const REGION_FILE = "EAST"; 
+let currentFilter = "all";
 
 async function loadPage(pageIndex = 0) {
-  const resp = await fetch(`api/region_questions.php?file=${REGION_FILE}&page=${pageIndex}`);
+  const resp = await fetch(
+    `api/region_questions.php?file=${REGION_FILE}&page=${pageIndex}&lang=${currentFilter}`
+  );
   return resp.json();
 }
 
@@ -221,14 +235,8 @@ function createSlider(current, totalPages, changePage) {
   let start = current - 2;
   let end = current + 2;
 
-  if (start < 0) {
-    end += (0 - start);
-    start = 0;
-  }
-  if (end >= totalPages) {
-    start -= (end - totalPages + 1);
-    end = totalPages - 1;
-  }
+  if (start < 0) { end += (0 - start); start = 0; }
+  if (end >= totalPages) { start -= (end - totalPages + 1); end = totalPages - 1; }
   if (start < 0) start = 0;
 
   for (let i = start; i <= end; i++) {
@@ -256,8 +264,6 @@ function createSlider(current, totalPages, changePage) {
 
 async function render(pageIndex = 0) {
   const container = document.querySelector(".features");
-
-  // Remove old pagination if present
   document.querySelectorAll(".qs-pagination").forEach(el => el.remove());
 
   const data = await loadPage(pageIndex);
@@ -288,6 +294,11 @@ async function render(pageIndex = 0) {
   const bottomSlider = createSlider(pageIndex, totalPages, render);
   container.after(bottomSlider);
 }
+
+document.getElementById("filterSelect").addEventListener("change", () => {
+  currentFilter = document.getElementById("filterSelect").value;
+  render(0);
+});
 
 render(0);
 </script>

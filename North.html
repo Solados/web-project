@@ -1,10 +1,10 @@
 <!doctype html>
 <!-- Head -->
-<html lang="ar" dir="rtl">
+<html lang="en" dir="ltr">
  <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Saudi Culture | Home Page</title>
+  <title>Saudi Culture | North Page</title>
   <meta name="description" content="Discover customs, traditions, and regions of the Kingdom of Saudi Arabia.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,11 +16,13 @@
   <!-- Header -->
   <header class="site-header">
    <!-- Navigation -->
-   <nav class="navbar" aria-label="Main navigation">
-    <a class="brand" href="#top" aria-label="Back to top">Saudi Culture</a>
+    <nav class="navbar" aria-label="Main navigation">
+     <a class="brand" href="#top" aria-label="Back to top">Saudi Culture</a>
     <button class="menu-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Toggle menu">☰</button>
-    <!-- Nav list -->
-    <ul id="nav-links" class="nav-links">
+      <!-- Nav list -->
+      <ul id="nav-links" class="nav-links">
+
+
      <li><a href="sign/SignUp_LogIn_Form.html">Login</a></li>
       <li><a href="QUIZ.html">Quizzes</a></li>
           <li class="dropdown">
@@ -35,10 +37,11 @@
         </ul>
       </li>
      <li><a href="index.html">Home</a></li>
+             <li><a href="North-ar.html" style="font-weight:700">اللغة العربية</a></li>
     </ul>
    </nav>
   </header>
-
+  
   <!-- Slider -->
   <div id="top" class="carousel">
     <!-- list item -->
@@ -158,7 +161,17 @@
     <h2 dir="ltr">Overview of the Kingdom of Saudi Arabia</h2>
      <p dir="ltr">
        The Kingdom of Saudi Arabia is a nation of rich heritage and rapid development, located in the heart of the Arabian Peninsula. It is the birthplace of Islam and home to Makkah and Madinah, combining deep traditions with a modern vision for the future.     </p>
-     <div class="features"></div>
+     
+      <div class="question-filter">
+      <label>Filter:</label>
+      <select id="filterSelect">
+        <option value="all">All Questions</option>
+        <option value="english">English Only</option>
+        <option value="arabic">Arabic Only</option>
+      </select>
+      </div>
+     
+       <div class="features"></div>
     </div>
    </section>
 
@@ -193,11 +206,14 @@
 (function(){if(!window.chatbase||window.chatbase("getState")!=="initialized"){window.chatbase=(...arguments)=>{if(!window.chatbase.q){window.chatbase.q=[]}window.chatbase.q.push(arguments)};window.chatbase=new Proxy(window.chatbase,{get(target,prop){if(prop==="q"){return target.q}return(...args)=>target(prop,...args)}})}const onLoad=function(){const script=document.createElement("script");script.src="https://www.chatbase.co/embed.min.js";script.id="PkSRl6nFY3Csgenh8koIS";script.domain="www.chatbase.co";document.body.appendChild(script)};if(document.readyState==="complete"){onLoad()}else{window.addEventListener("load",onLoad)}})();
 </script>
 
-  <script>
-const REGION_FILE = "NORTH";
+<script>
+const REGION_FILE = "NORTH"; 
+let currentFilter = "all";
 
 async function loadPage(pageIndex = 0) {
-  const resp = await fetch(`api/region_questions.php?file=${REGION_FILE}&page=${pageIndex}`);
+  const resp = await fetch(
+    `api/region_questions.php?file=${REGION_FILE}&page=${pageIndex}&lang=${currentFilter}`
+  );
   return resp.json();
 }
 
@@ -220,14 +236,8 @@ function createSlider(current, totalPages, changePage) {
   let start = current - 2;
   let end = current + 2;
 
-  if (start < 0) {
-    end += (0 - start);
-    start = 0;
-  }
-  if (end >= totalPages) {
-    start -= (end - totalPages + 1);
-    end = totalPages - 1;
-  }
+  if (start < 0) { end += (0 - start); start = 0; }
+  if (end >= totalPages) { start -= (end - totalPages + 1); end = totalPages - 1; }
   if (start < 0) start = 0;
 
   for (let i = start; i <= end; i++) {
@@ -285,6 +295,11 @@ async function render(pageIndex = 0) {
   const bottomSlider = createSlider(pageIndex, totalPages, render);
   container.after(bottomSlider);
 }
+
+document.getElementById("filterSelect").addEventListener("change", () => {
+  currentFilter = document.getElementById("filterSelect").value;
+  render(0);
+});
 
 render(0);
 </script>

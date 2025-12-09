@@ -1,150 +1,151 @@
 <!doctype html>
-<!-- Head -->
-<html lang="en" dir="ltr">
- <head>
+<html lang="ar" dir="rtl">
+<head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Test Your Knowledge — Quiz</title>
-  <meta name="description" content="Test your knowledge with a random set of Arabic questions">
+  <title>اختبر معلوماتك — الاختبار</title>
+  <meta name="description" content="اختبر معلوماتك مع مجموعة أسئلة عشوائية">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/styles.css">
   <link rel="stylesheet" href="assets/quiz-style.css">
 
- </head>
- <!-- Body -->
- <body>
+  <!-- سريع: بعض تعديلات RTL خفيفة لضمان ترتيب-navbar والبطاقات -->
+<style>
+  /* override direction for the whole page */
+  html, body { direction: rtl; }
+  .navbar { direction: ltr; }
+  .nav-links { display:flex; gap:1rem; align-items:center; }
+  .navbar .brand { order: 0; }
+  .feature-card h3 { text-align: right; }
+  .quiz-gold-box { text-align: right; }
+  .qs-pagination { direction: ltr; }
+
+  /* تعديل شكل جميع select العربية */
+.quiz-gold-select {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1.8px solid rgba(215,181,109,0.55);
+  background: linear-gradient(180deg, #fff9ef, #f7e9cd);
+  color: #4b2d1b;
+  font-size: 15px;
+  appearance: none;
+  cursor: pointer;
+  transition: .25s ease;
+
+  background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L6 6L11 1' stroke='%23b38a42' stroke-width='2'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: left 14px center;
+}
+</style>
+
+</head>
+<body>
   <!-- Header -->
   <header class="site-header">
-    <!-- Header -->
-    <!-- Navigation -->
     <nav class="navbar" aria-label="Main navigation">
-     <a class="brand" href="#top" aria-label="Back to top">Saudi Culture</a>
-    <button class="menu-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Toggle menu">☰</button>
-      <!-- Nav list -->
+      <a class="brand" href="#top" aria-label="Back to top">ثقافة السعودية</a>
+      <button class="menu-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Toggle menu">☰</button>
       <ul id="nav-links" class="nav-links">
+        <!-- Language switch: links to the English page and current Arabic page -->
 
-     <li><a href="sign/SignUp_LogIn_Form.html">Login</a></li>
-      <li><a href="QUIZ.html">Quizzes</a></li>
-          <li class="dropdown">
-        <a class="dropbtn">Regions</a>
-        <!-- Regions dropdown list -->
-        <ul class="dropdown-content">
-          <li><a href="North.html">Northern Region</a></li>
-          <li><a href="South.html">Southern Region</a></li>
-          <li><a href="West.html">Western Region</a></li>
-          <li><a href="East.html">Eastern Region</a></li>
-          <li><a href="Central.html">Central Region</a></li>
-        </ul>
-      </li>
-     <li><a href="index.html">Home</a></li>
-                  <li><a href="QUIZ-ar.html" style="font-weight:700">اللغة العربية</a></li>
 
-    </ul>
-   </nav>
+        <li><a href="sign/Signup_Login_Form_ar.html">تسجيل الدخول</a></li>
+        <li><a href="QUIZ-ar.html">الاختبارات</a></li>
+
+        <li class="dropdown">
+          <a class="dropbtn">المناطق</a>
+          <ul class="dropdown-content" role="menu">
+            <li><a href="North-ar.html">المنطقة الشمالية</a></li>
+            <li><a href="South-ar.html">المنطقة الجنوبية</a></li>
+            <li><a href="West-ar.html">المنطقة الغربية</a></li>
+            <li><a href="East-ar.html">المنطقة الشرقية</a></li>
+            <li><a href="Central-ar.html">المنطقة الوسطى</a></li>
+          </ul>
+        </li>
+
+        <li><a href="index-ar.html">الرئيسية</a></li>
+                <li><a href="QUIZ.html" style="font-weight:700">English</a></li>
+
+      </ul>
+    </nav>
   </header>
 
   <!-- Main -->
   <main id="main">
-   <!-- Quiz intro -->
-   <section class="quiz-section">
-  <div class="quiz-gold-box">
+    <!-- Quiz intro -->
+    <section class="quiz-section">
+      <div class="quiz-gold-box">
 
-    <h2 class="quiz-gold-title">Test your knowledge</h2>
-    <p class="quiz-gold-sub">
-      Choose the number of questions then start the quiz.
-    </p>
+        <h2 class="quiz-gold-title">اختبر معلوماتك</h2>
+        <p class="quiz-gold-sub">اختر عدد الأسئلة ثم ابدأ الاختبار.</p>
 
-    <label class="quiz-gold-label">Select number of questions:</label>
-    <div class="select-wrapper">
-      <select id="questionCount" class="quiz-gold-select">
-        <option value="5">5 questions</option>
-        <option value="10">10 questions</option>
-        <option value="15">15 questions</option>
-        <option value="20">20 questions</option>
-      </select>
-    </div>
+        <label class="quiz-gold-label">عدد الأسئلة:</label>
+        <div class="select-wrapper">
+          <select id="questionCount" class="quiz-gold-select">
+            <option value="5">5 أسئلة</option>
+            <option value="10">10 أسئلة</option>
+            <option value="15">15 سؤالاً</option>
+            <option value="20">20 سؤالاً</option>
+          </select>
+        </div>
 
-    <label class="quiz-gold-label">Select region/source:</label>
-    <div class="select-wrapper">
-      <select id="regionFilter" class="quiz-gold-select">
-        <option value="GENERAL">GENERAL</option>
-        <option value="CENTERAL">Central</option>
-        <option value="NORTH">North</option>
-        <option value="SOUTH">South</option>
-        <option value="EAST">East</option>
-        <option value="WEST">West</option>
-        <option value="RANDOM">Random</option>
-      </select>
-    </div>
+        <label class="quiz-gold-label">المصدر / المنطقة:</label>
+        <div class="select-wrapper">
+          <select id="regionFilter" class="quiz-gold-select">
+            <option value="Words">كلمات</option>
+            <option value="Phrases">عبارات</option>
+            <option value="Proverbs">أمثال</option>
+          </select>
+        </div>
 
-    <label class="quiz-gold-label">Select question type:</label>
-    <div class="select-wrapper">
-      <select id="typeFilter" class="quiz-gold-select">
-        <option value="all">All Types</option>
-        <option value="mcq">Multiple Choice</option>
-        <option value="fill">Fill in the Blank</option>
-        <option value="multi">Multiple Answers</option>
-      </select>
-    </div>
-    <label class="quiz-gold-label">Select category:</label>
-    <div class="select-wrapper">
-      <select id="categoryFilter" class="quiz-gold-select">
-        <option value="all">All Categories</option>
-        <option value="food">Food</option>
-        <option value="clothes">Clothes</option>
-        <option value="celebration">Celebration</option>
-        <option value="games">Entertainment</option>
-      </select>
-    </div>
-
-    <!-- زر البداية يجب أن يكون هنا داخل الصندوق -->
-    <button id="startBtn" class="quiz-gold-btn">Start Quiz</button>
-
-  </div>
-</section>
+        <label class="quiz-gold-label">نوع السؤال:</label>
+        <div class="select-wrapper">
+          <select id="typeFilter" class="quiz-gold-select">
+            <option value="all">كل الأنواع</option>
+            <option value="mcq">اختيار من متعدد</option>
+            <option value="fill">املأ الفراغ</option>
+            <option value="multi">اختيارات متعددة</option>
+          </select>
+        </div>
 
 
-  <!-- Quiz Section -->
-  <section id="quiz" class="section section-alt">
-    <div class="container">
-     <div id="quizContainer"></div>
-     <div id="result" style="margin-top:1rem;font-weight:700"></div>
-    </div>
-   </section>
+        <!-- زر البداية -->
+        <button id="startBtn" class="quiz-gold-btn">ابدأ الاختبار</button>
+
+      </div>
+    </section>
+
+    <!-- Quiz Section -->
+    <section id="quiz" class="section section-alt">
+      <div class="container">
+        <div id="quizContainer"></div>
+        <div id="result" style="margin-top:1rem;font-weight:700"></div>
+      </div>
+    </section>
   </main>
 
   <!-- Footer -->
   <footer class="site-footer" aria-label="footer">
-   <div class="container footer-grid">
-    <ul class="footer-links">
-     <li><a href="#main">Back to Top</a></li>
-    </ul>
-    <div style="text-align:right">
-     <strong>Saudi Culture</strong>
-     <p>© 2025 All rights reserved</p>
+    <div class="container footer-grid">
+      <ul class="footer-links">
+        <li><a href="#main">العودة إلى الأعلى</a></li>
+      </ul>
+      <div style="text-align:left">
+        <strong>ثقافة السعودية</strong>
+        <p>© 2025 جميع الحقوق محفوظة</p>
+      </div>
     </div>
-   </div>
   </footer>
-  <!-- Scripts -->
+
+  <!-- Scripts (نفس ملفات JS الموجودة لديك) -->
   <script src="assets/script.js"></script>
   <script src="assets/quiz-parser.js"></script>
 
-  <!-- Quiz Script -->
+  <!-- Quiz Script (مترجم واجهات فقط — الأسئلة لم تُلمس) -->
   <script>
-  /*
-    Array of quiz questions.
-    Each question object contains:
-    - question: The question text
-    - choices: Multiple-choice answers
-    - answer: The correct answer
-  */
-  
-  /*
-    Function to shuffle array elements
-    (Used to randomize question order and choice order)
-  */
   function shuffle(arr){
     for(let i=arr.length-1;i>0;i--){
       const j = Math.floor(Math.random()*(i+1));
@@ -152,18 +153,14 @@
     }
   }
 
-  // Array to store randomly selected questions
   let selectedQuestions = [];
 
   async function startQuiz(){
     const count = Number(document.getElementById('questionCount').value) || 5;
     const regionSelect = document.getElementById('regionFilter');
     const regionValue = regionSelect ? regionSelect.value : 'Words';
-
-    // helper list of known region CSVs (matches files under data/)
     const regionFiles = ['GENERAL','CENTERAL','NORTH','SOUTH','EAST','WEST'];
 
-    // determine source to request from server
     let source = 'Words';
     if (regionValue === 'RANDOM') {
       source = regionFiles[Math.floor(Math.random()*regionFiles.length)];
@@ -172,12 +169,10 @@
     }
 
     const resultEl = document.getElementById('result');
-    resultEl.innerHTML = 'Loading quiz...';
+    resultEl.innerHTML = 'جارٍ تحميل الاختبار...';
     const lang = document.getElementById('langSelect') ? document.getElementById('langSelect').value : 'ar';
 
-    // read UI filters
     let type = document.getElementById('typeFilter') ? document.getElementById('typeFilter').value : 'all';
-    // Map UI shorthand to CSV Question Type strings used in the data files
     function mapTypeFilter(val) {
       if (!val) return 'all';
       const v = String(val).toLowerCase();
@@ -185,13 +180,11 @@
       if (v === 'mcq') return 'MCQ (one correct)';
       if (v === 'multi' || v === 'multiple') return 'MCQ (multiple correct)';
       if (v === 'fill' || v === 'open' || v === 'open-ended') return 'Open-ended';
-      // allow passing exact CSV strings as well
       return val;
     }
     const mappedType = mapTypeFilter(type);
     const category = document.getElementById('categoryFilter') ? document.getElementById('categoryFilter').value : 'all';
 
-    // try client-side CSV loader first (works without PHP)
     if (typeof fetchQuestions === 'function'){
       try{
           const clientQ = await fetchQuestions(source, count, lang, mappedType, category);
@@ -199,7 +192,8 @@
           selectedQuestions = clientQ.map(q => ({
             question: q.question,
             choices: Array.isArray(q.choices) ? q.choices.slice() : [],
-            answer: q.answer || null
+            answer: q.answer || null,
+            type: q.type || ''
           }));
           selectedQuestions.forEach(q => shuffle(q.choices));
           displayQuestions();
@@ -207,16 +201,15 @@
           window.location.hash = '#quiz';
           return;
         } else {
-          resultEl.innerHTML = 'No questions returned from client parser, trying server...';
+          resultEl.innerHTML = 'لم تُرجع أسئلة من المعالج المحلي، جارٍ المحاولة عبر الخادم...';
         }
       }catch(e){
         console.warn('client-side parser failed:', e);
       }
     }
 
-    // try server-side endpoint first with a timeout
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 6000); // 6s timeout
+    const timeout = setTimeout(() => controller.abort(), 6000);
 
     try {
       const qs = new URLSearchParams({ source: source, count: String(count), type: mappedType === 'all' ? '' : mappedType, category: category || '' });
@@ -228,44 +221,45 @@
           selectedQuestions = data.questions.map(q => ({
             question: q.question,
             choices: Array.isArray(q.choices) ? q.choices.slice() : [],
-            answer: q.answer || null
+            answer: q.answer || null,
+            type: q.type || ''
           }));
-          // shuffle choices for each question
           selectedQuestions.forEach(q => shuffle(q.choices));
           displayQuestions();
           resultEl.innerHTML = '';
           window.location.hash = '#quiz';
           return;
         } else {
-          resultEl.innerHTML = 'No questions returned from server, using local fallback.';
+          resultEl.innerHTML = 'لم تُرجع أسئلة من الخادم، سيتم استخدام النسخة المحلية الاحتياطية.';
         }
       } else {
-        resultEl.innerHTML = `Server returned ${resp.status}, using local fallback.`;
+        resultEl.innerHTML = `الخادم أعاد الحالة ${resp.status}، سيتم استخدام النسخة الاحتياطية.`;
       }
     } catch (err) {
       clearTimeout(timeout);
       if (err.name === 'AbortError') {
-        resultEl.innerHTML = 'Server request timed out (6s). Using local fallback.';
+        resultEl.innerHTML = 'انتهى وقت انتظار الخادم (6 ث). سيتم استخدام النسخة الاحتياطية.';
       } else {
-        resultEl.innerHTML = 'Could not reach quiz endpoint. Using local fallback.';
+        resultEl.innerHTML = 'تعذّر الوصول إلى نقطة نهاية الاختبار. سيتم استخدام النسخة الاحتياطية.';
       }
       console.warn('quiz.php fetch failed or timed out:', err);
     }
 
-    // fallback to embedded questions when server-side generation fails or times out
-    selectedQuestions = allQuestions.slice();
-    shuffle(selectedQuestions);
-    selectedQuestions = selectedQuestions.slice(0, count);
-    selectedQuestions.forEach(q => shuffle(q.choices));
+    // fallback to embedded questions when server-side fails
+    if (typeof allQuestions !== 'undefined' && Array.isArray(allQuestions)) {
+      selectedQuestions = allQuestions.slice();
+      shuffle(selectedQuestions);
+      selectedQuestions = selectedQuestions.slice(0, count);
+      selectedQuestions.forEach(q => shuffle(q.choices));
+    } else {
+      selectedQuestions = []; // empty fallback
+    }
+
     displayQuestions();
-    // clear any lingering loading text
-    setTimeout(() => { if (resultEl && resultEl.innerHTML.startsWith('Loading')) resultEl.innerHTML = ''; }, 300);
+    setTimeout(() => { if (resultEl && resultEl.innerHTML.startsWith('جارٍ')) resultEl.innerHTML = ''; }, 300);
     window.location.hash = '#quiz';
   }
 
-  /*
-    Displays the selected questions on the page
-  */
   function displayQuestions(){
     const container = document.getElementById('quizContainer');
     container.innerHTML = '';
@@ -274,23 +268,25 @@
       const box = document.createElement('div');
       box.className = 'feature-card';
 
-      // determine a short type label for the badge
+      // keep the question text as-is (do not translate/change it)
       const inferredType = (q.type && q.type.trim()) ? q.type.trim() : (Array.isArray(q.choices) && q.choices.length > 0 ? 'MCQ' : 'Open-ended');
+
+      // Note: preserve question text direction exactly as original dataset requested.
+      // We'll keep dir="ltr" so dataset questions (likely English) render correctly.
       let html = `<h3 dir="ltr">${i+1}. ${q.question} <span class="q-badge" style="font-size:.7rem;padding:.15rem .4rem;margin-left:.6rem;border-radius:4px;background:#efefef;color:#333;border:1px solid #ddd">${inferredType}</span></h3>`;
 
-      // If the question has choices, render radios; otherwise render an open-answer textarea
       if (Array.isArray(q.choices) && q.choices.length > 0) {
         q.choices.forEach(choice => {
+          // keep choice text untouched as well
           html += `
-          <label style="display:block;margin:.25rem 0">
+          <label style="display:block;margin:.25rem 0; text-align:right;" dir="rtl">
             <input type="radio" name="q${i}" value="${choice}"> ${choice}
           </label>`;
         });
       } else {
-        // open / fill-in-the-blank input
         html += `
           <div style="margin-top:.5rem">
-            <textarea name="q${i}_open" placeholder="Write your answer here..." 
+            <textarea name="q${i}_open" placeholder="اكتب إجابتك هنا..." 
               style="width:100%;min-height:88px;padding:.5rem;border:1px solid #e0e0e0;border-radius:6px;font-size:1rem;font-family:inherit;resize:vertical"></textarea>
           </div>`;
       }
@@ -299,15 +295,14 @@
       container.appendChild(box);
     });
 
-    // Add "Check Answers" button
+    // Add "Check Answers" button (Arabic)
     const checkBtn = document.createElement('a');
     checkBtn.className = 'btn btn-primary';
-    checkBtn.textContent = 'Check Answers';
+    checkBtn.textContent = 'تحقّق من الإجابات';
     checkBtn.href = '#result';
     checkBtn.style.display = 'inline-block';
     checkBtn.style.marginTop = '1rem';
 
-    // Prevent default link behavior and check answers instead
     checkBtn.addEventListener('click', (e) => { 
       e.preventDefault(); 
       checkAnswers(); 
@@ -316,12 +311,6 @@
     container.appendChild(checkBtn);
   }
 
-  /*
-    Checks the user's answers:
-    - Counts correct responses
-    - Calculates percentage
-    - Colors the score based on performance
-  */
   function checkAnswers(){
     let score = 0;
 
@@ -331,7 +320,6 @@
         const sel = document.querySelector(`input[name="q${i}"]:checked`);
         if(sel && sel.value === q.answer) score++;
       } else {
-        // open answer grading: compare trimmed, case-insensitive if answer exists
         const ta = document.querySelector(`textarea[name="q${i}_open"]`);
         if (ta) {
           const user = (ta.value || '').trim();
@@ -339,7 +327,6 @@
           if (corr !== '') {
             if (user !== '' && user.toLowerCase() === corr.toLowerCase()) score++;
           }
-          // if no correct answer provided, we cannot auto-grade; leave as incorrect
         }
       }
     }
@@ -347,19 +334,15 @@
     const total = selectedQuestions.length || 1;
     const percent = Math.round((score/total)*100);
 
-    // Choose color based on percentage
-    let color = '#1e88e5'; // default blue
+    let color = '#1e88e5';
     if(percent >= 80) color = 'green';
     else if(percent >= 50) color = 'orange';
     else color = 'red';
 
     document.getElementById('result').innerHTML =
-      `Your score: <span style="color:${color}">${score} / ${total} (${percent}%)</span>`;
+      `نتيجتك: <span style="color:${color}">${score} / ${total} (${percent}%)</span>`;
   }
 
-  /*
-    Activates the Start button on page load
-  */
   document.addEventListener('DOMContentLoaded', () => {
     const startBtn = document.getElementById('startBtn');
     if(startBtn) startBtn.addEventListener('click', (e) => { 
@@ -367,22 +350,20 @@
       startQuiz(); 
     });
 
-    // Populate typeFilter dynamically using client discovery with server fallback
     async function populateTypeFilter() {
       const regionSelect = document.getElementById('regionFilter');
       const typeSelect = document.getElementById('typeFilter');
       if (!typeSelect || !regionSelect) return;
       const src = regionSelect.value || 'Words';
-      // clear existing options
       typeSelect.innerHTML = '';
-      const optAll = document.createElement('option'); optAll.value = 'all'; optAll.textContent = 'All Types';
+      const optAll = document.createElement('option'); optAll.value = 'all'; optAll.textContent = 'كل الأنواع';
       typeSelect.appendChild(optAll);
 
       let types = [];
       if (typeof fetchQuestionTypes === 'function') {
         try { types = await fetchQuestionTypes(src); } catch (e) { types = []; }
       }
-      // server fallback
+
       if ((!types || types.length === 0)) {
         try {
           const qs = new URLSearchParams({ action: 'types', source: src });
@@ -398,18 +379,20 @@
           const o = document.createElement('option'); o.value = t; o.textContent = t; typeSelect.appendChild(o);
         }
       } else {
-        // fallback static options
-        const labels = [{v:'mcq',t:'Multiple Choice'},{v:'multi',t:'Multiple Answers (Choose more than one)'},{v:'fill',t:'Fill in the Blank'}];
+        const labels = [
+          {v:'mcq',t:'اختيار من متعدد'},
+          {v:'multi',t:'اختيارات متعددة (اختَر أكثر من واحد)'},
+          {v:'fill',t:'املأ الفراغ'}
+        ];
         for (const l of labels){ const o=document.createElement('option'); o.value=l.v; o.textContent=l.t; typeSelect.appendChild(o); }
       }
     }
 
-    // run on load and when region changes
     populateTypeFilter();
     const regionSelectEl = document.getElementById('regionFilter');
     if (regionSelectEl) regionSelectEl.addEventListener('change', () => populateTypeFilter());
   });
   </script>
 
- </body>
+</body>
 </html>
