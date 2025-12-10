@@ -171,7 +171,9 @@ function loadEnglishQuestions($dataDir, $files) {
                 $output[] = [
                     'question' => $q,
                     'answer'   => $a,
-                    'lang'     => 'english'
+                    'lang'     => 'english',
+                    "english_type"     => strtolower($r["Type"] ?? ""),
+                    "english_category" => strtolower($r["Category"] ?? "")
                 ];
             }
         }
@@ -197,18 +199,6 @@ function loadArabicQuestions($dataDir, $dialectsLower) {
             $dialect = strtolower(trim($row['Dialect type'] ?? ''));
             if (!in_array($dialect, $dialectsLower)) continue;
 
-            // السؤال الرئيسي Term + Meaning_of_term
-            $term = trim($row['Term'] ?? '');
-            $mean = trim($row['Meaning_of_term'] ?? '');
-
-            if ($term !== "" && $mean !== "") {
-                $result[] = [
-                    'question' => $term,
-                    'answer'   => $mean,
-                    'lang'     => 'arabic'
-                ];
-            }
-
             // الأعمدة الأخرى كبلوكات
             $blockColumns = [
                 'Location_Recognition_question',
@@ -232,7 +222,8 @@ function loadArabicQuestions($dataDir, $dialectsLower) {
                     $result[] = [
                         'question' => $qText,
                         'answer'   => $aText,
-                        'lang'     => 'arabic'
+                        'lang'     => 'arabic',
+                        'arabic_type' => strtolower($col)
                     ];
                 }
             }

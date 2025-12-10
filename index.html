@@ -183,14 +183,36 @@
      <p dir="ltr">
        The Kingdom of Saudi Arabia is a nation of rich heritage and rapid development, located in the heart of the Arabian Peninsula. It is the birthplace of Islam and home to Makkah and Madinah, combining deep traditions with a modern vision for the future.     </p>
     
+      <!-- Main language filter -->
       <div class="question-filter">
-      <label>Filter:</label>
-      <select id="filterSelect">
-        <option value="all">All Questions</option>
-        <option value="english">English Only</option>
-        <option value="arabic">Arabic Only</option>
-      </select>
+        <label>Language:</label>
+        <select id="langFilter">
+          <option value="all">All</option>
+          <option value="arabic">Arabic</option>
+          <option value="english">English</option>
+        </select>
       </div>
+
+      <!-- Arabic type filter -->
+      <div id="arabicFilter" style="display:none; margin-top:10px;">
+        <label>Arabic Question Type:</label>
+        <select id="arabicType">
+          <option value="all">All</option>
+        </select>
+      </div>
+
+      <!-- English filters -->
+      <div id="englishFilters" style="display:none; margin-top:10px;">
+        <label>English Type:</label>
+        <select id="englishType">
+          <option value="all">All</option>
+        </select>
+
+        <label style="margin-left:15px;">Category:</label>
+        <select id="englishCategory">
+          <option value="all">All</option>
+        </select>
+        </div>
     
        <div class="features"></div>
     </div>
@@ -293,37 +315,130 @@ function createSlider(current, totalPages, changePage) {
   return wrap;
 }
 
+// ===========================================
+// filter system (language + types + category)
+// ===========================================
+
+// Filter states
+let currentArabicType = "all";
+let currentEnglishType = "all";
+let currentEnglishCategory = "all";
+
+// Sets for auto-populating filter dropdowns
+let discoveredArabicTypes = new Set();
+let discoveredEnglishTypes = new Set();
+let discoveredEnglishCategories = new Set();
+
+// Extract all types/categories from loaded questions
+function populateDynamicFilters(allQuestions) {
+  discoveredArabicTypes.clear();
+  discoveredEnglishTypes.clear();
+  discoveredEnglishCategories.clear();
+
+  allQuestions.forEach(q => {
+    if (q.lang === "arabic" && q.arabic_type) {
+      discoveredArabicTypes.add(q.arabic_type);
+    }
+    if (q.lang === "english") {
+      if (q.english_type) discoveredEnglishTypes.add(q.english_type);
+      if (q.category) discoveredEnglishCategories.add(q.category);
+    }
+  });
+
+  // Fill Arabic type filter
+  const arabSel = document.getElementById("arabicType");
+  arabSel.innerHTML = `<option value="all">All</option>`;
+  discoveredArabicTypes.forEach(t => {
+    arabSel.innerHTML += `<option value="${t}">${t}</option>`;
+  });
+
+  // Fill English types
+  const engTypeSel = document.getElementById("englishType");
+  engTypeSel.innerHTML = `<option value="all">All</option>`;
+  discoveredEnglishTypes.forEach(t => {
+    engTypeSel.innerHTML += `<option value="${t}">${t}</option>`;
+  });
+
+  // Fill English categories
+  const engCatSel = document.getElementById("englishCategory");
+  engCatSel.innerHTML = `<option value="all">All</option>`;
+  discoveredEnglishCategories.forEach(c => {
+    engCatSel.innerHTML += `<option value="${c}">${c}</option>`;
+  });
+}
+
+// Apply filters before rendering
+function applyFilters(items) {
+
+  // Main language
+  if (currentFilter !== "all") {
+    items = items.filter(q => q.lang === currentFilter);
+  }
+
+  // Arabic sub-filter
+  if (currentFilter === "arabic" && currentArabicType !== "all") {
+    items = items.filter(q => q.arabic_type === currentArabicType);
+  }
+
+  // English sub-filters
+  if (currentFilter === "english") {
+    if (currentEnglishType !== "all") {
+      items = items.filter(q => q.english_type === currentEnglishType);
+    }
+    if (currentEnglishCategory !== "all") {
+      items = items.filter(q => q.category === currentEnglishCategory);
+    }
+  }
+
+  return items;
+}
+
 // render questions in the page
 async function render(pageIndex = 0) {
   const container = document.querySelector(".features");
 
-  // remove old sliders
+  // Remove old sliders
   document.querySelectorAll(".qs-pagination").forEach(el => el.remove());
 
-  // load data (20 questions per page)
+  // Load all questions from backend
   const data = await loadPage(pageIndex);
 
-  // backend total pages (after filter)
-  const totalPages = Math.ceil(data.total / 20);
+  // Build dynamic dropdown contents
+  populateDynamicFilters(data.questions);
 
-  // top slider
+  // Apply filters
+  let filtered = applyFilters(data.questions);
+
+  // Correct total pages (based on filtered results)
+  const totalPages = Math.ceil(filtered.length / 20);
+
+  // Pick the correct 20 items for current page
+  let pageItems = filtered.slice(pageIndex * 20, pageIndex * 20 + 20);
+
+  // Create top slider
   const topSlider = createSlider(pageIndex, totalPages, render);
   container.before(topSlider);
 
-  // clear old cards
+  // Clear old content
   container.innerHTML = "";
 
-  // render question cards
-  data.questions.forEach(q => {
+  // Render cards
+  pageItems.forEach(q => {
     const card = document.createElement("article");
     card.className = "feature-card";
 
     const h3 = document.createElement("h3");
-    h3.textContent = q.question;
-    h3.dir = "auto";
-
     const p = document.createElement("p");
-    p.textContent = q.answer;
+
+    if (q.lang === "arabic") {
+      h3.textContent = "س: " + q.question;
+      p.textContent = "ج: " + q.answer;
+    } else {
+      h3.textContent = "Q: " + q.question;
+      p.textContent = "Answer: " + q.answer;
+    }
+
+    h3.dir = "auto";
     p.dir = "auto";
 
     card.appendChild(h3);
@@ -331,14 +446,36 @@ async function render(pageIndex = 0) {
     container.appendChild(card);
   });
 
-  // bottom slider
+  // Create bottom slider
   const bottomSlider = createSlider(pageIndex, totalPages, render);
   container.after(bottomSlider);
 }
+// Event listeners for filters
+document.getElementById("arabicType").addEventListener("change", (e) => {
+  currentArabicType = e.target.value;
+  render(0);
+});
 
-// when filter changes → reload from page 0
-document.getElementById("filterSelect").addEventListener("change", () => {
-  currentFilter = document.getElementById("filterSelect").value;
+document.getElementById("englishType").addEventListener("change", (e) => {
+  currentEnglishType = e.target.value;
+  render(0);
+});
+
+document.getElementById("englishCategory").addEventListener("change", (e) => {
+  currentEnglishCategory = e.target.value;
+  render(0);
+});
+
+// Show/Hide filters based on language
+document.getElementById("langFilter").addEventListener("change", (e) => {
+  currentFilter = e.target.value;
+
+  document.getElementById("arabicFilter").style.display =
+    currentFilter === "arabic" ? "block" : "none";
+
+  document.getElementById("englishFilters").style.display =
+    currentFilter === "english" ? "block" : "none";
+
   render(0);
 });
 
