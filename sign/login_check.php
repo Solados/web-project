@@ -1,14 +1,20 @@
 <?php
-session_set_cookie_params([
-    'lifetime' => 86400, // 24 hours
-    'path' => '/',
-    'domain' => $_SERVER['HTTP_HOST'],
-    'secure' => isset($_SERVER['HTTPS']), // Use HTTPS if available
-    'httponly' => true, // Prevent JavaScript access
-    'samesite' => 'Strict'
-]);
-session_start(); 
+// Configure session properly
+if (session_status() === PHP_SESSION_NONE) {
+ini_set('session.cookie_lifetime', 86400); // 24 hours
+ini_set('session.gc_maxlifetime', 86400);
 
+session_set_cookie_params([
+    'lifetime' => 86400,
+    'path' => '/web-project/',
+    'domain' => $_SERVER['HTTP_HOST'],
+    'secure' => isset($_SERVER['HTTPS']),
+    'httponly' => true,
+    'samesite' => 'Lax'
+]);
+
+session_start();
+}
 header('Content-Type: application/json');
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -39,6 +45,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $userFound = false;
     $isFirstRow = true;
+     $userName = '';
 
     while (($row = fgetcsv($file)) !== FALSE) {
         // Skip header row
@@ -63,6 +70,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $_SESSION['user_email'] = $email;
     $_SESSION['user_name'] = $row[0]; 
     $_SESSION['logged_in'] = true;
+    $_SESSION['login_time'] = time();
         echo json_encode(['success' => true, 'message' => 'Login successful.']);
         exit();
     } else {
@@ -70,3 +78,4 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit();
     }
 }
+?>

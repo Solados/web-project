@@ -1,4 +1,20 @@
 <?php
+// Configure session properly
+ini_set('session.cookie_lifetime', 86400); // 24 hours
+ini_set('session.gc_maxlifetime', 86400);
+
+session_set_cookie_params([
+    'lifetime' => 86400,
+    'path' => '/',
+    'domain' => $_SERVER['HTTP_HOST'],
+    'secure' => false,  // Set to true if using HTTPS
+    'httponly' => true,
+    'samesite' => 'Lax'
+]);
+
+session_start();
+?>
+<?php
 if ($_SERVER["REQUEST_METHOD"] !== 'POST') {
     http_response_code(405);
     exit('Method Not Allowed');
@@ -95,3 +111,4 @@ $_SESSION['logged_in'] = true;
 // Redirect to homepage (relative path)
 header('Location: ../index.html');
 exit();
+?>
