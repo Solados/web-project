@@ -254,13 +254,13 @@
   <script>
 const REGION_FILE = "GENERAL";   // which data file to load
 let currentFilter = "all";       // all | english | arabic
+let ALL_QUESTIONS = [];
 
 // fetch data from backend
-async function loadPage(pageIndex = 0) {
-  const resp = await fetch(
-    `api/region_questions.php?file=${REGION_FILE}&page=${pageIndex}&lang=${currentFilter}`
-  );
-  return resp.json();
+async function loadAllQuestions() {
+  const resp = await fetch(`api/region_questions.php?file=${REGION_FILE}&lang=all`);
+  const data = await resp.json();
+  return data.questions;
 }
 
 // slider (pagination) builder
@@ -397,32 +397,30 @@ function applyFilters(items) {
 async function render(pageIndex = 0) {
   const container = document.querySelector(".features");
 
-  // Remove old sliders
-  document.querySelectorAll(".qs-pagination").forEach(el => el.remove());
+  // load all questions once
+  if (ALL_QUESTIONS.length === 0) {
+    ALL_QUESTIONS = await loadAllQuestions();
+  }
 
-  // Load all questions from backend
-  const data = await loadPage(pageIndex);
+  // build dropdowns
+  populateDynamicFilters(ALL_QUESTIONS);
 
-  // Build dynamic dropdown contents
-  populateDynamicFilters(data.questions);
+  // apply filters
+  let filtered = applyFilters(ALL_QUESTIONS);
 
-  // Apply filters
-  let filtered = applyFilters(data.questions);
-
-  // Correct total pages (based on filtered results)
-  const totalPages = Math.ceil(filtered.length / 20);
-
-  // Pick the correct 20 items for current page
+  // calculate pages
+  let totalPages = Math.ceil(filtered.length / 20);
   let pageItems = filtered.slice(pageIndex * 20, pageIndex * 20 + 20);
 
-  // Create top slider
+  // clear old sliders
+  document.querySelectorAll(".qs-pagination").forEach(el => el.remove());
+
   const topSlider = createSlider(pageIndex, totalPages, render);
   container.before(topSlider);
 
-  // Clear old content
   container.innerHTML = "";
 
-  // Render cards
+  // render cards
   pageItems.forEach(q => {
     const card = document.createElement("article");
     card.className = "feature-card";
@@ -446,25 +444,9 @@ async function render(pageIndex = 0) {
     container.appendChild(card);
   });
 
-  // Create bottom slider
   const bottomSlider = createSlider(pageIndex, totalPages, render);
   container.after(bottomSlider);
 }
-// Event listeners for filters
-document.getElementById("arabicType").addEventListener("change", (e) => {
-  currentArabicType = e.target.value;
-  render(0);
-});
-
-document.getElementById("englishType").addEventListener("change", (e) => {
-  currentEnglishType = e.target.value;
-  render(0);
-});
-
-document.getElementById("englishCategory").addEventListener("change", (e) => {
-  currentEnglishCategory = e.target.value;
-  render(0);
-});
 
 // Show/Hide filters based on language
 document.getElementById("langFilter").addEventListener("change", (e) => {

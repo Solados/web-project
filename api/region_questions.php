@@ -250,18 +250,7 @@ if ($lang !== 'all') {
     }));
 }
 
-// خلط
-shuffle($questions);
-
-// تقسيم صفحات
-$total = count($questions);
-$start = $page * $perPage;
-$chunk = array_slice($questions, $start, $perPage);
-
-// النتيجة
+// لا نستخدم التقسيم هنا — JS يتكفل بالصفحات
 echo json_encode([
-    'page'      => $page,
-    'count'     => $perPage,
-    'total'     => $total,
-    'questions' => $chunk
+    'questions' => $questions
 ], JSON_UNESCAPED_UNICODE);
