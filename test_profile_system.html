@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile System Test Suite</title>
+    <style>
+        body {
+            font-family: 'Noto Kufi Arabic', Arial, sans-serif;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #115e42 0%, #1a7b57 100%);
+            color: #333;
+        }
+        .container {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+        .header {
+            background: linear-gradient(135deg, #115e42 0%, #1a7b57 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 2rem;
+        }
+        .content {
+            padding: 30px;
+        }
+        .test-section {
+            margin: 25px 0;
+            padding: 20px;
+            border-left: 4px solid #d4af37;
+            background: #faf7f1;
+            border-radius: 5px;
+        }
+        .test-section h3 {
+            color: #115e42;
+            margin-top: 0;
+        }
+        .test-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            background: white;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #e6decd;
+        }
+        .test-item a {
+            color: #1a7b57;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 8px 15px;
+            background: #e6decd;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+        .test-item a:hover {
+            background: #d4af37;
+            color: #1a1a1a;
+        }
+        .button-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .button {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+        .button-primary {
+            background: #115e42;
+            color: white;
+        }
+        .button-primary:hover {
+            background: #1a7b57;
+            transform: translateY(-2px);
+        }
+        .button-success {
+            background: #2a9d6b;
+            color: white;
+        }
+        .button-success:hover {
+            background: #1a7b57;
+        }
+        .button-danger {
+            background: #d73a49;
+            color: white;
+        }
+        .button-danger:hover {
+            background: #cb2431;
+        }
+        .info-box {
+            background: #e0f2f1;
+            border-left: 4px solid #2a9d6b;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        .warning-box {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        .error-box {
+            background: #f8d7da;
+            border-left: 4px solid #d73a49;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        .code {
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 3px;
+            font-family: monospace;
+            overflow-x: auto;
+            margin: 10px 0;
+        }
+        .status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        .status-success {
+            background: #d4edda;
+            color: #155724;
+        }
+        .status-warning {
+            background: #fff3cd;
+            color: #856404;
+        }
+        .status-error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: #faf7f1;
+            border-top: 1px solid #e6decd;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🧪 Profile System Test Suite</h1>
+            <p>Test and validate all profile system features</p>
+        </div>
+
+        <div class="content">
+            <!-- Quick Status Check -->
+            <div class="test-section">
+                <h3>📊 Quick Status Check</h3>
+                <div class="button-group">
+                    <button class="button button-primary" onclick="checkSession()">Check Session</button>
+                    <button class="button button-primary" onclick="checkCookies()">Check Cookies</button>
+                    <button class="button button-primary" onclick="checkAPI()">Check API</button>
+                    <button class="button button-primary" onclick="testAll()">Test All</button>
+                </div>
+                <div id="status-output" style="margin-top: 15px;"></div>
+            </div>
+
+            <!-- Test 1: Authentication Tests -->
+            <div class="test-section">
+                <h3>🔐 Test 1: Authentication System</h3>
+                <div class="test-item">
+                    <span>Login System</span>
+                    <div class="button-group">
+                        <a href="sign/Signup_Login_Form.html">Go to Login</a>
+                        <button class="button button-success" onclick="window.open('debug_profile.php', '_blank')">Debug Info</button>
+                    </div>
+                </div>
+                <div class="test-item">
+                    <span>Test Credentials</span>
+                    <div class="code">
+Email: solados@gmail.com
+Password: (check your registration)
+                    </div>
+                </div>
+            </div>
+
+            <!-- Test 2: Dashboard Tests -->
+            <div class="test-section">
+                <h3>📈 Test 2: Dashboard</h3>
+                <div class="test-item">
+                    <span>View Profile Dashboard</span>
+                    <a href="dashboard.php">Open Dashboard</a>
+                </div>
+                <div class="test-item">
+                    <span>Check User Info Display</span>
+                    <button class="button button-primary" onclick="alert('Go to dashboard and verify your name and email are displayed')">Instructions</button>
+                </div>
+                <div class="test-item">
+                    <span>Check Stats Loading</span>
+                    <button class="button button-primary" onclick="alert('Go to dashboard and open browser console (F12) to check for errors')">Instructions</button>
+                </div>
+            </div>
+
+            <!-- Test 3: Cookie Tests -->
+            <div class="test-section">
+                <h3>🍪 Test 3: Cookies & Persistence</h3>
+                <div class="test-item">
+                    <span>View Browser Cookies</span>
+                    <button class="button button-primary" onclick="viewCookies()">Show Cookies</button>
+                </div>
+                <div class="test-item">
+                    <span>Test 30-Day Persistence</span>
+                    <button class="button button-primary" onclick="alert('1. Login\\n2. Close browser completely\\n3. Reopen and visit dashboard.php\\n4. Should still be logged in')">Instructions</button>
+                </div>
+                <div id="cookies-output" style="margin-top: 15px;"></div>
+            </div>
+
+            <!-- Test 4: API Tests -->
+            <div class="test-section">
+                <h3>⚙️ Test 4: API Endpoints</h3>
+                <div class="test-item">
+                    <span>Get Profile Data</span>
+                    <a href="api/user_profile.php?action=get_profile" target="_blank">Test API</a>
+                </div>
+                <div class="test-item">
+                    <span>Get Stats Data</span>
+                    <a href="api/user_profile.php?action=get_stats" target="_blank">Test API</a>
+                </div>
+                <div class="test-item">
+                    <span>Test API Response</span>
+                    <button class="button button-primary" onclick="testAPI()">Run Test</button>
+                </div>
+                <div id="api-output" style="margin-top: 15px;"></div>
+            </div>
+
+            <!-- Test 5: Logout Tests -->
+            <div class="test-section">
+                <h3>🚪 Test 5: Logout & Security</h3>
+                <div class="test-item">
+                    <span>Test Logout (if logged in)</span>
+                    <a href="sign/check_session.php?logout=true" onclick="return confirm('This will logout. Continue?')">Logout</a>
+                </div>
+                <div class="test-item">
+                    <span>Verify Cookies Cleared</span>
+                    <button class="button button-danger" onclick="alert('After logging out, open browser cookies (F12). All user cookies should be gone.')">Instructions</button>
+                </div>
+            </div>
+
+            <!-- Information Box -->
+            <div class="info-box">
+                <strong>ℹ️ How to Open Browser Developer Tools:</strong>
+                <ul>
+                    <li>Windows/Linux: Press <strong>F12</strong> or <strong>Ctrl+Shift+I</strong></li>
+                    <li>Mac: Press <strong>Cmd+Option+I</strong></li>
+                    <li>Then go to <strong>"Application"</strong> or <strong>"Storage"</strong> tab to see cookies</li>
+                </ul>
+            </div>
+
+            <!-- Test Checklist -->
+            <div class="test-section">
+                <h3>✅ Test Checklist</h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div style="background: white; padding: 15px; border-radius: 5px;">
+                        <label><input type="checkbox"> Login works</label><br>
+                        <label><input type="checkbox"> Dashboard displays</label><br>
+                        <label><input type="checkbox"> User info visible</label><br>
+                        <label><input type="checkbox"> Stats load</label><br>
+                    </div>
+                    <div style="background: white; padding: 15px; border-radius: 5px;">
+                        <label><input type="checkbox"> Cookies set</label><br>
+                        <label><input type="checkbox"> Stays logged in</label><br>
+                        <label><input type="checkbox"> Logout works</label><br>
+                        <label><input type="checkbox"> All errors cleared</label><br>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Troubleshooting -->
+            <div class="warning-box">
+                <strong>⚠️ Common Issues:</strong>
+                <ul>
+                    <li><strong>Not staying logged in:</strong> Check if cookies are enabled in browser</li>
+                    <li><strong>API returning 401:</strong> Make sure you're logged in first</li>
+                    <li><strong>User data not showing:</strong> Verify login credentials are correct</li>
+                    <li><strong>Logout not working:</strong> Try clearing cookies manually</li>
+                </ul>
+            </div>
+
+            <!-- Debug Links -->
+            <div class="test-section">
+                <h3>🔧 Debug Tools</h3>
+                <div class="button-group">
+                    <a href="debug_profile.php" class="button button-primary" style="text-decoration: none;">Open Debug Panel</a>
+                    <button class="button button-primary" onclick="openDevTools()">Open Dev Tools</button>
+                    <button class="button button-primary" onclick="window.open('sign/Signup_Login_Form.html', '_blank')">Open Login</button>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>🧪 Profile System Test Suite | Last Updated: December 10, 2025</p>
+            <p style="font-size: 0.9rem;">For detailed documentation, see: PROFILE_INTEGRATION_GUIDE.md, QUICK_REFERENCE.md, IMPLEMENTATION_COMPLETE.md</p>
+        </footer>
+    </div>
+
+    <script>
+        function viewCookies() {
+            if (document.cookie === '') {
+                document.getElementById('cookies-output').innerHTML = '<div class="error-box"><strong>No cookies found!</strong> Login first.</div>';
+            } else {
+                const cookies = document.cookie.split(';');
+                let html = '<div class="info-box"><strong>Cookies Found:</strong><br>';
+                cookies.forEach(cookie => {
+                    html += '<code style="display: block; margin: 5px 0;">' + cookie.trim() + '</code>';
+                });
+                html += '</div>';
+                document.getElementById('cookies-output').innerHTML = html;
+            }
+        }
+
+        function checkSession() {
+            fetch('debug_profile.php').then(r => r.text()).then(html => {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                alert('Check debug_profile.php for session details');
+                window.open('debug_profile.php', '_blank');
+            });
+        }
+
+        function checkCookies() {
+            viewCookies();
+        }
+
+        async function testAPI() {
+            try {
+                const response = await fetch('api/user_profile.php?action=get_stats');
+                const data = await response.json();
+                document.getElementById('api-output').innerHTML = '<div class="info-box"><strong>API Response (Stats):</strong><pre>' + JSON.stringify(data, null, 2) + '</pre></div>';
+            } catch (e) {
+                document.getElementById('api-output').innerHTML = '<div class="error-box"><strong>Error:</strong> ' + e.message + '<br>Make sure you are logged in.</div>';
+            }
+        }
+
+        function checkAPI() {
+            testAPI();
+        }
+
+        async function testAll() {
+            let results = '<div class="info-box"><strong>Test Results:</strong>';
+            
+            // Test 1: Cookies
+            if (document.cookie) {
+                results += '<br>✅ Cookies present';
+            } else {
+                results += '<br>❌ No cookies (login first)';
+            }
+            
+            // Test 2: API
+            try {
+                const response = await fetch('api/user_profile.php?action=get_stats');
+                if (response.ok) {
+                    results += '<br>✅ API responding';
+                } else {
+                    results += '<br>❌ API error (login required)';
+                }
+            } catch (e) {
+                results += '<br>❌ API unreachable';
+            }
+            
+            results += '</div>';
+            document.getElementById('status-output').innerHTML = results;
+        }
+
+        function openDevTools() {
+            alert('Press F12 to open Developer Tools\nGo to "Application" tab to see cookies');
+        }
+    </script>
+</body>
+</html>

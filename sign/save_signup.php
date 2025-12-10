@@ -103,12 +103,38 @@ fflush($fh);
 flock($fh, LOCK_UN);
 fclose($fh);
 
-// Start session and redirect to root index
+// Start session with persistent cookies
+ini_set('session.cookie_lifetime', 2592000); // 30 days
+ini_set('session.gc_maxlifetime', 2592000);
+
+session_set_cookie_params([
+    'lifetime' => 2592000,
+    'path' => '/',
+    'domain' => '',
+    'secure' => false,
+    'httponly' => true,
+    'samesite' => 'Lax'
+]);
+
 session_start();
+
+// Store all user data in session
+$_SESSION['user_id'] = md5($email . time());
+$_SESSION['user_name'] = $fullname;
 $_SESSION['user_email'] = $email;
 $_SESSION['logged_in'] = true;
+$_SESSION['login_time'] = time();
+$_SESSION['last_activity'] = time();
+$_SESSION['ip_address'] = $_SERVER['REMOTE_ADDR'];
+$_SESSION['user_agent'] = $_SERVER['HTTP_USER_AGENT'];
 
-// Redirect to homepage (relative path)
+// Set persistent cookies
+setcookie('user_id', $_SESSION['user_id'], time() + 2592000, '/');
+setcookie('user_email', $email, time() + 2592000, '/');
+setcookie('user_name', $fullname, time() + 2592000, '/');
+setcookie('logged_in', '1', time() + 2592000, '/');
+
+// Redirect to homepage
 header('Location: ../index.html');
 exit();
 ?>
