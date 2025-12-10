@@ -668,6 +668,23 @@ body { overflow-x: hidden; }
   border: 1px solid #ccc;
   font-size: 1rem;
 }
+
+/* apply same style to all filter rows */
+.sub-filter {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 0.75rem;
+    margin: 0.5rem 0 1rem;
+}
+
+.sub-filter select {
+    padding: .4rem .6rem;
+    border-radius: .5rem;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+}
+
 /* =========================== */
 /*   FIXED NAVBAR              */
 /* =========================== */

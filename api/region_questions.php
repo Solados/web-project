@@ -3,7 +3,7 @@ header("Content-Type: application/json; charset=UTF-8;");
 
 // قراءة بارامترات الطلب
 $file = isset($_GET['file']) ? strtoupper(trim($_GET['file'])) : 'GENERAL';
-$page = isset($_GET['page']) ? max(0, intval($_GET['page'])) : 0;
+$page = isset($_GET['page']) ? intval($_GET['page']) : 0;
 
 $lang = isset($_GET['lang']) ? strtolower(trim($_GET['lang'])) : 'all';
 if (!in_array($lang, ['all', 'english', 'arabic'])) {
@@ -172,7 +172,7 @@ function loadEnglishQuestions($dataDir, $files) {
                     'question' => $q,
                     'answer'   => $a,
                     'lang'     => 'english',
-                    "english_type"     => strtolower($r["Type"] ?? ""),
+                    "english_type"     => strtolower($r["Question Type"] ?? ""),
                     "english_category" => strtolower($r["Category"] ?? "")
                 ];
             }
@@ -243,6 +243,12 @@ $english = loadEnglishQuestions($dataDir, $config['englishFiles']);
 $arabic  = loadArabicQuestions($dataDir, $dialectsLower);
 
 $questions = array_merge($english, $arabic);
+
+// Shuffle only if no language filter is applied
+if ($lang === 'all') {
+    shuffle($questions);
+}
+
 
 if ($lang !== 'all') {
     $questions = array_values(array_filter($questions, function($q) use ($lang) {

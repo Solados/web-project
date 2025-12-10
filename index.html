@@ -194,7 +194,7 @@
       </div>
 
       <!-- Arabic type filter -->
-      <div id="arabicFilter" style="display:none; margin-top:10px;">
+      <div id="arabicFilter" class="sub-filter" style="display:none; margin-top:10px;">
         <label>Arabic Question Type:</label>
         <select id="arabicType">
           <option value="all">All</option>
@@ -202,7 +202,7 @@
       </div>
 
       <!-- English filters -->
-      <div id="englishFilters" style="display:none; margin-top:10px;">
+      <div id="englishFilters" class="sub-filter" style="display:none; margin-top:10px;">
         <label>English Type:</label>
         <select id="englishType">
           <option value="all">All</option>
@@ -337,56 +337,82 @@ function populateDynamicFilters(allQuestions) {
 
   allQuestions.forEach(q => {
     if (q.lang === "arabic" && q.arabic_type) {
-      discoveredArabicTypes.add(q.arabic_type);
+      discoveredArabicTypes.add(q.arabic_type.toLowerCase());
     }
     if (q.lang === "english") {
-      if (q.english_type) discoveredEnglishTypes.add(q.english_type);
-      if (q.category) discoveredEnglishCategories.add(q.category);
+      if (q.english_type)      discoveredEnglishTypes.add(q.english_type.toLowerCase());
+      if (q.english_category)  discoveredEnglishCategories.add(q.english_category.toLowerCase());
     }
   });
 
-  // Fill Arabic type filter
+  // Arabic dropdown
   const arabSel = document.getElementById("arabicType");
   arabSel.innerHTML = `<option value="all">All</option>`;
   discoveredArabicTypes.forEach(t => {
     arabSel.innerHTML += `<option value="${t}">${t}</option>`;
   });
+  // لو القيمة الحالية مو موجودة ضمن الأنواع، رجّعها all
+  if (currentArabicType !== "all" && !discoveredArabicTypes.has(currentArabicType)) {
+    currentArabicType = "all";
+  }
+  arabSel.value = currentArabicType;
 
-  // Fill English types
+  // English Type dropdown
   const engTypeSel = document.getElementById("englishType");
   engTypeSel.innerHTML = `<option value="all">All</option>`;
   discoveredEnglishTypes.forEach(t => {
     engTypeSel.innerHTML += `<option value="${t}">${t}</option>`;
   });
+  if (currentEnglishType !== "all" && !discoveredEnglishTypes.has(currentEnglishType)) {
+    currentEnglishType = "all";
+  }
+  engTypeSel.value = currentEnglishType;
 
-  // Fill English categories
+  // English Category dropdown
   const engCatSel = document.getElementById("englishCategory");
   engCatSel.innerHTML = `<option value="all">All</option>`;
   discoveredEnglishCategories.forEach(c => {
     engCatSel.innerHTML += `<option value="${c}">${c}</option>`;
   });
+  if (currentEnglishCategory !== "all" && !discoveredEnglishCategories.has(currentEnglishCategory)) {
+    currentEnglishCategory = "all";
+  }
+  engCatSel.value = currentEnglishCategory;
 }
 
 // Apply filters before rendering
 function applyFilters(items) {
 
-  // Main language
+  // 1️⃣ اللغة
   if (currentFilter !== "all") {
     items = items.filter(q => q.lang === currentFilter);
   }
 
-  // Arabic sub-filter
-  if (currentFilter === "arabic" && currentArabicType !== "all") {
-    items = items.filter(q => q.arabic_type === currentArabicType);
+  // 2️⃣ العربية
+  if (currentFilter === "arabic") {
+    if (currentArabicType !== "all") {
+      items = items.filter(q =>
+        q.arabic_type &&
+        q.arabic_type.toLowerCase() === currentArabicType.toLowerCase()
+      );
+    }
   }
 
-  // English sub-filters
+  // 3️⃣ الإنجليزية
   if (currentFilter === "english") {
+
     if (currentEnglishType !== "all") {
-      items = items.filter(q => q.english_type === currentEnglishType);
+      items = items.filter(q =>
+        q.english_type &&
+        q.english_type.toLowerCase() === currentEnglishType.toLowerCase()
+      );
     }
+
     if (currentEnglishCategory !== "all") {
-      items = items.filter(q => q.category === currentEnglishCategory);
+      items = items.filter(q =>
+        q.english_category &&
+        q.english_category.toLowerCase() === currentEnglishCategory.toLowerCase()
+      );
     }
   }
 
@@ -448,10 +474,36 @@ async function render(pageIndex = 0) {
   container.after(bottomSlider);
 }
 
+document.getElementById("arabicType").addEventListener("change", (e) => {
+  currentArabicType = e.target.value;
+  render(0);
+});
+
+document.getElementById("englishType").addEventListener("change", (e) => {
+  currentEnglishType = e.target.value;
+  render(0);
+});
+
+document.getElementById("englishCategory").addEventListener("change", (e) => {
+  currentEnglishCategory = e.target.value;
+  render(0);
+});
+
 // Show/Hide filters based on language
 document.getElementById("langFilter").addEventListener("change", (e) => {
   currentFilter = e.target.value;
 
+  // Reset ALL sub-filters when switching language
+  currentArabicType = "all";
+  currentEnglishType = "all";
+  currentEnglishCategory = "all";
+
+  // Reset UI dropdowns too
+  document.getElementById("arabicType").value = "all";
+  document.getElementById("englishType").value = "all";
+  document.getElementById("englishCategory").value = "all";
+
+  // Show/Hide blocks
   document.getElementById("arabicFilter").style.display =
     currentFilter === "arabic" ? "block" : "none";
 
