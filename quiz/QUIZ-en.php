@@ -341,35 +341,116 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
 
     for(let i=0;i<selectedQuestions.length;i++){
       const q = selectedQuestions[i];
+      let isCorrect = false;
+
       if (Array.isArray(q.choices) && q.choices.length > 0) {
         const sel = document.querySelector(`input[name="q${i}"]:checked`);
-        if(sel && sel.value === q.answer) score++;
+        if(sel && sel.value === q.answer){
+            score++;
+            isCorrect = true;
+        }
       } else {
-        // open answer grading: compare trimmed, case-insensitive if answer exists
         const ta = document.querySelector(`textarea[name="q${i}_open"]`);
         if (ta) {
           const user = (ta.value || '').trim();
           const corr = (q.answer || '').trim();
           if (corr !== '') {
-            if (user !== '' && user.toLowerCase() === corr.toLowerCase()) score++;
+            if (user !== '' && user.toLowerCase() === corr.toLowerCase()){
+                score++;
+                isCorrect = true;
+            }
           }
-          // if no correct answer provided, we cannot auto-grade; leave as incorrect
         }
       }
+
+      //  تلوين صندوق السؤال
+      const box = document.getElementById("quizContainer").children[i];
+      if (isCorrect){
+        box.style.background = "rgba(0,255,0,0.2)";
+      } else {
+        box.style.background = "rgba(255,0,0,0.2)";
+      }
+      box.style.transition = "0.3s";
     }
 
     const total = selectedQuestions.length || 1;
     const percent = Math.round((score/total)*100);
 
-    // Choose color based on percentage
-    let color = '#1e88e5'; // default blue
-    if(percent >= 80) color = 'green';
-    else if(percent >= 50) color = 'orange';
-    else color = 'red';
-
     document.getElementById('result').innerHTML =
-      `Your score: <span style="color:${color}">${score} / ${total} (${percent}%)</span>`;
-  }
+      `Your score: <strong>${score} / ${total} (${percent}%)</strong><br><br>
+       <canvas id="scoreChart" style="max-width:300px;margin:0 auto;display:block;"></canvas>`;
+
+    //  تحميل Chart.js تلقائياً إذا لم يكن موجود
+    function loadChart(callback){
+        if (window.Chart){
+            callback();
+            return;
+        }
+        const s = document.createElement("script");
+        s.src = "https://cdn.jsdelivr.net/npm/chart.js";
+        s.onload = callback;
+        document.body.appendChild(s);
+    }
+
+    loadChart(() => {
+        const ctx = document.getElementById("scoreChart");
+
+        // حذف أي شارت قديم
+        if (window.quizChart){
+            window.quizChart.destroy();
+        }
+
+        // رسم الشارت
+        window.quizChart = new Chart(ctx, {
+            type: "pie",
+            data: {
+                labels: ["Correct", "Wrong"],
+                datasets: [{
+                    data: [score, total - score],
+                    backgroundColor: ["#4CAF50", "#F44336"]
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: "bottom" }
+                }
+            }
+        });
+
+//  إضافة أزرار المشاركة
+const shareContainerId = "shareResultContainer";
+let shareContainer = document.getElementById(shareContainerId);
+if (!shareContainer){
+    shareContainer = document.createElement("div");
+    shareContainer.id = shareContainerId;
+    shareContainer.style.textAlign = "center";
+    shareContainer.style.marginTop = "15px";
+    document.getElementById('result').appendChild(shareContainer);
+}
+
+// الرابط والنص للمشاركة
+const shareText = `I scored ${score} / ${total} (${percent}%) on the quiz! Try it yourself: ${window.location.href}`;
+const encodedText = encodeURIComponent(shareText);
+const encodedURL = encodeURIComponent(window.location.href);
+
+// أزرار المشاركة HTML باللوقو الرسمي لكل منصة
+shareContainer.innerHTML = `
+  <a href="https://x.com/intent/tweet?text=${encodedText}" target="_blank" style="margin:0 5px;">
+    <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/x.svg" width="32" height="32" alt="x" style="vertical-align:middle; filter: invert(36%) sepia(97%) saturate(1595%) hue-rotate(176deg) brightness(93%) contrast(95%);" />
+  </a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=${encodedURL}" target="_blank" style="margin:0 5px;">
+    <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/facebook.svg" width="32" height="32" alt="Facebook" style="vertical-align:middle; filter: invert(29%) sepia(72%) saturate(900%) hue-rotate(182deg) brightness(90%) contrast(90%);" />
+  </a>
+
+  <a href="https://api.whatsapp.com/send?text=${encodedText}" target="_blank" style="margin:0 5px;">
+    <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/whatsapp.svg" width="32" height="32" alt="WhatsApp" style="vertical-align:middle; filter: invert(49%) sepia(92%) saturate(510%) hue-rotate(95deg) brightness(93%) contrast(95%);" />
+  </a>
+`;
+    });
+
+}
 
   /*
     Activates the Start button on page load
