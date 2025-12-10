@@ -161,14 +161,36 @@
      <p dir="ltr">
        The Kingdom of Saudi Arabia is a nation of rich heritage and rapid development, located in the heart of the Arabian Peninsula. It is the birthplace of Islam and home to Makkah and Madinah, combining deep traditions with a modern vision for the future.     </p>
      
+      <!-- Main language filter -->
       <div class="question-filter">
-      <label>Filter:</label>
-      <select id="filterSelect">
-        <option value="all">All Questions</option>
-        <option value="english">English Only</option>
-        <option value="arabic">Arabic Only</option>
-      </select>
+        <label>Language:</label>
+        <select id="langFilter">
+          <option value="all">All</option>
+          <option value="arabic">Arabic</option>
+          <option value="english">English</option>
+        </select>
       </div>
+
+      <!-- Arabic type filter -->
+      <div id="arabicFilter" class="sub-filter" style="display:none; margin-top:10px;">
+        <label>Arabic Question Type:</label>
+        <select id="arabicType">
+          <option value="all">All</option>
+        </select>
+      </div>
+
+      <!-- English filters -->
+      <div id="englishFilters" class="sub-filter" style="display:none; margin-top:10px;">
+        <label>English Type:</label>
+        <select id="englishType">
+          <option value="all">All</option>
+        </select>
+
+        <label style="margin-left:15px;">Category:</label>
+        <select id="englishCategory">
+          <option value="all">All</option>
+        </select>
+        </div>
      
        <div class="features"></div>
     </div>
@@ -205,33 +227,38 @@
 (function(){if(!window.chatbase||window.chatbase("getState")!=="initialized"){window.chatbase=(...arguments)=>{if(!window.chatbase.q){window.chatbase.q=[]}window.chatbase.q.push(arguments)};window.chatbase=new Proxy(window.chatbase,{get(target,prop){if(prop==="q"){return target.q}return(...args)=>target(prop,...args)}})}const onLoad=function(){const script=document.createElement("script");script.src="https://www.chatbase.co/embed.min.js";script.id="PkSRl6nFY3Csgenh8koIS";script.domain="www.chatbase.co";document.body.appendChild(script)};if(document.readyState==="complete"){onLoad()}else{window.addEventListener("load",onLoad)}})();
 </script>
 
-  <script>
-const REGION_FILE = "EAST"; 
-let currentFilter = "all";
+ <script>
+const REGION_FILE = "EAST";   // which data file to load
+let currentFilter = "all";       // all | english | arabic
+let ALL_QUESTIONS = [];
 
-async function loadPage(pageIndex = 0) {
-  const resp = await fetch(
-    `api/region_questions.php?file=${REGION_FILE}&page=${pageIndex}&lang=${currentFilter}`
-  );
-  return resp.json();
+// fetch data from backend
+async function loadAllQuestions() {
+  const resp = await fetch(`api/region_questions.php?file=${REGION_FILE}&lang=all`);
+  const data = await resp.json();
+  return data.questions;
 }
 
+// slider (pagination) builder
 function createSlider(current, totalPages, changePage) {
   const wrap = document.createElement("div");
   wrap.className = "qs-pagination";
 
+  // first page button
   const first = document.createElement("button");
   first.textContent = "«";
   first.disabled = current === 0;
   first.onclick = () => changePage(0);
   wrap.appendChild(first);
 
+  // previous page button
   const prev = document.createElement("button");
   prev.textContent = "‹";
   prev.disabled = current === 0;
   prev.onclick = () => changePage(current - 1);
   wrap.appendChild(prev);
 
+  // page numbers (current ± 2)
   let start = current - 2;
   let end = current + 2;
 
@@ -247,12 +274,14 @@ function createSlider(current, totalPages, changePage) {
     wrap.appendChild(btn);
   }
 
+  // next page button
   const next = document.createElement("button");
   next.textContent = "›";
   next.disabled = current === totalPages - 1;
   next.onclick = () => changePage(current + 1);
   wrap.appendChild(next);
 
+  // last page button
   const last = document.createElement("button");
   last.textContent = "»";
   last.disabled = current === totalPages - 1;
@@ -262,28 +291,154 @@ function createSlider(current, totalPages, changePage) {
   return wrap;
 }
 
+// ===========================================
+// filter system (language + types + category)
+// ===========================================
+
+// Filter states
+let currentArabicType = "all";
+let currentEnglishType = "all";
+let currentEnglishCategory = "all";
+
+// Sets for auto-populating filter dropdowns
+let discoveredArabicTypes = new Set();
+let discoveredEnglishTypes = new Set();
+let discoveredEnglishCategories = new Set();
+
+// Extract all types/categories from loaded questions
+function populateDynamicFilters(allQuestions) {
+  discoveredArabicTypes.clear();
+  discoveredEnglishTypes.clear();
+  discoveredEnglishCategories.clear();
+
+  allQuestions.forEach(q => {
+    if (q.lang === "arabic" && q.arabic_type) {
+      discoveredArabicTypes.add(q.arabic_type.toLowerCase());
+    }
+    if (q.lang === "english") {
+      if (q.english_type)      discoveredEnglishTypes.add(q.english_type.toLowerCase());
+      if (q.english_category)  discoveredEnglishCategories.add(q.english_category.toLowerCase());
+    }
+  });
+
+  // Arabic dropdown
+  const arabSel = document.getElementById("arabicType");
+  arabSel.innerHTML = `<option value="all">All</option>`;
+  discoveredArabicTypes.forEach(t => {
+    arabSel.innerHTML += `<option value="${t}">${t}</option>`;
+  });
+  // لو القيمة الحالية مو موجودة ضمن الأنواع، رجّعها all
+  if (currentArabicType !== "all" && !discoveredArabicTypes.has(currentArabicType)) {
+    currentArabicType = "all";
+  }
+  arabSel.value = currentArabicType;
+
+  // English Type dropdown
+  const engTypeSel = document.getElementById("englishType");
+  engTypeSel.innerHTML = `<option value="all">All</option>`;
+  discoveredEnglishTypes.forEach(t => {
+    engTypeSel.innerHTML += `<option value="${t}">${t}</option>`;
+  });
+  if (currentEnglishType !== "all" && !discoveredEnglishTypes.has(currentEnglishType)) {
+    currentEnglishType = "all";
+  }
+  engTypeSel.value = currentEnglishType;
+
+  // English Category dropdown
+  const engCatSel = document.getElementById("englishCategory");
+  engCatSel.innerHTML = `<option value="all">All</option>`;
+  discoveredEnglishCategories.forEach(c => {
+    engCatSel.innerHTML += `<option value="${c}">${c}</option>`;
+  });
+  if (currentEnglishCategory !== "all" && !discoveredEnglishCategories.has(currentEnglishCategory)) {
+    currentEnglishCategory = "all";
+  }
+  engCatSel.value = currentEnglishCategory;
+}
+
+// Apply filters before rendering
+function applyFilters(items) {
+
+  // 1️⃣ اللغة
+  if (currentFilter !== "all") {
+    items = items.filter(q => q.lang === currentFilter);
+  }
+
+  // 2️⃣ العربية
+  if (currentFilter === "arabic") {
+    if (currentArabicType !== "all") {
+      items = items.filter(q =>
+        q.arabic_type &&
+        q.arabic_type.toLowerCase() === currentArabicType.toLowerCase()
+      );
+    }
+  }
+
+  // 3️⃣ الإنجليزية
+  if (currentFilter === "english") {
+
+    if (currentEnglishType !== "all") {
+      items = items.filter(q =>
+        q.english_type &&
+        q.english_type.toLowerCase() === currentEnglishType.toLowerCase()
+      );
+    }
+
+    if (currentEnglishCategory !== "all") {
+      items = items.filter(q =>
+        q.english_category &&
+        q.english_category.toLowerCase() === currentEnglishCategory.toLowerCase()
+      );
+    }
+  }
+
+  return items;
+}
+
+// render questions in the page
 async function render(pageIndex = 0) {
   const container = document.querySelector(".features");
-  document.querySelectorAll(".qs-pagination").forEach(el => el.remove());
 
-  const data = await loadPage(pageIndex);
-  const totalPages = Math.ceil(data.total / 20);
+  // load all questions once
+  if (ALL_QUESTIONS.length === 0) {
+    ALL_QUESTIONS = await loadAllQuestions();
+  }
+
+  // build dropdowns
+  populateDynamicFilters(ALL_QUESTIONS);
+
+  // apply filters
+  let filtered = applyFilters(ALL_QUESTIONS);
+
+  // calculate pages
+  let totalPages = Math.ceil(filtered.length / 20);
+  let pageItems = filtered.slice(pageIndex * 20, pageIndex * 20 + 20);
+
+  // clear old sliders
+  document.querySelectorAll(".qs-pagination").forEach(el => el.remove());
 
   const topSlider = createSlider(pageIndex, totalPages, render);
   container.before(topSlider);
 
   container.innerHTML = "";
 
-  data.questions.forEach(q => {
+  // render cards
+  pageItems.forEach(q => {
     const card = document.createElement("article");
     card.className = "feature-card";
 
     const h3 = document.createElement("h3");
-    h3.textContent = q.question;
-    h3.dir = "auto";
-
     const p = document.createElement("p");
-    p.textContent = q.answer;
+
+    if (q.lang === "arabic") {
+      h3.textContent = "س: " + q.question;
+      p.textContent = "ج: " + q.answer;
+    } else {
+      h3.textContent = "Q: " + q.question;
+      p.textContent = "Answer: " + q.answer;
+    }
+
+    h3.dir = "auto";
     p.dir = "auto";
 
     card.appendChild(h3);
@@ -295,11 +450,46 @@ async function render(pageIndex = 0) {
   container.after(bottomSlider);
 }
 
-document.getElementById("filterSelect").addEventListener("change", () => {
-  currentFilter = document.getElementById("filterSelect").value;
+document.getElementById("arabicType").addEventListener("change", (e) => {
+  currentArabicType = e.target.value;
   render(0);
 });
 
+document.getElementById("englishType").addEventListener("change", (e) => {
+  currentEnglishType = e.target.value;
+  render(0);
+});
+
+document.getElementById("englishCategory").addEventListener("change", (e) => {
+  currentEnglishCategory = e.target.value;
+  render(0);
+});
+
+// Show/Hide filters based on language
+document.getElementById("langFilter").addEventListener("change", (e) => {
+  currentFilter = e.target.value;
+
+  // Reset ALL sub-filters when switching language
+  currentArabicType = "all";
+  currentEnglishType = "all";
+  currentEnglishCategory = "all";
+
+  // Reset UI dropdowns too
+  document.getElementById("arabicType").value = "all";
+  document.getElementById("englishType").value = "all";
+  document.getElementById("englishCategory").value = "all";
+
+  // Show/Hide blocks
+  document.getElementById("arabicFilter").style.display =
+    currentFilter === "arabic" ? "block" : "none";
+
+  document.getElementById("englishFilters").style.display =
+    currentFilter === "english" ? "block" : "none";
+
+  render(0);
+});
+
+// initial load
 render(0);
 </script>
 
