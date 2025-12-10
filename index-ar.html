@@ -473,7 +473,7 @@ async function render(pageIndex = 0) {
   // render cards
   pageItems.forEach(q => {
     const card = document.createElement("article");
-    card.className = "feature-card";
+    card.className = "feature-card " + (q.lang === "english" ? "en" : "ar");
 
     const h3 = document.createElement("h3");
     const p = document.createElement("p");

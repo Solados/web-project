@@ -801,3 +801,10 @@ body { overflow-x: hidden; }
 .navbar .dropdown:hover .dropdown-content {
     display: block;
 }
+
+/* تأكيد ظهور الأسئلة الإنجليزية من اليسار لليمين فقط */
+.feature-card.en h3,
+.feature-card.en p {
+    direction: ltr !important;
+    text-align: left !important;
+}
