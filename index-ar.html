@@ -180,12 +180,35 @@
                 وهي مهد الإسلام وموطن الحرمين الشريفين.
             </p>
 
+            <!-- فلتر اللغة -->
             <div class="question-filter">
-                <label>الفرز:</label>
-                <select id="filterSelect">
-                    <option value="all">كل الأسئلة</option>
-                    <option value="english">أسئلة إنجليزية</option>
-                    <option value="arabic">أسئلة عربية</option>
+            <label>اللغة:</label>
+            <select id="langFilter">
+                <option value="all">الكل</option>
+                <option value="arabic">عربي</option>
+                <option value="english">إنجليزي</option>
+            </select>
+            </div>
+
+            <!-- فلتر نوع السؤال العربي -->
+            <div id="arabicFilter" style="display:none; margin-top:10px;" class="question-filter">
+                <label>نوع السؤال:</label>
+                <select id="arabicType">
+                    <option value="all">الكل</option>
+                </select>
+            </div>
+
+            <!-- فلاتر الأسئلة الإنجليزية -->
+            <div id="englishFilters" style="display:none; margin-top:10px;" class="question-filter">
+
+                <label>نوع السؤال:</label>
+                <select id="englishType">
+                    <option value="all">الكل</option>
+                </select>
+
+                <label style="margin-left:15px;">الفئة:</label>
+                <select id="englishCategory">
+                    <option value="all">الكل</option>
                 </select>
             </div>
 
@@ -227,15 +250,41 @@
     
   <!-- Page script -->
   <script>
+
+// ==========================
+// قاموس الترجمة للفلاتر
+// ==========================
+const TRANSLATIONS = {
+  "location_recognition_question": "أسئلة تحديد الموقع",
+  "cultural_interpretation_question": "أسئلة التفسير الثقافي",
+  "contextual_usage_question": "أسئلة الاستخدام السياقي",
+  "fill_in_blank_question": "أسئلة املأ الفراغ",
+  "true_false_question": "أسئلة الصح والخطأ",
+  "meaning_question": "أسئلة اختيار المعنى",
+
+  "open-ended": "سؤال مقالي",
+  "mcq (one correct)": "اختيار من متعدد (إجابة واحدة)",
+  "mcq (multiple correct)": "اختيار من متعدد (عدة إجابات)",
+
+  "languages and communication": "اللغات والتواصل",
+  "celebration": "الاحتفالات",
+  "entertainment": "الترفيه",
+  "crafts and work": "الحرف والعمل",
+  "architecture": "العمارة",
+  "food": "الطعام",
+  "clothes": "الملابس",
+  "dating": "التعارف والعلاقات"
+};
+
 const REGION_FILE = "GENERAL";   // which data file to load
 let currentFilter = "all";       // all | english | arabic
+let ALL_QUESTIONS = [];
 
 // fetch data from backend
-async function loadPage(pageIndex = 0) {
-  const resp = await fetch(
-    `api/region_questions.php?file=${REGION_FILE}&page=${pageIndex}&lang=${currentFilter}`
-  );
-  return resp.json();
+async function loadAllQuestions() {
+  const resp = await fetch(`api/region_questions.php?file=${REGION_FILE}&lang=all`);
+  const data = await resp.json();
+  return data.questions;
 }
 
 // slider (pagination) builder
@@ -290,37 +339,154 @@ function createSlider(current, totalPages, changePage) {
   return wrap;
 }
 
+// ===========================================
+// filter system (language + types + category)
+// ===========================================
+
+// Filter states
+let currentArabicType = "all";
+let currentEnglishType = "all";
+let currentEnglishCategory = "all";
+
+// Sets for auto-populating filter dropdowns
+let discoveredArabicTypes = new Set();
+let discoveredEnglishTypes = new Set();
+let discoveredEnglishCategories = new Set();
+
+// Extract all types/categories from loaded questions
+function populateDynamicFilters(allQuestions) {
+  discoveredArabicTypes.clear();
+  discoveredEnglishTypes.clear();
+  discoveredEnglishCategories.clear();
+
+  allQuestions.forEach(q => {
+    if (q.lang === "arabic" && q.arabic_type) {
+      discoveredArabicTypes.add(q.arabic_type.toLowerCase());
+    }
+    if (q.lang === "english") {
+      if (q.english_type)      discoveredEnglishTypes.add(q.english_type.toLowerCase());
+      if (q.english_category)  discoveredEnglishCategories.add(q.english_category.toLowerCase());
+    }
+  });
+
+  // Arabic dropdown
+  const arabSel = document.getElementById("arabicType");
+  arabSel.innerHTML = `<option value="all">الكل</option>`;
+  discoveredArabicTypes.forEach(t => {
+    arabSel.innerHTML += `<option value="${t}">${TRANSLATIONS[t] || t}</option>`;
+  });
+  // لو القيمة الحالية مو موجودة ضمن الأنواع، رجّعها all
+  if (currentArabicType !== "all" && !discoveredArabicTypes.has(currentArabicType)) {
+    currentArabicType = "all";
+  }
+  arabSel.value = currentArabicType;
+
+  // English Type dropdown
+  const engTypeSel = document.getElementById("englishType");
+  engTypeSel.innerHTML = `<option value="all">الكل</option>`;
+  discoveredEnglishTypes.forEach(t => {
+    engTypeSel.innerHTML += `<option value="${t}">${TRANSLATIONS[t] || t}</option>`;
+  });
+  if (currentEnglishType !== "all" && !discoveredEnglishTypes.has(currentEnglishType)) {
+    currentEnglishType = "all";
+  }
+  engTypeSel.value = currentEnglishType;
+
+  // English Category dropdown
+  const engCatSel = document.getElementById("englishCategory");
+  engCatSel.innerHTML = `<option value="all">الكل</option>`;
+  discoveredEnglishCategories.forEach(c => {
+    engCatSel.innerHTML += `<option value="${c}">${TRANSLATIONS[c] || c}</option>`;
+  });
+  if (currentEnglishCategory !== "all" && !discoveredEnglishCategories.has(currentEnglishCategory)) {
+    currentEnglishCategory = "all";
+  }
+  engCatSel.value = currentEnglishCategory;
+}
+
+// Apply filters before rendering
+function applyFilters(items) {
+
+  // 1️⃣ اللغة
+  if (currentFilter !== "all") {
+    items = items.filter(q => q.lang === currentFilter);
+  }
+
+  // 2️⃣ العربية
+  if (currentFilter === "arabic") {
+    if (currentArabicType !== "all") {
+      items = items.filter(q =>
+        q.arabic_type &&
+        q.arabic_type.toLowerCase() === currentArabicType.toLowerCase()
+      );
+    }
+  }
+
+  // 3️⃣ الإنجليزية
+  if (currentFilter === "english") {
+
+    if (currentEnglishType !== "all") {
+      items = items.filter(q =>
+        q.english_type &&
+        q.english_type.toLowerCase() === currentEnglishType.toLowerCase()
+      );
+    }
+
+    if (currentEnglishCategory !== "all") {
+      items = items.filter(q =>
+        q.english_category &&
+        q.english_category.toLowerCase() === currentEnglishCategory.toLowerCase()
+      );
+    }
+  }
+
+  return items;
+}
+
 // render questions in the page
 async function render(pageIndex = 0) {
   const container = document.querySelector(".features");
 
-  // remove old sliders
+  // load all questions once
+  if (ALL_QUESTIONS.length === 0) {
+    ALL_QUESTIONS = await loadAllQuestions();
+  }
+
+  // build dropdowns
+  populateDynamicFilters(ALL_QUESTIONS);
+
+  // apply filters
+  let filtered = applyFilters(ALL_QUESTIONS);
+
+  // calculate pages
+  let totalPages = Math.ceil(filtered.length / 20);
+  let pageItems = filtered.slice(pageIndex * 20, pageIndex * 20 + 20);
+
+  // clear old sliders
   document.querySelectorAll(".qs-pagination").forEach(el => el.remove());
 
-  // load data (20 questions per page)
-  const data = await loadPage(pageIndex);
-
-  // backend total pages (after filter)
-  const totalPages = Math.ceil(data.total / 20);
-
-  // top slider
   const topSlider = createSlider(pageIndex, totalPages, render);
   container.before(topSlider);
 
-  // clear old cards
   container.innerHTML = "";
 
-  // render question cards
-  data.questions.forEach(q => {
+  // render cards
+  pageItems.forEach(q => {
     const card = document.createElement("article");
     card.className = "feature-card";
 
     const h3 = document.createElement("h3");
-    h3.textContent = q.question;
-    h3.dir = "auto";
-
     const p = document.createElement("p");
-    p.textContent = q.answer;
+
+    if (q.lang === "arabic") {
+      h3.textContent = "س: " + q.question;
+      p.textContent = "ج: " + q.answer;
+    } else {
+      h3.textContent = "Q: " + q.question;
+      p.textContent = "Answer: " + q.answer;
+    }
+
+    h3.dir = "auto";
     p.dir = "auto";
 
     card.appendChild(h3);
@@ -328,14 +494,46 @@ async function render(pageIndex = 0) {
     container.appendChild(card);
   });
 
-  // bottom slider
   const bottomSlider = createSlider(pageIndex, totalPages, render);
   container.after(bottomSlider);
 }
 
-// when filter changes → reload from page 0
-document.getElementById("filterSelect").addEventListener("change", () => {
-  currentFilter = document.getElementById("filterSelect").value;
+document.getElementById("arabicType").addEventListener("change", (e) => {
+  currentArabicType = e.target.value;
+  render(0);
+});
+
+document.getElementById("englishType").addEventListener("change", (e) => {
+  currentEnglishType = e.target.value;
+  render(0);
+});
+
+document.getElementById("englishCategory").addEventListener("change", (e) => {
+  currentEnglishCategory = e.target.value;
+  render(0);
+});
+
+// Show/Hide filters based on language
+document.getElementById("langFilter").addEventListener("change", (e) => {
+  currentFilter = e.target.value;
+
+  // Reset ALL sub-filters when switching language
+  currentArabicType = "all";
+  currentEnglishType = "all";
+  currentEnglishCategory = "all";
+
+  // Reset UI dropdowns too
+  document.getElementById("arabicType").value = "all";
+  document.getElementById("englishType").value = "all";
+  document.getElementById("englishCategory").value = "all";
+
+  // Show/Hide blocks
+  document.getElementById("arabicFilter").style.display =
+    currentFilter === "arabic" ? "block" : "none";
+
+  document.getElementById("englishFilters").style.display =
+    currentFilter === "english" ? "block" : "none";
+
   render(0);
 });
 
@@ -346,7 +544,3 @@ render(0);
 
  </body>
  </html>
-
-
-</body>
-</html>
