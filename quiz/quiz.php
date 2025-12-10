@@ -1,3 +1,21 @@
+<?php
+// Configure session properly
+if (session_status() === PHP_SESSION_NONE) {
+ini_set('session.cookie_lifetime', 86400); // 24 hours
+ini_set('session.gc_maxlifetime', 86400);
+
+session_set_cookie_params([
+    'lifetime' => 86400,
+    'path' => '/web-project/',
+    'domain' => $_SERVER['HTTP_HOST'],
+    'secure' => isset($_SERVER['HTTPS']),
+    'httponly' => true,
+    'samesite' => 'Lax'
+]);
+}
+
+session_start();
+?>
 <?php require_once 'php/check_session.php'; ?>
 <?php
 // quiz.php

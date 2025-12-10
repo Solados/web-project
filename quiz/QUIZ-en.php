@@ -1,5 +1,18 @@
-<?php require_once '..sign/check_session.php'; ?>
-<!doctype html>
+<?php
+// Start session first
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// Check login manually
+if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
+    // CORRECT filename: Signup_Login_Form.html
+    echo '<script>window.location.href = "../sign/Signup_Login_Form.html";</script>';
+    echo '<noscript><meta http-equiv="refresh" content="0;url=../sign/Signup_Login_Form.html"></noscript>';
+    exit();
+}
+?>
+<!DOCTYPE html>
 <!-- Head -->
 <html lang="en" dir="ltr">
  <head>
@@ -27,7 +40,7 @@
       <ul id="nav-links" class="nav-links">
 
      <li><a href="../sign/SignUp_LogIn_Form.html">Login</a></li>
-      <li><a href="QUIZ.html">Quizzes</a></li>
+      <li><a href="QUIZ-en.php">Quizzes</a></li>
           <li class="dropdown">
         <a class="dropbtn">Regions</a>
         <!-- Regions dropdown list -->
@@ -40,7 +53,7 @@
         </ul>
       </li>
      <li><a href="../index.html">Home</a></li>
-                  <li><a href="QUIZ-ar.html" style="font-weight:700">اللغة العربية</a></li>
+                  <li><a href="QUIZ-ar.php" style="font-weight:700">اللغة العربية</a></li>
 
     </ul>
    </nav>

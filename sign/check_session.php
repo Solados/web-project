@@ -1,16 +1,26 @@
 <?php
-// Start session first
-session_start();
+// Start session with SAME settings
+if (session_status() === PHP_SESSION_NONE) {
+    // Use same cookie params as login_check.php
+    session_set_cookie_params([
+        'lifetime' => 86400,
+        'path' => '/web-project/',
+        'domain' => $_SERVER['HTTP_HOST'],
+        'secure' => false,
+        'httponly' => true,
+        'samesite' => 'Lax'
+    ]);
+    session_start();
+}
 
-// Check if user is logged in
+// Debug - REMOVE AFTER FIXING
+echo "<!-- DEBUG: Session check -->";
+echo "<!-- Session ID: " . session_id() . " -->";
+echo "<!-- Logged in: " . (isset($_SESSION['logged_in']) ? 'YES' : 'NO') . " -->";
+
 if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
-    // If it's an AJAX request, return JSON error
-    if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && 
-        strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
-        echo json_encode(['success' => false, 'message' => 'Session expired. Please login again.']);
-    } else {
-        // Redirect to login page for normal requests
-        header('Location: login.html');
-    }
+    // JavaScript redirect as fallback
+    echo '<script>window.location.href = "../Signup_Login_Form.html";</script>';
     exit();
 }
+?>

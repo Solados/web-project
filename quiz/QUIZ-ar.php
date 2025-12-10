@@ -1,4 +1,17 @@
-<?php require_once '..sign/check_session.php'; ?>
+<?php
+// Start session first
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// Check login manually
+if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
+    // CORRECT filename: Signup_Login_Form.html
+    echo '<script>window.location.href = "../sign/Signup_Login_Form_ar.html";</script>';
+    echo '<noscript><meta http-equiv="refresh" content="0;url=../sign/Signup_Login_Form_ar.html"></noscript>';
+    exit();
+}
+?>
 <!doctype html>
 <html lang="ar" dir="rtl">
 <head>
@@ -55,7 +68,7 @@
 
 
         <li><a href="../sign/Signup_Login_Form_ar.html">تسجيل الدخول</a></li>
-        <li><a href="QUIZ-ar.html">الاختبارات</a></li>
+        <li><a href="QUIZ-ar.php">الاختبارات</a></li>
 
         <li class="dropdown">
           <a class="dropbtn">المناطق</a>
@@ -69,7 +82,7 @@
         </li>
 
         <li><a href="../index-ar.html">الرئيسية</a></li>
-                <li><a href="QUIZ.html" style="font-weight:700">English</a></li>
+                <li><a href="QUIZ-en.php" style="font-weight:700">English</a></li>
 
       </ul>
     </nav>
