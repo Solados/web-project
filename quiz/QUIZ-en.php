@@ -42,14 +42,14 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
      <li><a href="../sign/SignUp_LogIn_Form.html">Login</a></li>
       <li><a href="QUIZ-en.php">Quizzes</a></li>
           <li class="dropdown">
-        <a class="dropbtn">Regions</a>
-        <!-- Regions dropdown list -->
+        <a class="dropbtn">Questions</a>
         <ul class="dropdown-content">
-                      <li><a href="../North.html">Northern Region</a></li>
-                        <li><a href="../South.html">Southern Region</a></li>
-                        <li><a href="../West.html">Western Region</a></li>
-                        <li><a href="../East.html">Eastern Region</a></li>
-                        <li><a href="../Central.html">Central Region</a></li>
+                      <li><a href="../General.html">General Questions</a></li>
+                        <li><a href="../North.html">Northern Questions</a></li>
+                        <li><a href="../South.html">Southern Questions</a></li>
+                        <li><a href="../West.html">Western Questions</a></li>
+                        <li><a href="../East.html">Eastern Questions</a></li>
+                        <li><a href="../Central.html">Central Questions</a></li>
         </ul>
       </li>
      <li><a href="../index.html">Home</a></li>
