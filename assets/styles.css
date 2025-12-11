@@ -22,7 +22,11 @@ body {
   font-family: 'Noto Kufi Arabic', system-ui, -apple-system, "Segoe UI", Roboto, Ubuntu, "Helvetica Neue", Arial, sans-serif;
   line-height: 1.7;
   color: var(--text-900);
-  background: var(--sand-50);
+  background-color: var(--sand-50);
+background-image: url('../image/Disign.jpg');
+  background-size: cover; 
+  background-repeat: no-repeat;
+  background-attachment: fixed;
 }
 
 /* prevent page horizontal scrolling caused by full-bleed elements */
@@ -50,8 +54,8 @@ body { overflow-x: hidden; }
   position: sticky;
   top: 0;
   z-index: 50;
-  background: rgba(255,255,255,.8);
-  backdrop-filter: blur(10px);
+  background: rgba(255,255,255,0.1);
+  backdrop-filter: none ;
   border-bottom: 1px solid var(--sand-200);
 }
 .navbar {
@@ -62,9 +66,11 @@ body { overflow-x: hidden; }
 }
 .brand {
   text-decoration: none;
-  color: var(--green-700);
-  font-weight: 700;
-  letter-spacing: .5px;
+}
+.site-logo {
+    height: 60px ;
+    width: auto;
+    display: block;
 }
 .menu-toggle {
   display: none;
