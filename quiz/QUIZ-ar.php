@@ -75,7 +75,7 @@ if (!$LOGGED_IN) {
             <a class="dropbtn">حسابي</a>
             <!-- Profile dropdown list -->
             <ul class="dropdown-content">
-              <li><a href="dashboard.php">حسابي</a></li>
+              <li><a href="../dashboard.php">حسابي</a></li>
               <li><a href="Favorites.php">المفضلة</a></li>
               <li><a href="My_quizzes.php">اختباراتي</a></li>
               <li><a href="sign/check_session.php?logout=true" onclick="return confirm('هل أنت متأكد أنك تريد تسجيل الخروج؟')">تسجيل خروج</a></li>
@@ -474,6 +474,34 @@ shareContainer.innerHTML = `
   </a>
 `;
     });
+
+  // إرسال النتيجة إلى الخادم لحفظها في ملف الملف الشخصي
+  (async function sendResult() {
+    try {
+      const form = new URLSearchParams();
+      form.append('score', String(score));
+      form.append('total', String(total));
+      const regionEl = document.getElementById('regionFilter');
+      if (regionEl) form.append('source', regionEl.value || '');
+
+      const resp = await fetch('save_quiz_result.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: form.toString()
+      });
+      const data = await resp.json().catch(() => ({}));
+      if (resp.ok && data.success) {
+        // عرض إشعار بسيط
+        const t = document.getElementById('toast');
+        if (t){ t.textContent = 'تم حفظ النتيجة في ملفك الشخصي ✅'; t.style.display='block'; setTimeout(()=>{t.style.display='none'},3000); }
+      } else {
+        const t = document.getElementById('toast');
+        if (t){ t.textContent = 'تعذّر حفظ النتيجة'; t.style.background='#F44336'; t.style.display='block'; setTimeout(()=>{t.style.display='none'},3000); }
+      }
+    } catch (e) {
+      console.warn('save result failed', e);
+    }
+  })();
 
 }
 
