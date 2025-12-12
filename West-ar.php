@@ -1,11 +1,22 @@
+<?php
+if (session_status() === PHP_SESSION_NONE) {
+  session_start();
+}
+
+// جلب حالة المستخدم من الجلسة
+$LOGGED_IN = isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true;
+$USER_NAME = $_SESSION['user_name'] ?? "";
+$USER_EMAIL = $_SESSION['user_email'] ?? "";
+?>
+
 <!doctype html>
 <html lang="ar" dir="rtl">
- <!-- Head -->
+<!-- Head -->
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>ثقافة السعودية | المنطقة الشرقية</title>
-  <meta name="description" content="اكتشف عادات وتقاليد ومواقع المنطقة الشرقية في المملكة.">
+  <title>ثقافة السعودية | المنطقة الشمالية</title>
+  <meta name="description" content="اكتشف عادات وتقاليد ومواقع المنطقة الشمالية في المملكة.">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -29,117 +40,149 @@
   <!-- Header -->
   <header class="site-header">
     <nav class="navbar" aria-label="التنقل الرئيسي">
+<<<<<<< HEAD:West-ar.html
       <a class="brand" href="index-ar.html" aria-label="العودة للرئيسية">
                   <img src="image/Hawiyah.png" alt="Logo" class="site-logo">
 
       </a>
+=======
+      <a class="brand" href="index-ar.php" aria-label="العودة للرئيسية">الثقافة السعودية</a>
+>>>>>>> 75d80716f1f392d2bc2b409371740e55bbbfe0c1:West-ar.php
       <button class="menu-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="قائمة">☰</button>
 
       <ul id="nav-links" class="nav-links">
-        <li><a href="sign/Signup_Login_Form_ar.html">تسجيل الدخول</a></li>
+        <?php if ($LOGGED_IN): ?>
+    <li class="dropdown">
+            <a class="dropbtn">حسابي</a>
+            <!-- Profile dropdown list -->
+            <ul class="dropdown-content">
+              <li><a href="dashboard.php">حسابي</a></li>
+              <li><a href="Favorites.php">المفضلة</a></li>
+              <li><a href="My_quizzes.php">اختباراتي</a></li>
+              <li><a href="sign/check_session.php?logout=true" onclick="return confirm('هل أنت متأكد أنك تريد تسجيل الخروج؟')">تسجيل خروج</a></li>
+            </ul>
+          </li>
+<?php else: ?>
+    <li><a href="/sign/SignUp_LogIn_Form.html">تسجيل الدخول</a></li>
+<?php endif; ?>
+
         <li><a href="quiz/QUIZ-ar.php">الاختبارات</a></li>
 
         <li class="dropdown">
           <a class="dropbtn">الأسئلة</a>
           <ul class="dropdown-content">
-            <li><a href="General-ar.html">أسئلة عامة</a></li>
-            <li><a href="North-ar.html">أسئلة المنطقة الشمالية</a></li>
-            <li><a href="South-ar.html">أسئلة المنطقة الجنوبية</a></li>
-            <li><a href="West-ar.html">أسئلة المنطقة الغربية</a></li>
-            <li><a href="East-ar.html">أسئلة المنطقة الشرقية</a></li>
-            <li><a href="Central-ar.html">أسئلة المنطقة الوسطى</a></li>
+            <li><a href="General-ar.php">أسئلة عامة</a></li>
+            <li><a href="North-ar.php">أسئلة المنطقة الشمالية</a></li>
+            <li><a href="South-ar.php">أسئلة المنطقة الجنوبية</a></li>
+            <li><a href="West-ar.php">أسئلة المنطقة الغربية</a></li>
+            <li><a href="East-ar.php">أسئلة المنطقة الشرقية</a></li>
+            <li><a href="Central-ar.php">أسئلة المنطقة الوسطى</a></li>
           </ul>
         </li>
 
-        <li><a href="index-ar.html">الرئيسية</a></li>
+        <li><a href="index-ar.php">الرئيسية</a></li>
 
         <!-- زر تبديل اللغة — يفتح الصفحة الإنجليزية المطابقة -->
-        <li><a href="Central.html" style="font-weight:700">English</a></li>
+        <li><a href="West.php" style="font-weight:700">English</a></li>
       </ul>
     </nav>
   </header>
 
   <!-- Slider -->
   <div id="top" class="carousel">
-    <!-- list item -->
     <div class="list">
-      <!-- الرياض -->
+      <!-- مكة -->
       <div class="item">
-        <img src="image/Al-Riyadh.jpg" alt="الرياض">
+        <img src="image/swissotel_makkah_Hero-1.jpg" alt="مكة">
         <div class="content" dir="rtl">
-          <div class="author">المنطقة الوسطى في السعودية</div>
-          <div class="topic">الرياض</div>
+          <div class="author">المنطقة الغربية في السعودية</div>
+          <div class="topic">مكة</div>
           <div class="des">
-            الرياض، عاصمة المملكة، تجمع بين ناطحات السحاب الحديثة والكنوز التاريخية مثل قلعة المصمك. يمكن للزوار الاستمتاع بالمتاحف الثقافية، والمطاعم الفاخرة، والحياة الحضرية النابضة التي تمثل قلب السعودية.
+            مكة المكرمة أقدس مدينة في الإسلام، وموطن الكعبة، وتستقطب ملايين الحجاج والمعتمرين. يمكن للزوار تجربة الطقوس الروحية العميقة، والخدمات الضيافية الكبيرة، والمواقع التاريخية، والأسواق، والبنية التحتية الحديثة الداعمة للعبادة والتنقل.
           </div>
         </div>
       </div>
-      
-      <!-- الرس -->
-     <div class="item">
-          <img src="image/Al-Rass.jpg" alt="الرس">
-          <div class="content" dir="rtl">
-          <div class="author">المنطقة الوسطى في السعودية</div>
-          <div class="topic">الرس</div>
+      <!-- جدة -->
+      <div class="item">
+        <img src="image/King-Fahd-Fountain-Saudi.jpg" alt="جدة">
+        <div class="content" dir="rtl">
+          <div class="author">المنطقة الغربية في السعودية</div>
+          <div class="topic">جدة</div>
           <div class="des">
-           الرس مدينة تاريخية في منطقة القصيم، معروفة بتراثها النجدي الغني، وهندستها المعمارية التقليدية، ومعالمها الثقافية مثل قلعة الرس والأسواق القديمة. تجمع المدينة بين التاريخ والزراعة والتطور الحديث، مما يجعلها من الوجهات البارزة في المنطقة الوسطى.
+            جدة مدينة ساحلية على البحر الأحمر، مشهورة بمنطقة البلد التاريخية، والكورنيش الحديث، وتنوعها الثقافي. يمكن للزوار الاستمتاع بالمهرجانات الفنية، والمأكولات البحرية، والمشي على الواجهة البحرية، والهندسة المعمارية المرجانية التاريخية، والأسواق النابضة بالحياة، والفعاليات التي تحتفل بتراثها البحري.
+          </div>
         </div>
       </div>
-    </div>
-
-      <!-- عنيزة -->
-     <div class="item">
-          <img src="image/Qassim.jpg" alt="عنيزة">
-          <div class="content" dir="rtl">
-          <div class="author">المنطقة الوسطى في السعودية</div>
-          <div class="topic">عنيزة</div>
+      <!-- الطائف -->
+      <div class="item">
+        <img src="image/EwheUZDWYAQscSV.jpg" alt="الطائف">
+        <div class="content" dir="rtl">
+          <div class="author">المنطقة الغربية في السعودية</div>
+          <div class="topic">الطائف</div>
           <div class="des">
-            تشتهر عنيزة بتراثها الزراعي ومهرجانات التمور والأسواق الثقافية والهندسة المعمارية التقليدية. المنطقة وجهة ساحرة للمهتمين بالعادات النجديّة الأصيلة.
+            الطائف تقع على جبال باردة، وتشتهر بزراعة الورود، والحدائق، والمنتجعات الصيفية. يمكن للزوار حضور مهرجانات الورود، واستكشاف المواقع التاريخية، والتمتع بالمناظر الجبلية والمنتجات المحلية، والاسترخاء في منتجعات جبلية صديقة للعائلات.
+          </div>
         </div>
       </div>
-      </div>
-
-      <!-- بريدة -->
-     <div class="item">
-          <img src="image/Buraidah.jpg" alt="بريدة">
-          <div class="content" dir="rtl">
-          <div class="author">المنطقة الوسطى في السعودية</div>
-          <div class="topic">بريدة</div>
+      <!-- المدينة -->
+      <div class="item">
+        <img src="image/photo-1591604129939-f1efa4d9f7fa.jpg" alt="المدينة">
+        <div class="content" dir="rtl">
+          <div class="author">المنطقة الغربية في السعودية</div>
+          <div class="topic">المدينة المنورة</div>
           <div class="des">
-            تُعرف بريدة بسوق التمور الكبير—واحد من الأكبر في العالم. المتاحف والحدائق والهندسة المعمارية النجدية التقليدية توفر تجربة ثقافية وعائلية غنية.
+            المدينة المنورة ثاني أقدس مدينة في الإسلام، وتتركز حول المسجد النبوي والمواقع المقدسة. يزور الحجاج والزوار لأداء الصلاة، والتأمل، واستكشاف الأحياء التاريخية، والمراكز التعليمية، مع دعم الخدمات الضيافية وحياة المجتمع الهادئة طوال السنة.
+          </div>
         </div>
       </div>
+      <!-- ينبع -->
+      <div class="item">
+        <img src="image/YIC-3-scaled-1.webp" alt="ينبع">
+        <div class="content" dir="rtl">
+          <div class="author">المنطقة الغربية في السعودية</div>
+          <div class="topic">ينبع</div>
+          <div class="des">
+            ينبع مدينة ساحلية على البحر الأحمر، مشهورة بالشواطئ، والغوص، والصناعات. يمكن للزوار الاستمتاع بالغوص والمنتجعات البحرية، والمأكولات البحرية، والاستجمام على الواجهة البحرية، بينما تجمع المدينة بين الموانئ الصناعية والمرافق السياحية المتطورة والفعاليات الثقافية.
+          </div>
+        </div>
       </div>
     </div>
 
     <!-- Thumbnails -->
     <div class="thumbnail">
       <div class="item">
-        <img src="image/Al-Riyadh.jpg" alt="الرياض">
+        <img src="image/swissotel_makkah_Hero-1.jpg" alt="مكة">
         <div class="content" dir="rtl">
-          <div class="topic">الرياض</div>
-          <div class="description">العاصمة والتراث</div>
+          <div class="title">مكة</div>
+          <div class="description">مركز الإسلام</div>
         </div>
       </div>
       <div class="item">
-        <img src="image/Al-Rass.jpg" alt="الرس">
+        <img src="image/King-Fahd-Fountain-Saudi.jpg" alt="جدة">
         <div class="content" dir="rtl">
-          <div class="topic">الرس</div>
-          <div class="description">التراث النجدي والتاريخي</div>
+          <div class="title">جدة</div>
+          <div class="description">كورنيش البحر الأحمر الجميل</div>
         </div>
       </div>
       <div class="item">
-        <img src="image/Qassim.jpg" alt="عنيزة">
+        <img src="image/EwheUZDWYAQscSV.jpg" alt="الطائف">
         <div class="content" dir="rtl">
-          <div class="topic">عنيزة</div>
-          <div class="description">الزراعة والثقافة</div>
+          <div class="title">الطائف</div>
+          <div class="description">معروفة بمناخها البارد وجبالها وورود الطائف الشهيرة</div>
         </div>
       </div>
       <div class="item">
-        <img src="image/Buraidah.jpg" alt="بريدة">
+        <img src="image/photo-1591604129939-f1efa4d9f7fa.jpg" alt="المدينة">
         <div class="content" dir="rtl">
-          <div class="topic">بريدة</div>
-          <div class="description">التمور والتراث</div>
+          <div class="title">المدينة المنورة</div>
+          <div class="description">ثاني أقدس مدينة في الإسلام</div>
+        </div>
+      </div>
+      <div class="item">
+        <img src="image/YIC-3-scaled-1.webp" alt="ينبع">
+        <div class="content" dir="rtl">
+          <div class="title">ينبع</div>
+          <div class="description">معروفة بشواطئها الجميلة ومناطقها الصناعية الحديثة</div>
         </div>
       </div>
     </div>
@@ -154,14 +197,14 @@
 
   <!-- Main -->
   <main id="main">
-   <section id="overview" class="section section-intro">
-    <div class="container">
-    <h2 dir="rtl">نظرة عامة على المملكة العربية السعودية</h2>
-     <p dir="rtl">
-       المملكة العربية السعودية دولة ذات تراث غني وتطور سريع، تقع في قلب شبه الجزيرة العربية. هي مهد الإسلام وموطن مكة والمدينة، تجمع بين التقاليد العميقة ورؤية حديثة للمستقبل.
-     </p>
-     
-      <!-- فلتر اللغة -->
+    <section id="overview" class="section section-intro">
+      <div class="container">
+        <h2 dir="rtl">نظرة عامة على المنطقة الغربية</h2>
+        <p dir="rtl">
+          المنطقة الغربية من المملكة العربية السعودية تضم مكة المكرمة، المدينة المنورة، جدة، الطائف، وينبع، وتتميز بالمواقع الدينية، التاريخية، الساحلية، والثقافية. تجمع بين التراث الإسلامي العريق والتطور الحضري الحديث، وتجذب الزوار من جميع أنحاء العالم.
+        </p>
+
+        <!-- فلتر اللغة -->
             <div class="question-filter">
             <label>اللغة:</label>
             <select id="langFilter">
@@ -192,33 +235,33 @@
                     <option value="all">الكل</option>
                 </select>
             </div>
-     
-       <div class="features"></div>
-    </div>
-   </section>
 
-   <!-- CTA section -->
-   <section id="visit" class="section section-cta">
-    <div class="container cta">
-     <h2>اختبر معرفتك بالثقافة السعودية</h2>
-     <p>اختبر معرفتك بالثقافة السعودية من خلال تجربة ممتعة وواقعية.</p>
-     <a class="btn btn-primary" href="#top">ابدأ الآن</a>
-    </div>
-   </section>
+        <div class="features"></div>
+      </div>
+    </section>
+
+    <!-- CTA section -->
+    <section id="visit" class="section section-cta">
+      <div class="container cta">
+        <h2>اختبر معرفتك بالمنطقة الغربية</h2>
+        <p>اختبر معرفتك بالمنطقة الغربية، تاريخها وتراثها.</p>
+        <a class="btn btn-primary" href="quiz/QUIZ-ar.php">ابدأ الآن</a>
+      </div>
+    </section>
   </main>
 
   <!-- Footer -->
   <footer class="site-footer" aria-label="footer">
-   <div class="container footer-grid">
-    <div>
-     <strong>ثقافة السعودية</strong>
-     <p>© 2025 جميع الحقوق محفوظة</p>
+    <div class="container footer-grid">
+      <div>
+        <strong>ثقافة السعودية</strong>
+        <p>© 2025 جميع الحقوق محفوظة</p>
+      </div>
+      <ul class="footer-links">
+        <li><a href="#top">العودة للأعلى</a></li>
+        <li><a href="#main">الأسئلة والأجوبة</a></li>
+      </ul>
     </div>
-    <ul class="footer-links">
-     <li><a href="#top">العودة للأعلى</a></li>
-     <li><a href="#main">الأسئلة والأجوبة</a></li>
-    </ul>
-   </div>
   </footer>
 
   <script src="assets/script.js"></script>
@@ -251,7 +294,7 @@ const TRANSLATIONS = {
   "dating": "التعارف والعلاقات"
 };
 
-const REGION_FILE = "CENTERAL";   // which data file to load
+const REGION_FILE = "WEST";   // which data file to load
 let currentFilter = "all";       // all | english | arabic
 let ALL_QUESTIONS = [];
 
@@ -517,5 +560,5 @@ render(0);
 </script>
 
 
- </body>
+</body>
 </html>

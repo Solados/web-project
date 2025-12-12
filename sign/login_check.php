@@ -84,7 +84,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         setcookie('user_name', $userData[0] ?? '', time() + 2592000, '/');;
         setcookie('logged_in', '1', time() + 2592000, '/');;
         
-        echo json_encode(['success' => true, 'message' => 'Login successful.', 'redirect' => '../index.html']);
+        echo json_encode(['success' => true, 'message' => 'Login successful.', 'redirect' => '../index.php']);
         exit();
     } else {
         echo json_encode(['success' => false, 'message' => 'Error: Invalid email or password.']);

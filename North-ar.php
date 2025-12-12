@@ -1,6 +1,15 @@
+<?php
+if (session_status() === PHP_SESSION_NONE) {
+  session_start();
+}
+
+// جلب حالة المستخدم من الجلسة
+$LOGGED_IN = isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true;
+$USER_NAME = $_SESSION['user_name'] ?? "";
+$USER_EMAIL = $_SESSION['user_email'] ?? "";
+?>
 <!doctype html>
 <html lang="ar" dir="rtl">
-<!-- Head -->
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -25,154 +34,173 @@
     .qs-pagination { direction: ltr; }
   </style>
 </head>
-<body>
+<body class="rtl">
   <!-- Header -->
   <header class="site-header">
     <nav class="navbar" aria-label="التنقل الرئيسي">
+<<<<<<< HEAD:North-ar.html
       <a class="brand" href="index-ar.html" aria-label="العودة للرئيسية">
                   <img src="image/Hawiyah.png" alt="Logo" class="site-logo">
 
       </a>
+=======
+      <a class="brand" href="index-ar.php" aria-label="العودة للرئيسية">الثقافة السعودية</a>
+>>>>>>> 75d80716f1f392d2bc2b409371740e55bbbfe0c1:North-ar.php
       <button class="menu-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="قائمة">☰</button>
 
       <ul id="nav-links" class="nav-links">
-        <li><a href="sign/Signup_Login_Form_ar.html">تسجيل الدخول</a></li>
+        <?php if ($LOGGED_IN): ?>
+    <li class="dropdown">
+            <a class="dropbtn">حسابي</a>
+            <!-- Profile dropdown list -->
+            <ul class="dropdown-content">
+              <li><a href="dashboard.php">حسابي</a></li>
+              <li><a href="Favorites.php">المفضلة</a></li>
+              <li><a href="My_quizzes.php">اختباراتي</a></li>
+              <li><a href="sign/check_session.php?logout=true" onclick="return confirm('هل أنت متأكد أنك تريد تسجيل الخروج؟')">تسجيل خروج</a></li>
+            </ul>
+          </li>
+<?php else: ?>
+    <li><a href="/sign/SignUp_LogIn_Form.html">تسجيل الدخول</a></li>
+<?php endif; ?>
+
         <li><a href="quiz/QUIZ-ar.php">الاختبارات</a></li>
 
         <li class="dropdown">
-          <a class="dropbtn">الأسئلة</a>
-          <ul class="dropdown-content">
-            <li><a href="General-ar.html">أسئلة عامة</a></li>
-            <li><a href="North-ar.html">أسئلة المنطقة الشمالية</a></li>
-            <li><a href="South-ar.html">أسئلة المنطقة الجنوبية</a></li>
-            <li><a href="West-ar.html">أسئلة المنطقة الغربية</a></li>
-            <li><a href="East-ar.html">أسئلة المنطقة الشرقية</a></li>
-            <li><a href="Central-ar.html">أسئلة المنطقة الوسطى</a></li>
-          </ul>
-        </li>
+            <a class="dropbtn">الأسئلة</a>
+            <ul class="dropdown-content">
+              <li><a href="General-ar.php">أسئلة عامة</a></li>
+              <li><a href="North-ar.php">أسئلة المنطقة الشمالية</a></li>
+              <li><a href="South-ar.php">أسئلة المنطقة الجنوبية</a></li>
+              <li><a href="West-ar.php">أسئلة المنطقة الغربية</a></li>
+              <li><a href="East-ar.php">أسئلة المنطقة الشرقية</a></li>
+              <li><a href="Central-ar.php">أسئلة المنطقة الوسطى</a></li>
+            </ul>
 
-        <li><a href="index-ar.html">الرئيسية</a></li>
+        <li><a href="index-ar.php">الرئيسية</a></li>
 
         <!-- زر تبديل اللغة — يفتح الصفحة الإنجليزية المطابقة -->
-        <li><a href="West.html" style="font-weight:700">English</a></li>
+        <li><a href="North.php" style="font-weight:700">English</a></li>
       </ul>
     </nav>
   </header>
 
+  <!-- Slider (مبني كما في الصفحة الأصلية، مع ترجمة الوصف) -->
   <!-- Slider -->
   <div id="top" class="carousel">
+    <!-- list item -->
     <div class="list">
-      <!-- مكة -->
+      <!-- (Hail slide) -->
       <div class="item">
-        <img src="image/swissotel_makkah_Hero-1.jpg" alt="مكة">
-        <div class="content" dir="rtl">
-          <div class="author">المنطقة الغربية في السعودية</div>
-          <div class="topic">مكة</div>
+        <img src="image/Hail.jpg" alt="حائل">
+        <div class="content" >
+          <div class="author">شمال المملكة العربية السعودية</div>
+          <div class="topic">حائل</div>
           <div class="des">
-            مكة المكرمة أقدس مدينة في الإسلام، وموطن الكعبة، وتستقطب ملايين الحجاج والمعتمرين. يمكن للزوار تجربة الطقوس الروحية العميقة، والخدمات الضيافية الكبيرة، والمواقع التاريخية، والأسواق، والبنية التحتية الحديثة الداعمة للعبادة والتنقل.
-          </div>
+تتميز حائل بحصونها الأثرية وفنونها الصخرية المدرجة في قائمة اليونسكو بالقرب من جبة، مع مناظر صحراوية خلابة وأزهار برية موسمية. يستمتع الزوار بالمواقع الأثرية والأسواق التقليدية والمهرجانات القبلية والجولات المصحوبة بمرشدين والتي تُبرز قرونًا من تاريخ الصحراء والحرف اليدوية المحلية والثقافة الأصيلة لشمال السعودية.          </div>
         </div>
       </div>
-      <!-- جدة -->
+      <!-- (Tabuk slide) -->
       <div class="item">
-        <img src="image/King-Fahd-Fountain-Saudi.jpg" alt="جدة">
-        <div class="content" dir="rtl">
-          <div class="author">المنطقة الغربية في السعودية</div>
-          <div class="topic">جدة</div>
+        <img src="image/Tabuk.jpg" alt="تبوك">
+        <div class="content" >
+          <div class="author">شمال المملكة العربية السعودية</div>
+          <div class="topic">تبوك</div>
           <div class="des">
-            جدة مدينة ساحلية على البحر الأحمر، مشهورة بمنطقة البلد التاريخية، والكورنيش الحديث، وتنوعها الثقافي. يمكن للزوار الاستمتاع بالمهرجانات الفنية، والمأكولات البحرية، والمشي على الواجهة البحرية، والهندسة المعمارية المرجانية التاريخية، والأسواق النابضة بالحياة، والفعاليات التي تحتفل بتراثها البحري.
-          </div>
+تقع تبوك على الحافة الشمالية الغربية للمملكة، وتتميز بجبال اللوز ووادي الديسة والحصون التاريخية. يستكشف الزوار مسارات المشي لمسافات طويلة، والآثار القديمة، ومناخها المعتدل، وساحلها المطل على البحر الأحمر، ومشاريعها التنموية الناشئة التي تجمع بين الطبيعة والتراث والفرص العصرية.          </div>
         </div>
       </div>
-      <!-- الطائف -->
+      <!-- (Sakaka slide) -->
       <div class="item">
-        <img src="image/EwheUZDWYAQscSV.jpg" alt="الطائف">
-        <div class="content" dir="rtl">
-          <div class="author">المنطقة الغربية في السعودية</div>
-          <div class="topic">الطائف</div>
+        <img src="image/sakaka.jpg" alt="سكاكا">
+        <div class="content" >
+          <div class="author">شمال المملكة العربية السعودية</div>
+          <div class="topic">سكاكا</div>
           <div class="des">
-            الطائف تقع على جبال باردة، وتشتهر بزراعة الورود، والحدائق، والمنتجعات الصيفية. يمكن للزوار حضور مهرجانات الورود، واستكشاف المواقع التاريخية، والتمتع بالمناظر الجبلية والمنتجات المحلية، والاسترخاء في منتجعات جبلية صديقة للعائلات.
-          </div>
+تشتهر سكاكا في الجوف ببساتين الزيتون الشاسعة، وأحجار الرجاجيل، والمتاحف، والأسواق الريفية. يستكشف الزوار المواقع الأثرية، ويتذوقون أطباق زيت الزيتون التقليدية، ويحضرون المهرجانات الموسمية، ويختبرون كرم الضيافة المحلية من خلال الجولات المصحوبة بمرشدين ومعارض الحرف اليدوية.          </div>
         </div>
       </div>
-      <!-- المدينة -->
+      <!-- (Arar slide) -->
       <div class="item">
-        <img src="image/photo-1591604129939-f1efa4d9f7fa.jpg" alt="المدينة">
-        <div class="content" dir="rtl">
-          <div class="author">المنطقة الغربية في السعودية</div>
-          <div class="topic">المدينة المنورة</div>
+        <img src="image/Arar.jpg" alt="عرعر">
+        <div class="content">
+          <div class="author">شمال المملكة العربية السعودية</div>
+          <div class="topic">عرعر</div>
           <div class="des">
-            المدينة المنورة ثاني أقدس مدينة في الإسلام، وتتركز حول المسجد النبوي والمواقع المقدسة. يزور الحجاج والزوار لأداء الصلاة، والتأمل، واستكشاف الأحياء التاريخية، والمراكز التعليمية، مع دعم الخدمات الضيافية وحياة المجتمع الهادئة طوال السنة.
-          </div>
+عرعر مدينة حدودية تزخر بتقاليد بدوية راسخة، وأسواق نابضة بالحياة، ومناظر صحراوية خلابة. يمتد وادي عرعر على مسافة 190 كيلومترًا تقريبًا. يستمتع الزوار بالأسواق المحلية، والحرف اليدوية البدوية، والمهرجانات الموسمية، والتجارب الثقافية الأصيلة، وكرم الضيافة الشمالية الأخّاذ.          </div>
         </div>
       </div>
-      <!-- ينبع -->
+      <!-- (Umluj slide) -->
       <div class="item">
-        <img src="image/YIC-3-scaled-1.webp" alt="ينبع">
-        <div class="content" dir="rtl">
-          <div class="author">المنطقة الغربية في السعودية</div>
-          <div class="topic">ينبع</div>
+        <img src="image/Umluj.jpg" alt="املج">
+        <div class="content">
+          <div class="author">شمال المملكة العربية السعودية</div>
+          <div class="topic">املج</div>
           <div class="des">
-            ينبع مدينة ساحلية على البحر الأحمر، مشهورة بالشواطئ، والغوص، والصناعات. يمكن للزوار الاستمتاع بالغوص والمنتجعات البحرية، والمأكولات البحرية، والاستجمام على الواجهة البحرية، بينما تجمع المدينة بين الموانئ الصناعية والمرافق السياحية المتطورة والفعاليات الثقافية.
-          </div>
+أملج مدينة ساحلية على البحر الأحمر، تشتهر بمياهها الصافية وشعابها المرجانية وجزرها المتفرقة، مثالية للغطس ورحلات القوارب. يستمتع الزوار بشواطئها الرملية وقرى الصيد والمأكولات البحرية ورحلاتها في الجزر، بالإضافة إلى مناظرها البحرية الهادئة التي تتناقض مع الوجهات الصحراوية الداخلية.          </div>
         </div>
       </div>
     </div>
-
     <!-- Thumbnails -->
     <div class="thumbnail">
+      <!-- Thumb: Hail -->
       <div class="item">
-        <img src="image/swissotel_makkah_Hero-1.jpg" alt="مكة">
+        <img src="image/Hail.jpg" alt="حائل">
         <div class="content" dir="rtl">
-          <div class="title">مكة</div>
-          <div class="description">مركز الإسلام</div>
+          <div class="topic">حائل</div>
+          <div class="description">الحصون التاريخية والفنون الصخرية</div>
+        </div>
+      </div>
+      <!-- Thumb: Tabuk -->
+      <div class="item">
+        <img src="image/Tabuk.jpg" alt="تبوك">
+        <div class="content" dir="rtl">
+          <div class="topic">تبوك</div>
+          <div class="description">القمم الثلجية والوديان القديمة</div>
+        </div>
+      </div>
+      <!-- Thumb: Sakaka -->
+      <div class="item">
+        <img src="image/sakaka.jpg" alt="سكاكا">
+        <div class="content" dir="rtl">
+          <div class="topic">سكاكا</div>
+          <div class="description">بساتين الزيتون والآثار</div>
+        </div>
+      </div>
+      <!-- Thumb: Arar -->
+      <div class="item">
+        <img src="image/Arar.jpg" alt="عرعر">
+        <div class="content" dir="rtl">
+          <div class="topic">عرعر</div>
+          <div class="description">وادي عرعر والأسواق الصحراوية</div>
         </div>
       </div>
       <div class="item">
-        <img src="image/King-Fahd-Fountain-Saudi.jpg" alt="جدة">
+        <img src="image/Umluj.jpg" alt="املج">
         <div class="content" dir="rtl">
-          <div class="title">جدة</div>
-          <div class="description">كورنيش البحر الأحمر الجميل</div>
-        </div>
-      </div>
-      <div class="item">
-        <img src="image/EwheUZDWYAQscSV.jpg" alt="الطائف">
-        <div class="content" dir="rtl">
-          <div class="title">الطائف</div>
-          <div class="description">معروفة بمناخها البارد وجبالها وورود الطائف الشهيرة</div>
-        </div>
-      </div>
-      <div class="item">
-        <img src="image/photo-1591604129939-f1efa4d9f7fa.jpg" alt="المدينة">
-        <div class="content" dir="rtl">
-          <div class="title">المدينة المنورة</div>
-          <div class="description">ثاني أقدس مدينة في الإسلام</div>
-        </div>
-      </div>
-      <div class="item">
-        <img src="image/YIC-3-scaled-1.webp" alt="ينبع">
-        <div class="content" dir="rtl">
-          <div class="title">ينبع</div>
-          <div class="description">معروفة بشواطئها الجميلة ومناطقها الصناعية الحديثة</div>
+          <div class="topic">املج</div>
+          <div class="description">جزر البحر الأحمر وأملج</div>
         </div>
       </div>
     </div>
-
     <!-- next prev -->
     <div class="arrows">
-      <button id="prev">‹</button>
-      <button id="next">›</button>
+      <button id="prev"><</button>
+      <button id="next">></button>
     </div>
+    <!-- time running -->
     <div class="time"></div>
   </div>
-
   <!-- Main -->
   <main id="main">
+
+    <!-- Overview / نظرة عامة -->
     <section id="overview" class="section section-intro">
       <div class="container">
-        <h2 dir="rtl">نظرة عامة على المنطقة الغربية</h2>
-        <p dir="rtl">
-          المنطقة الغربية من المملكة العربية السعودية تضم مكة المكرمة، المدينة المنورة، جدة، الطائف، وينبع، وتتميز بالمواقع الدينية، التاريخية، الساحلية، والثقافية. تجمع بين التراث الإسلامي العريق والتطور الحضري الحديث، وتجذب الزوار من جميع أنحاء العالم.
+        <h2>نظرة عامة عن المنطقة الشمالية</h2>
+
+        <p>
+          تضم المنطقة الشمالية تضاريس متنوعة ومواقع أثرية غنية، وتعتبر نقطة التقاء بين الحياة البدوية والتراث الزراعي في بعض وديانها.
         </p>
 
         <!-- فلتر اللغة -->
@@ -211,21 +239,22 @@
       </div>
     </section>
 
-    <!-- CTA section -->
+    <!-- CTA -->
     <section id="visit" class="section section-cta">
       <div class="container cta">
-        <h2>اختبر معرفتك بالمنطقة الغربية</h2>
-        <p>اختبر معرفتك بالمنطقة الغربية، تاريخها وتراثها.</p>
-        <a class="btn btn-primary" href="quiz/QUIZ-ar.php">ابدأ الآن</a>
+        <h2>تعرّف على ثقافة وشواهد المنطقة الشمالية</h2>
+        <p>استكشف المواقع الأثرية، الفعاليات التقليدية، والأسواق المحلية.</p>
+        <a class="btn btn-primary" href="quiz/QUIZ-ar.php">ابدأ الاختبار</a>
       </div>
     </section>
+
   </main>
 
   <!-- Footer -->
-  <footer class="site-footer" aria-label="footer">
+  <footer class="site-footer" aria-label="تذييل الصفحة">
     <div class="container footer-grid">
       <div>
-        <strong>ثقافة السعودية</strong>
+        <strong>الثقافة السعودية</strong>
         <p>© 2025 جميع الحقوق محفوظة</p>
       </div>
       <ul class="footer-links">
@@ -235,9 +264,11 @@
     </div>
   </footer>
 
+ 
   <script src="assets/script.js"></script>
 
-<!-- Page script -->
+  
+  <!-- Page script -->
   <script>
 
 // ==========================
@@ -265,7 +296,7 @@ const TRANSLATIONS = {
   "dating": "التعارف والعلاقات"
 };
 
-const REGION_FILE = "WEST";   // which data file to load
+const REGION_FILE = "NORTH";   // which data file to load
 let currentFilter = "all";       // all | english | arabic
 let ALL_QUESTIONS = [];
 

@@ -1,3 +1,14 @@
+<?php
+if (session_status() === PHP_SESSION_NONE) {
+  session_start();
+}
+
+// جلب حالة المستخدم من الجلسة
+$LOGGED_IN = isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true;
+$USER_NAME = $_SESSION['user_name'] ?? "";
+$USER_EMAIL = $_SESSION['user_email'] ?? "";
+?>
+
 <!doctype html>
 <html lang="en" dir="ltr">
  <!-- Head -->
@@ -24,22 +35,36 @@
     <button class="menu-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Toggle menu">☰</button>
       <!-- Nav list -->
       <ul id="nav-links" class="nav-links">
-     <li><a href="sign/SignUp_LogIn_Form.html">Login</a></li>
+     <?php if ($LOGGED_IN): ?>
+    <li class="dropdown">
+            <a class="dropbtn">My profile</a>
+            <!-- Profile dropdown list -->
+            <ul class="dropdown-content">
+              <li><a href="dashboard.php">My profile</a></li>
+              <li><a href="Favorites.php">Favorites</a></li>
+              <li><a href="My_quizzes.php">My Quizzes</a></li>
+              <li><a href="sign/check_session.php?logout=true" onclick="return confirm('Are you sure you want to logout?')">Logout</a></li>
+            </ul>
+          </li>
+<?php else: ?>
+    <li><a href="/sign/SignUp_LogIn_Form.html">Login</a></li>
+<?php endif; ?>
+
       <li><a href="quiz/QUIZ-en.php">Quizzes</a></li>
           <li class="dropdown">
         <a class="dropbtn">Questions</a>
         <!-- Questions dropdown list -->
         <ul class="dropdown-content">
-          <li><a href="General.html">General Questions</a></li>
-          <li><a href="North.html">Northern Questions</a></li>
-          <li><a href="South.html">Southern Questions</a></li>
-          <li><a href="West.html">Western Questions</a></li>
-          <li><a href="East.html">Eastern Questions</a></li>
-          <li><a href="Central.html">Central Questions</a></li>
+          <li><a href="General.php">General Questions</a></li>
+          <li><a href="North.php">Northern Questions</a></li>
+          <li><a href="South.php">Southern Questions</a></li>
+          <li><a href="West.php">Western Questions</a></li>
+          <li><a href="East.php">Eastern Questions</a></li>
+          <li><a href="Central.php">Central Questions</a></li>
         </ul>
       </li>
-     <li><a href="index.html">Home</a></li>
-          <li><a href="Central-ar.html" style="font-weight:700">اللغة العربية</a></li>
+     <li><a href="index.php">Home</a></li>
+          <li><a href="Central-ar.php" style="font-weight:700">اللغة العربية</a></li>
 
     </ul>
    </nav>

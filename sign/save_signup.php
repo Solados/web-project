@@ -135,6 +135,6 @@ setcookie('user_name', $fullname, time() + 2592000, '/');
 setcookie('logged_in', '1', time() + 2592000, '/');
 
 // Redirect to homepage
-header('Location: ../index.html');
+header('Location: ../index.php');
 exit();
 ?>

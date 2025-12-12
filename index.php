@@ -1,3 +1,10 @@
+<?php
+// Start session before ANY output
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+?>
+
 <!doctype html>
 <html lang="en" dir="ltr">
  <!-- Head -->
@@ -85,22 +92,43 @@
       <ul id="nav-links" class="nav-links">
       <!-- Language switcher -->
 
-     <li><a href="sign/SignUp_LogIn_Form.html">Login</a></li>
+     <?php include 'sign/check_login_status.php'; ?>
+
+<?php if ($LOGGED_IN): ?>
+    <li class="dropdown">
+            <a class="dropbtn">My profile</a>
+            <!-- Profile dropdown list -->
+            <ul class="dropdown-content">
+              <li><a href="dashboard.php">My profile</a></li>
+              <li><a href="Favorites.php">Favorites</a></li>
+              <li><a href="My_quizzes.php">My Quizzes</a></li>
+              <li><a href="sign/check_session.php?logout=true" onclick="return confirm('Are you sure you want to logout?')">Logout</a></li>
+            </ul>
+          </li>
+    
+<?php else: ?>
+    <?php if ($LOGGED_IN): ?>
+<?php else: ?>
+    <li><a href="/sign/SignUp_LogIn_Form.html">Login</a></li>
+<?php endif; ?>
+
+<?php endif; ?>
+
       <li><a href="quiz/QUIZ-en.php">Quizzes</a></li>
             <li class="dropdown">
                 <a class="dropbtn">Questions</a>
                 <!-- Questions dropdown list -->
                 <ul class="dropdown-content">
-                    <li><a href="General.html">General Questions</a></li>
-                    <li><a href="North.html">Northern Questions</a></li>
-                    <li><a href="South.html">Southern Questions</a></li>
-                    <li><a href="West.html">Western Questions</a></li>
-                    <li><a href="East.html">Eastern Questions</a></li>
-                    <li><a href="Central.html">Central Questions</a></li>
+                    <li><a href="General.php">General Questions</a></li>
+                    <li><a href="North.php">Northern Questions</a></li>
+                    <li><a href="South.php">Southern Questions</a></li>
+                    <li><a href="West.php">Western Questions</a></li>
+                    <li><a href="East.php">Eastern Questions</a></li>
+                    <li><a href="Central.php">Central Questions</a></li>
                 </ul>
             </li>
-     <li><a href="index.html">Home</a></li>
-           <li><a href="index-ar.html" style="font-weight:700">اللغة العربية</a></li>
+     <li><a href="index.php">Home</a></li>
+           <li><a href="index-ar.php" style="font-weight:700">اللغة العربية</a></li>
     </ul>
    </nav>
   </header>
@@ -174,7 +202,7 @@
               <h4>General Questions</h4>
               <p>Broad questions about Saudi culture and history.</p>
             </div>
-            <a class="explore-btn" href="General.html">Explore</a>
+            <a class="explore-btn" href="General.php">Explore</a>
           </div>
           <div class="region-card sr-hidden">
             <div>
@@ -182,7 +210,7 @@
               <h4>Northern Region Questions</h4>
               <p>Questions focused on the Northern Region.</p>
             </div>
-            <a class="explore-btn" href="North.html">Explore</a>
+            <a class="explore-btn" href="North.php">Explore</a>
           </div>
           <div class="region-card sr-hidden">
             <div>
@@ -190,7 +218,7 @@
               <h4>Southern Region Questions</h4>
               <p>Questions focused on the Southern Region.</p>
             </div>
-            <a class="explore-btn" href="South.html">Explore</a>
+            <a class="explore-btn" href="South.php">Explore</a>
           </div>
           <div class="region-card sr-hidden">
             <div>
@@ -198,7 +226,7 @@
               <h4>Eastern Region Questions</h4>
               <p>Questions focused on the Eastern Region.</p>
             </div>
-            <a class="explore-btn" href="East.html">Explore</a>
+            <a class="explore-btn" href="East.php">Explore</a>
           </div>
           <div class="region-card sr-hidden">
             <div>
@@ -206,7 +234,7 @@
               <h4>Western Region Questions</h4>
               <p>Questions focused on the Western Region.</p>
             </div>
-            <a class="explore-btn" href="West.html">Explore</a>
+            <a class="explore-btn" href="West.php">Explore</a>
           </div>
           <div class="region-card sr-hidden">
             <div>
@@ -214,7 +242,7 @@
               <h4>Central Region Questions</h4>
               <p>Questions focused on the Central Region.</p>
             </div>
-            <a class="explore-btn" href="Central.html">Explore</a>
+            <a class="explore-btn" href="Central.php">Explore</a>
           </div>
         </div>
       </div>

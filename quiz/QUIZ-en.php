@@ -1,17 +1,20 @@
 <?php
-// Start session first
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Check login manually
-if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
-    // CORRECT filename: Signup_Login_Form.html
-    echo '<script>window.location.href = "../sign/Signup_Login_Form.html";</script>';
-    echo '<noscript><meta http-equiv="refresh" content="0;url=../sign/Signup_Login_Form.html"></noscript>';
+// جلب حالة المستخدم
+$LOGGED_IN = isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true;
+$USER_NAME = $_SESSION['user_name'] ?? "";
+$USER_EMAIL = $_SESSION['user_email'] ?? "";
+
+// منع الوصول لغير المسجلين
+if (!$LOGGED_IN) {
+    header("Location: ../sign/SignUp_LogIn_Form.html");
     exit();
 }
 ?>
+
 <!DOCTYPE html>
 <!-- Head -->
 <html lang="en" dir="ltr">
@@ -29,6 +32,13 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
  </head>
  <!-- Body -->
  <body>
+  <div id="toast" 
+     style="position:fixed; bottom:20px; right:20px; background:#4CAF50; 
+            color:white; padding:12px 20px; border-radius:8px; 
+            display:none; box-shadow:0 4px 12px rgba(0,0,0,0.2); 
+            font-family:'Noto Kufi Arabic', sans-serif; font-size:0.95rem; z-index:999;">
+</div>
+  <!-- Site wrapper --> 
   <!-- Header -->
   <header class="site-header">
     <!-- Header -->
@@ -39,20 +49,33 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
       <!-- Nav list -->
       <ul id="nav-links" class="nav-links">
 
-     <li><a href="../sign/SignUp_LogIn_Form.html">Login</a></li>
+     <?php if ($LOGGED_IN): ?>
+   <li class="dropdown">
+            <a class="dropbtn">My profile</a>
+            <!-- Profile dropdown list -->
+            <ul class="dropdown-content">
+              <li><a href="dashboard.php">My profile</a></li>
+              <li><a href="Favorites.php">Favorites</a></li>
+              <li><a href="My_quizzes.php">My Quizzes</a></li>
+              <li><a href="sign/check_session.php?logout=true" onclick="return confirm('Are you sure you want to logout?')">Logout</a></li>
+            </ul>
+          </li>
+<?php else: ?>
+    <li><a href="../sign/SignUp_LogIn_Form.html">Login</a></li>
+<?php endif; ?>
       <li><a href="QUIZ-en.php">Quizzes</a></li>
           <li class="dropdown">
         <a class="dropbtn">Questions</a>
         <ul class="dropdown-content">
-                      <li><a href="../General.html">General Questions</a></li>
-                        <li><a href="../North.html">Northern Questions</a></li>
-                        <li><a href="../South.html">Southern Questions</a></li>
-                        <li><a href="../West.html">Western Questions</a></li>
-                        <li><a href="../East.html">Eastern Questions</a></li>
-                        <li><a href="../Central.html">Central Questions</a></li>
+                      <li><a href="../General.php">General Questions</a></li>
+                        <li><a href="../North.php">Northern Questions</a></li>
+                        <li><a href="../South.php">Southern Questions</a></li>
+                        <li><a href="../West.php">Western Questions</a></li>
+                        <li><a href="../East.php">Eastern Questions</a></li>
+                        <li><a href="../Central.php">Central Questions</a></li>
         </ul>
       </li>
-     <li><a href="../index.html">Home</a></li>
+     <li><a href="../index.php">Home</a></li>
                   <li><a href="QUIZ-ar.php" style="font-weight:700">اللغة العربية</a></li>
 
     </ul>
@@ -146,7 +169,7 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
   <script src="../assets/quiz-parser.js"></script>
 
   <!-- Quiz Script -->
-  <script>
+<script>
   /*
     Array of quiz questions.
     Each question object contains:
@@ -159,6 +182,21 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
     Function to shuffle array elements
     (Used to randomize question order and choice order)
   */
+ function showToast(message, bgColor = "#4CAF50") {
+    const toast = document.getElementById("toast");
+    toast.textContent = message;
+    toast.style.background = bgColor; // يمكن تغيير اللون حسب نوع الرسالة
+    toast.style.display = "block";
+    toast.style.opacity = "1";
+    
+    // إخفاء التنبيه تدريجيًا بعد 3 ثواني
+    setTimeout(() => {
+        toast.style.transition = "opacity 0.5s ease";
+        toast.style.opacity = "0";
+        setTimeout(() => { toast.style.display = "none"; toast.style.transition = ""; }, 500);
+    }, 3000);
+}
+
   function shuffle(arr){
     for(let i=arr.length-1;i>0;i--){
       const j = Math.floor(Math.random()*(i+1));
@@ -301,13 +339,40 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
           </label>`;
         });
       } else {
-        // open / fill-in-the-blank input
         html += `
           <div style="margin-top:.5rem">
             <textarea name="q${i}_open" placeholder="Write your answer here..." 
               style="width:100%;min-height:88px;padding:.5rem;border:1px solid #e0e0e0;border-radius:6px;font-size:1rem;font-family:inherit;resize:vertical"></textarea>
           </div>`;
       }
+
+      html += `
+        <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
+
+
+          <button onclick="favoriteQuestion(${i})" 
+            style="padding:6px 12px; background:#ffb800; color:white; border:0; border-radius:6px; cursor:pointer;">
+            Favorite ⭐ 
+          </button>
+
+          <button onclick="copyQuestion(${i})" 
+            style="padding:6px 12px; background:#2196F3; color:white; border:0; border-radius:6px; cursor:pointer;">
+           copy 📋 
+          </button>
+
+          <div style="display:flex; gap:5px; align-items:center;">
+            <a href="#" onclick="shareQuestion(${i}, 'x'); return false;" title="Share on X">
+              <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/x.svg" width="24" height="24" style="filter: invert(36%) sepia(97%) saturate(1595%) hue-rotate(176deg) brightness(93%) contrast(95%);"/>
+            </a>
+            <a href="#" onclick="shareQuestion(${i}, 'facebook'); return false;" title="Share on Facebook">
+              <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/facebook.svg" width="24" height="24" style="filter: invert(29%) sepia(72%) saturate(900%) hue-rotate(182deg) brightness(90%) contrast(90%);"/>
+            </a>
+            <a href="#" onclick="shareQuestion(${i}, 'whatsapp'); return false;" title="Share on WhatsApp">
+              <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/whatsapp.svg" width="24" height="24" style="filter: invert(49%) sepia(92%) saturate(510%) hue-rotate(95deg) brightness(93%) contrast(95%);"/>
+            </a>
+          </div>
+        </div>
+      `;
 
       box.innerHTML = html;
       container.appendChild(box);
@@ -320,14 +385,84 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
     checkBtn.href = '#result';
     checkBtn.style.display = 'inline-block';
     checkBtn.style.marginTop = '1rem';
+    checkBtn.style.marginRight = '10px';
 
-    // Prevent default link behavior and check answers instead
+    //Favorite button
+    const favBtn = document.createElement('a');
+    favBtn.className = 'btn btn-primary';
+    favBtn.textContent = 'view Favorites ⭐';
+    favBtn.href = 'favorites.php';
+    favBtn.style.display = 'inline-block';
+    favBtn.style.marginTop = '1rem';
+
     checkBtn.addEventListener('click', (e) => { 
       e.preventDefault(); 
       checkAnswers(); 
     });
 
     container.appendChild(checkBtn);
+    container.appendChild(favBtn);
+  }
+
+  /* ▼▼▼ save the question as favorite ▼▼▼ */
+  function favoriteQuestion(index) {
+    const box = document.getElementsByClassName('feature-card')[index];
+    const htmlContent = box.outerHTML;
+
+    fetch('save_favorite.php', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: 'html=' + encodeURIComponent(htmlContent)
+    })
+    .then(res => res.text())
+    .then(data => { showToast("The question has been added to favorites! ⭐"); })
+    .catch(err => { console.error("Error saving favorite:", err); showToast("Error saving question ❌", "#F44336"); });
+
+  }
+  function deleteFavorite(favHtml) {
+    if (!confirm("Are you sure you want to remove this question from favorites?")) return;
+
+    fetch('delete_favorite.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: 'html=' + encodeURIComponent(favHtml)
+    })
+    .then(res => res.text())
+    .then(msg => {
+        showToast("Question removed from favorites ❌", "#F44336");
+        // إعادة تحميل الصفحة لتحديث قائمة المفضلة
+        setTimeout(() => { location.reload(); }, 500);
+    })
+    .catch(err => {
+        console.error(err);
+        showToast("Error removing question ❌", "#F44336");
+    });
+}
+
+  /* ▲▲▲ favorite ▲▲▲ */
+
+  /* copy */
+  function copyQuestion(index) {
+    const box = document.getElementsByClassName('feature-card')[index];
+    const text = box.innerText;
+    navigator.clipboard.writeText(text).then(() => {
+    showToast("Question copied! 📋");
+    }).catch(err => {
+      console.error("Error copying question:", err);
+      showToast("Error copying question ❌", "#F44336");
+    });
+
+  }
+
+  /* Share */
+  function shareQuestion(index, platform) {
+    const box = document.getElementsByClassName('feature-card')[index];
+    const text = encodeURIComponent(box.innerText + "\n" + window.location.href);
+    let url = "";
+    if(platform === 'x') url = `https://x.com/intent/tweet?text=${text}`;
+    else if(platform === 'facebook') url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`;
+    else if(platform === 'whatsapp') url = `https://api.whatsapp.com/send?text=${text}`;
+    window.open(url, "_blank");
   }
 
   /*
@@ -363,7 +498,7 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
         }
       }
 
-      //  تلوين صندوق السؤال
+      //  color the question box based on correctness
       const box = document.getElementById("quizContainer").children[i];
       if (isCorrect){
         box.style.background = "rgba(0,255,0,0.2)";
@@ -380,7 +515,6 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
       `Your score: <strong>${score} / ${total} (${percent}%)</strong><br><br>
        <canvas id="scoreChart" style="max-width:300px;margin:0 auto;display:block;"></canvas>`;
 
-    //  تحميل Chart.js تلقائياً إذا لم يكن موجود
     function loadChart(callback){
         if (window.Chart){
             callback();
@@ -394,63 +528,17 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
 
     loadChart(() => {
         const ctx = document.getElementById("scoreChart");
-
-        // حذف أي شارت قديم
-        if (window.quizChart){
-            window.quizChart.destroy();
-        }
-
-        // رسم الشارت
+        if (window.quizChart){ window.quizChart.destroy(); }
         window.quizChart = new Chart(ctx, {
             type: "pie",
             data: {
                 labels: ["Correct", "Wrong"],
-                datasets: [{
-                    data: [score, total - score],
-                    backgroundColor: ["#4CAF50", "#F44336"]
-                }]
+                datasets: [{ data: [score, total - score], backgroundColor: ["#4CAF50", "#F44336"] }]
             },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: { position: "bottom" }
-                }
-            }
-        });
-
-//  إضافة أزرار المشاركة
-const shareContainerId = "shareResultContainer";
-let shareContainer = document.getElementById(shareContainerId);
-if (!shareContainer){
-    shareContainer = document.createElement("div");
-    shareContainer.id = shareContainerId;
-    shareContainer.style.textAlign = "center";
-    shareContainer.style.marginTop = "15px";
-    document.getElementById('result').appendChild(shareContainer);
-}
-
-// الرابط والنص للمشاركة
-const shareText = `I scored ${score} / ${total} (${percent}%) on the quiz! Try it yourself: ${window.location.href}`;
-const encodedText = encodeURIComponent(shareText);
-const encodedURL = encodeURIComponent(window.location.href);
-
-// أزرار المشاركة HTML باللوقو الرسمي لكل منصة
-shareContainer.innerHTML = `
-  <a href="https://x.com/intent/tweet?text=${encodedText}" target="_blank" style="margin:0 5px;">
-    <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/x.svg" width="32" height="32" alt="x" style="vertical-align:middle; filter: invert(36%) sepia(97%) saturate(1595%) hue-rotate(176deg) brightness(93%) contrast(95%);" />
-  </a>
-
-  <a href="https://www.facebook.com/sharer/sharer.php?u=${encodedURL}" target="_blank" style="margin:0 5px;">
-    <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/facebook.svg" width="32" height="32" alt="Facebook" style="vertical-align:middle; filter: invert(29%) sepia(72%) saturate(900%) hue-rotate(182deg) brightness(90%) contrast(90%);" />
-  </a>
-
-  <a href="https://api.whatsapp.com/send?text=${encodedText}" target="_blank" style="margin:0 5px;">
-    <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/whatsapp.svg" width="32" height="32" alt="WhatsApp" style="vertical-align:middle; filter: invert(49%) sepia(92%) saturate(510%) hue-rotate(95deg) brightness(93%) contrast(95%);" />
-  </a>
-`;
-    });
-
-}
+            options: { responsive: true, plugins: { legend: { position: "bottom" } } }
+        });
+    });
+  }
 
   /*
     Activates the Start button on page load
@@ -462,13 +550,11 @@ shareContainer.innerHTML = `
       startQuiz(); 
     });
 
-    // Populate typeFilter dynamically using client discovery with server fallback
     async function populateTypeFilter() {
       const regionSelect = document.getElementById('regionFilter');
       const typeSelect = document.getElementById('typeFilter');
       if (!typeSelect || !regionSelect) return;
       const src = regionSelect.value || 'Words';
-      // clear existing options
       typeSelect.innerHTML = '';
       const optAll = document.createElement('option'); optAll.value = 'all'; optAll.textContent = 'All Types';
       typeSelect.appendChild(optAll);
@@ -477,7 +563,6 @@ shareContainer.innerHTML = `
       if (typeof fetchQuestionTypes === 'function') {
         try { types = await fetchQuestionTypes(src); } catch (e) { types = []; }
       }
-      // server fallback
       if ((!types || types.length === 0)) {
         try {
           const qs = new URLSearchParams({ action: 'types', source: src });
@@ -485,7 +570,7 @@ shareContainer.innerHTML = `
           if (resp.ok) {
             const data = await resp.json(); if (data && Array.isArray(data.types)) types = data.types;
           }
-        } catch (e) { /* ignore */ }
+        } catch (e) { }
       }
 
       if (types && types.length > 0) {
@@ -493,18 +578,16 @@ shareContainer.innerHTML = `
           const o = document.createElement('option'); o.value = t; o.textContent = t; typeSelect.appendChild(o);
         }
       } else {
-        // fallback static options
         const labels = [{v:'mcq',t:'Multiple Choice'},{v:'multi',t:'Multiple Answers (Choose more than one)'},{v:'fill',t:'Fill in the Blank'}];
         for (const l of labels){ const o=document.createElement('option'); o.value=l.v; o.textContent=l.t; typeSelect.appendChild(o); }
       }
     }
 
-    // run on load and when region changes
     populateTypeFilter();
     const regionSelectEl = document.getElementById('regionFilter');
     if (regionSelectEl) regionSelectEl.addEventListener('change', () => populateTypeFilter());
   });
-  </script>
+</script>
 
  </body>
 </html>

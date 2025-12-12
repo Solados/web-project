@@ -1,10 +1,21 @@
+<?php
+if (session_status() === PHP_SESSION_NONE) {
+  session_start();
+}
+
+// جلب حالة المستخدم من الجلسة
+$LOGGED_IN = isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true;
+$USER_NAME = $_SESSION['user_name'] ?? "";
+$USER_EMAIL = $_SESSION['user_email'] ?? "";
+?>
+
 <!doctype html>
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>ثقافة السعودية | المنطقة الشمالية</title>
-  <meta name="description" content="اكتشف عادات وتقاليد ومواقع المنطقة الشمالية في المملكة.">
+  <title>ثقافة السعودية | المنطقة الشرقية</title>
+  <meta name="description" content="اكتشف عادات وتقاليد ومواقع المنطقة الشرقية في المملكة.">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -24,155 +35,163 @@
     .qs-pagination { direction: ltr; }
   </style>
 </head>
-<body>
+<body class="rtl">
   <!-- Header -->
   <header class="site-header">
     <nav class="navbar" aria-label="التنقل الرئيسي">
+<<<<<<< HEAD:East-ar.html
       <a class="brand" href="index-ar.html" aria-label="العودة للرئيسية">
                   <img src="image/Hawiyah.png" alt="Logo" class="site-logo">
-
       </a>
+=======
+      <a class="brand" href="index-ar.php" aria-label="العودة للرئيسية">الثقافة السعودية</a>
+>>>>>>> 75d80716f1f392d2bc2b409371740e55bbbfe0c1:East-ar.php
       <button class="menu-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="قائمة">☰</button>
 
       <ul id="nav-links" class="nav-links">
-        <li><a href="sign/Signup_Login_Form_ar.html">تسجيل الدخول</a></li>
+        <?php if ($LOGGED_IN): ?>
+    <li class="dropdown">
+            <a class="dropbtn">حسابي</a>
+            <!-- Profile dropdown list -->
+            <ul class="dropdown-content">
+              <li><a href="dashboard.php">حسابي</a></li>
+              <li><a href="Favorites.php">المفضلة</a></li>
+              <li><a href="My_quizzes.php">اختباراتي</a></li>
+              <li><a href="sign/check_session.php?logout=true" onclick="return confirm('هل أنت متأكد أنك تريد تسجيل الخروج؟')">تسجيل خروج</a></li>
+            </ul>
+          </li>
+<?php else: ?>
+    <li><a href="/sign/SignUp_LogIn_Form.html">تسجيل الدخول</a></li>
+<?php endif; ?>
+
         <li><a href="quiz/QUIZ-ar.php">الاختبارات</a></li>
 
         <li class="dropdown">
-            <a class="dropbtn">الأسئلة</a>
-            <ul class="dropdown-content">
-              <li><a href="General-ar.html">أسئلة عامة</a></li>
-              <li><a href="North-ar.html">أسئلة المنطقة الشمالية</a></li>
-              <li><a href="South-ar.html">أسئلة المنطقة الجنوبية</a></li>
-              <li><a href="West-ar.html">أسئلة المنطقة الغربية</a></li>
-              <li><a href="East-ar.html">أسئلة المنطقة الشرقية</a></li>
-              <li><a href="Central-ar.html">أسئلة المنطقة الوسطى</a></li>
-            </ul>
+                    <a class="dropbtn">الأسئلة</a>
+                    <ul class="dropdown-content" role="menu">
+                        <li><a href="../General-ar.php">أسئلة عامة</a></li>
+                        <li><a href="../North-ar.php">أسئلة المنطقة الشمالية</a></li>
+                        <li><a href="../South-ar.php">أسئلة المنطقة الجنوبية</a></li>
+                        <li><a href="../West-ar.php">أسئلة المنطقة الغربية</a></li>
+                        <li><a href="../East-ar.php">أسئلة المنطقة الشرقية</a></li>
+                        <li><a href="../Central-ar.php">أسئلة المنطقة الوسطى</a></li>
+                    </ul>
+                </li>
 
-        <li><a href="index-ar.html">الرئيسية</a></li>
+        <li><a href="index-ar.php">الرئيسية</a></li>
 
         <!-- زر تبديل اللغة — يفتح الصفحة الإنجليزية المطابقة -->
-        <li><a href="North.html" style="font-weight:700">English</a></li>
+        <li><a href="East.php" style="font-weight:700">English</a></li>
       </ul>
     </nav>
   </header>
 
-  <!-- Slider (مبني كما في الصفحة الأصلية، مع ترجمة الوصف) -->
   <!-- Slider -->
   <div id="top" class="carousel">
-    <!-- list item -->
     <div class="list">
-      <!-- (Hail slide) -->
       <div class="item">
-        <img src="image/Hail.jpg" alt="حائل">
-        <div class="content" >
-          <div class="author">شمال المملكة العربية السعودية</div>
-          <div class="topic">حائل</div>
-          <div class="des">
-تتميز حائل بحصونها الأثرية وفنونها الصخرية المدرجة في قائمة اليونسكو بالقرب من جبة، مع مناظر صحراوية خلابة وأزهار برية موسمية. يستمتع الزوار بالمواقع الأثرية والأسواق التقليدية والمهرجانات القبلية والجولات المصحوبة بمرشدين والتي تُبرز قرونًا من تاريخ الصحراء والحرف اليدوية المحلية والثقافة الأصيلة لشمال السعودية.          </div>
-        </div>
-      </div>
-      <!-- (Tabuk slide) -->
-      <div class="item">
-        <img src="image/Tabuk.jpg" alt="تبوك">
-        <div class="content" >
-          <div class="author">شمال المملكة العربية السعودية</div>
-          <div class="topic">تبوك</div>
-          <div class="des">
-تقع تبوك على الحافة الشمالية الغربية للمملكة، وتتميز بجبال اللوز ووادي الديسة والحصون التاريخية. يستكشف الزوار مسارات المشي لمسافات طويلة، والآثار القديمة، ومناخها المعتدل، وساحلها المطل على البحر الأحمر، ومشاريعها التنموية الناشئة التي تجمع بين الطبيعة والتراث والفرص العصرية.          </div>
-        </div>
-      </div>
-      <!-- (Sakaka slide) -->
-      <div class="item">
-        <img src="image/sakaka.jpg" alt="سكاكا">
-        <div class="content" >
-          <div class="author">شمال المملكة العربية السعودية</div>
-          <div class="topic">سكاكا</div>
-          <div class="des">
-تشتهر سكاكا في الجوف ببساتين الزيتون الشاسعة، وأحجار الرجاجيل، والمتاحف، والأسواق الريفية. يستكشف الزوار المواقع الأثرية، ويتذوقون أطباق زيت الزيتون التقليدية، ويحضرون المهرجانات الموسمية، ويختبرون كرم الضيافة المحلية من خلال الجولات المصحوبة بمرشدين ومعارض الحرف اليدوية.          </div>
-        </div>
-      </div>
-      <!-- (Arar slide) -->
-      <div class="item">
-        <img src="image/Arar.jpg" alt="عرعر">
+        <img src="image/dharan1.jpg" alt="الظهران">
         <div class="content">
-          <div class="author">شمال المملكة العربية السعودية</div>
-          <div class="topic">عرعر</div>
+          <div class="author">المنطقة الشرقية</div>
+          <div class="topic">الظهران</div>
           <div class="des">
-عرعر مدينة حدودية تزخر بتقاليد بدوية راسخة، وأسواق نابضة بالحياة، ومناظر صحراوية خلابة. يمتد وادي عرعر على مسافة 190 كيلومترًا تقريبًا. يستمتع الزوار بالأسواق المحلية، والحرف اليدوية البدوية، والمهرجانات الموسمية، والتجارب الثقافية الأصيلة، وكرم الضيافة الشمالية الأخّاذ.          </div>
+            تستضيف الظهران شركة أرامكو السعودية والمناطق السكنية المخططة، والجامعات، والمراكز الثقافية. توفر المدينة حدائق عائلية، متاحف، ومعالم ساحلية قريبة. يمكن للزوار التعرف على تاريخ النفط في المنطقة أثناء الاستمتاع بالأحياء الهادئة، الفعاليات المجتمعية، المهرجانات المحلية، والخدمات المتاحة.
+          </div>
         </div>
       </div>
-      <!-- (Umluj slide) -->
       <div class="item">
-        <img src="image/Umluj.jpg" alt="املج">
+        <img src="image/damam.jpg" alt="الدمام">
         <div class="content">
-          <div class="author">شمال المملكة العربية السعودية</div>
-          <div class="topic">املج</div>
+          <div class="author">المنطقة الشرقية</div>
+          <div class="topic">الدمام</div>
           <div class="des">
-أملج مدينة ساحلية على البحر الأحمر، تشتهر بمياهها الصافية وشعابها المرجانية وجزرها المتفرقة، مثالية للغطس ورحلات القوارب. يستمتع الزوار بشواطئها الرملية وقرى الصيد والمأكولات البحرية ورحلاتها في الجزر، بالإضافة إلى مناظرها البحرية الهادئة التي تتناقض مع الوجهات الصحراوية الداخلية.          </div>
+            الدمام هي عاصمة المنطقة الشرقية بشواطئ طويلة، وأسواق حيوية، وكورنيش نابض بالحياة. تستضيف المدينة فعاليات ثقافية، متاحف، أماكن عائلية، ومهرجانات على مدار السنة، مع سهولة الوصول إلى الخبر والظهران للتسوق، وتناول الطعام، والاستجمام على البحر.
+          </div>
+        </div>
+      </div>
+      <div class="item">
+        <img src="image/Jubail.avif" alt="الجُبيل">
+        <div class="content">
+          <div class="author">المنطقة الشرقية</div>
+          <div class="topic">الجُبيل</div>
+          <div class="des">
+            تجمع الجبيل بين مجمع صناعي رئيسي ومدينة ساحلية بشواطئ هادئة وأحياء تقليدية. يدعم الميناء الصناعي الاقتصاد، بينما يستمتع الزوار بالمشي على الساحل، الأسواق المحلية، والمواقع التراثية التي تعكس الصناعة الحديثة والتقاليد الساحلية.
+          </div>
+        </div>
+      </div>
+      <div class="item">
+        <img src="image/East.jpeg" alt="الأحساء">
+        <div class="content">
+          <div class="author">المنطقة الشرقية</div>
+          <div class="topic">الأحساء</div>
+          <div class="des">
+            الأحساء هي منطقة واحة مدرجة ضمن قائمة اليونسكو، تتميز بمزارع النخيل الواسعة، المواقع التاريخية، والقرى الريفية الهادئة. يمكن للزوار استكشاف قصر إبراهيم، جبل القارة، الأسواق التقليدية، والحدائق التي تعرض التراث الزراعي وزراعة التمور والمهرجانات الموسمية.
+          </div>
+        </div>
+      </div>
+      <div class="item">
+        <img src="image/bgig.jpg" alt="بقيق">
+        <div class="content">
+          <div class="author">المنطقة الشرقية</div>
+          <div class="topic">بقيق</div>
+          <div class="des">
+            بقيق هي مدينة صغيرة قرب الظهران بها مرافق أرامكو وطابع سكني هادئ. ليست وجهة سياحية نموذجية، لكن يمكن للزوار التعرف على التراث الصناعي، المواقع الثقافية القريبة، سبل العيش المحلية، والتطور الاجتماعي والاقتصادي للمنطقة.
+          </div>
         </div>
       </div>
     </div>
-    <!-- Thumbnails -->
+
     <div class="thumbnail">
-      <!-- Thumb: Hail -->
       <div class="item">
-        <img src="image/Hail.jpg" alt="حائل">
-        <div class="content" dir="rtl">
-          <div class="topic">حائل</div>
-          <div class="description">الحصون التاريخية والفنون الصخرية</div>
-        </div>
-      </div>
-      <!-- Thumb: Tabuk -->
-      <div class="item">
-        <img src="image/Tabuk.jpg" alt="تبوك">
-        <div class="content" dir="rtl">
-          <div class="topic">تبوك</div>
-          <div class="description">القمم الثلجية والوديان القديمة</div>
-        </div>
-      </div>
-      <!-- Thumb: Sakaka -->
-      <div class="item">
-        <img src="image/sakaka.jpg" alt="سكاكا">
-        <div class="content" dir="rtl">
-          <div class="topic">سكاكا</div>
-          <div class="description">بساتين الزيتون والآثار</div>
-        </div>
-      </div>
-      <!-- Thumb: Arar -->
-      <div class="item">
-        <img src="image/Arar.jpg" alt="عرعر">
-        <div class="content" dir="rtl">
-          <div class="topic">عرعر</div>
-          <div class="description">وادي عرعر والأسواق الصحراوية</div>
+        <img src="image/dharan1.jpg" alt="الظهران">
+        <div class="content">
+          <div class="topic">الظهران</div>
+          <div class="description">مدينة تعليمية وهادئة</div>
         </div>
       </div>
       <div class="item">
-        <img src="image/Umluj.jpg" alt="املج">
-        <div class="content" dir="rtl">
-          <div class="topic">املج</div>
-          <div class="description">جزر البحر الأحمر وأملج</div>
+        <img src="image/damam.jpg" alt="الدمام">
+        <div class="content">
+          <div class="topic">الدمام</div>
+          <div class="description">أسواق حيوية وشواطئ</div>
+        </div>
+      </div>
+      <div class="item">
+        <img src="image/Jubail.avif" alt="الجُبيل">
+        <div class="content">
+          <div class="topic">الجُبيل</div>
+          <div class="description">صناعة وساحل هادئ</div>
+        </div>
+      </div>
+      <div class="item">
+        <img src="image/East.jpeg" alt="الأحساء">
+        <div class="content">
+          <div class="topic">الأحساء</div>
+          <div class="description">واحة تاريخية ونخيل</div>
+        </div>
+      </div>
+      <div class="item">
+        <img src="image/bgig.jpg" alt="بقيق">
+        <div class="content">
+          <div class="topic">بقيق</div>
+          <div class="description">النفط ومدينة هادئة</div>
         </div>
       </div>
     </div>
-    <!-- next prev -->
+
     <div class="arrows">
       <button id="prev"><</button>
       <button id="next">></button>
     </div>
-    <!-- time running -->
     <div class="time"></div>
   </div>
-  <!-- Main -->
-  <main id="main">
 
-    <!-- Overview / نظرة عامة -->
+  <main id="main">
     <section id="overview" class="section section-intro">
       <div class="container">
-        <h2>نظرة عامة عن المنطقة الشمالية</h2>
-
+        <h2>نظرة عامة على المملكة العربية السعودية</h2>
         <p>
-          تضم المنطقة الشمالية تضاريس متنوعة ومواقع أثرية غنية، وتعتبر نقطة التقاء بين الحياة البدوية والتراث الزراعي في بعض وديانها.
+          المملكة العربية السعودية دولة ذات تراث غني وتنمية سريعة، تقع في قلب شبه الجزيرة العربية. هي مهد الإسلام وموطن مكة والمدينة، تجمع بين التقاليد العميقة ورؤية حديثة للمستقبل.
         </p>
 
         <!-- فلتر اللغة -->
@@ -211,22 +230,19 @@
       </div>
     </section>
 
-    <!-- CTA -->
     <section id="visit" class="section section-cta">
       <div class="container cta">
-        <h2>تعرّف على ثقافة وشواهد المنطقة الشمالية</h2>
-        <p>استكشف المواقع الأثرية، الفعاليات التقليدية، والأسواق المحلية.</p>
-        <a class="btn btn-primary" href="quiz/QUIZ-ar.php">ابدأ الاختبار</a>
+        <h2>اختبر معرفتك بثقافة السعودية</h2>
+        <p>اختبر معرفتك بثقافة السعودية من خلال تجربة ممتعة وحقيقية</p>
+        <a class="btn btn-primary" href="quiz/QUIZ-ar.php">ابدأ الآن</a>
       </div>
     </section>
-
   </main>
 
-  <!-- Footer -->
   <footer class="site-footer" aria-label="تذييل الصفحة">
     <div class="container footer-grid">
       <div>
-        <strong>الثقافة السعودية</strong>
+        <strong>ثقافة السعودية</strong>
         <p>© 2025 جميع الحقوق محفوظة</p>
       </div>
       <ul class="footer-links">
@@ -236,10 +252,8 @@
     </div>
   </footer>
 
- 
   <script src="assets/script.js"></script>
 
-  
   <!-- Page script -->
   <script>
 
@@ -268,7 +282,7 @@ const TRANSLATIONS = {
   "dating": "التعارف والعلاقات"
 };
 
-const REGION_FILE = "NORTH";   // which data file to load
+const REGION_FILE = "EAST";   // which data file to load
 let currentFilter = "all";       // all | english | arabic
 let ALL_QUESTIONS = [];
 

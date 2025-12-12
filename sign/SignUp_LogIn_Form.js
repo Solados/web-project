@@ -34,7 +34,7 @@ function handleLoginSubmit(event) {
     .then(data => {
         if (data.success) {
             // Redirect on successful login
-            window.location.href = '/index.html';
+            window.location.href = '/index.php';
         } else {
             // Display error message under login button
             errorDiv.textContent = data.message;

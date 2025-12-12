@@ -14,14 +14,14 @@ This repository contains the front-end pages and a light PHP-based profile/dashb
 
 ## Project Structure (important files)
 
-- `index.html` — Home page
-- `index-ar.html` — Home page (Arabic)
+- `index.php` — Home page
+- `index-ar.php` — Home page (Arabic)
 - `*.html` — Regional pages (North, South, East, West, Central)
 - `dashboard.php` — User profile dashboard (requires login)
 - `sign/` — Authentication handlers and forms
-   - `sign/save_signup.php` — Signup handler (creates user and starts session)
-   - `sign/login_check.php` — Login handler (verifies credentials, sets session + cookies)
-   - `sign/check_session.php` — Session validator and logout handler
+  - `sign/save_signup.php` — Signup handler (creates user and starts session)
+  - `sign/login_check.php` — Login handler (verifies credentials, sets session + cookies)
+  - `sign/check_session.php` — Session validator and logout handler
 - `api/user_profile.php` — Minimal profile API (get profile, get stats, update profile)
 - `data/user_data.csv` — CSV-backed user store (Full Name, Email, Password Hash, Quiz Record, Quiz Answered)
 - `assets/` — CSS and JavaScript assets (`styles.css`, `script.js`, `quiz-parser.js`, etc.)
@@ -40,12 +40,12 @@ php -S localhost:8000
 3. Open the site in a browser:
 
 ```text
-http://localhost:8000/index.html
+http://localhost:8000/index.php
 ```
 
 4. To test signup/login and the dashboard, use the form at `sign/Signup_Login_Form.html`.
 
-Notes: If you prefer a static-only preview (no PHP features), open `index.html` directly in your browser, but PHP pages (dashboard, signup/login handlers) will not work.
+Notes: If you prefer a static-only preview (no PHP features), open `index.php` directly in your browser, but PHP pages (dashboard, signup/login handlers) will not work.
 
 ## Authentication & Profile System
 
@@ -62,13 +62,12 @@ This project includes a simple session-based authentication flow implemented wit
 - Main JavaScript: `assets/script.js` and `assets/quiz-parser.js`.
 - API entrypoint for profile operations: `api/user_profile.php` — returns JSON for AJAX use in the dashboard.
 - Test/debug helpers included:
-   - `debug_profile.php` — view session and cookie state
-   - `test_profile_system.html` — interactive test suite
+  - `debug_profile.php` — view session and cookie state
+  - `test_profile_system.html` — interactive test suite
 
 ## Security Considerations
 
-This project is a prototype. 
-
+This project is a prototype.
 
 ## License & Attribution
 
@@ -83,6 +82,3 @@ If you'd like, I can also:
 ---
 
 Maintainer: Solados — December 2025
-
-
-

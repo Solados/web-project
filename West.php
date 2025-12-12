@@ -1,10 +1,21 @@
+<?php
+if (session_status() === PHP_SESSION_NONE) {
+  session_start();
+}
+
+// جلب حالة المستخدم من الجلسة
+$LOGGED_IN = isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true;
+$USER_NAME = $_SESSION['user_name'] ?? "";
+$USER_EMAIL = $_SESSION['user_email'] ?? "";
+?>
+
 <!doctype html>
 <!-- Head -->
 <html lang="en" dir="ltr">
  <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Saudi Culture | South Page</title>
+  <title>Saudi Culture | West Page</title>
   <meta name="description" content="Discover customs, traditions, and regions of the Kingdom of Saudi Arabia.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -24,87 +35,100 @@
     <button class="menu-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Toggle menu">☰</button>
       <!-- Nav list -->
       <ul id="nav-links" class="nav-links">
-     <li><a href="sign/SignUp_LogIn_Form.html">Login</a></li>
+     <?php if ($LOGGED_IN): ?>
+    <li class="dropdown">
+            <a class="dropbtn">My profile</a>
+            <!-- Profile dropdown list -->
+            <ul class="dropdown-content">
+              <li><a href="dashboard.php">My profile</a></li>
+              <li><a href="Favorites.php">Favorites</a></li>
+              <li><a href="My_quizzes.php">My Quizzes</a></li>
+              <li><a href="sign/check_session.php?logout=true" onclick="return confirm('Are you sure you want to logout?')">Logout</a></li>
+            </ul>
+          </li>
+<?php else: ?>
+    <li><a href="/sign/SignUp_LogIn_Form.html">Login</a></li>
+<?php endif; ?>
+
       <li><a href="quiz/QUIZ-en.php">Quizzes</a></li>
           <li class="dropdown">
         <a class="dropbtn">Questions</a>
         <!-- Questions dropdown list -->
         <ul class="dropdown-content">
-          <li><a href="General.html">General Questions</a></li>
-          <li><a href="North.html">Northern Questions</a></li>
-          <li><a href="South.html">Southern Questions</a></li>
-          <li><a href="West.html">Western Questions</a></li>
-          <li><a href="East.html">Eastern Questions</a></li>
-          <li><a href="Central.html">Central Questions</a></li>
+          <li><a href="General.php">General Questions</a></li>
+          <li><a href="North.php">Northern Questions</a></li>
+          <li><a href="South.php">Southern Questions</a></li>
+          <li><a href="West.php">Western Questions</a></li>
+          <li><a href="East.php">Eastern Questions</a></li>
+          <li><a href="Central.php">Central Questions</a></li>
         </ul>
       </li>
-     <li><a href="index.html">Home</a></li>
-          <li><a href="South-ar.html" style="font-weight:700">اللغة العربية</a></li>
-
+     <li><a href="index.php">Home</a></li>
+     <li><a href="West-ar.php" style="font-weight:700">اللغة العربية</a></li>
     </ul>
    </nav>
   </header>
-  
+
   <!-- Slider -->
   <div id="top" class="carousel">
     <!-- list item -->
     <div class="list">
-      <!-- (Abha slide) -->
+      <!-- (Makkah slide) -->
       <div class="item">
-        <img src="image/abha.jpeg" alt="Central Region">
+        <img src="image/swissotel_makkah_Hero-1.jpg" alt="Central Region">
         <div class="content" dir="ltr">
-          <div class="author">Southern of Saudi Arabia</div>
-          <div class="topic">Abha</div>
+          <div class="author">western of Saudi Arabia</div>
+          <div class="topic">Makkah</div>
           <div class="des">
-            Abha is a charming mountain city with a mild climate year-round, featuring cultural and heritage sites as well as modern tourist attractions, making it a favored destination in the south. Visitors enjoy cable cars, scenic viewpoints, local festivals, traditional architecture, handicraft souks, mountain hiking trails, family-friendly parks, and seasonal flower displays that enrich the cultural experience throughout the year for travelers seeking cooler weather.
+            Makkah is Islam's holiest city and home to the Kaaba, drawing millions for Hajj and Umrah pilgrimage. Visitors experience deep spiritual rituals, large-scale hospitality services, historic sites, markets, and modern infrastructure that supports pilgrimage logistics and worshipper needs.
           </div>
           
         </div>
       </div>
-      <!-- (Khamis Mushait slide) -->
+      <!-- (Jeddah slide) -->
       <div class="item">
-        <img src="image/Khamis Mushait.jpg" alt="Northern Region">
+        <img src="image/King-Fahd-Fountain-Saudi.jpg" alt="Northern Region">
         <div class="content" dir="ltr">
-          <div class="author">Southern of Saudi Arabia</div>
-          <div class="topic">Khamis Mushait</div>
+          <div class="author">western of Saudi Arabia</div>
+          <div class="topic">Jeddah</div>
           <div class="des">
-            Khamis Mushait is a thriving urban city both economically and structurally, hosting modern markets and shopping centers, which strengthens its position as a key economic hub in the southern region. It features transport links, business services, local industries, educational institutions, and lively weekly markets; visitors find restaurants, cafes, and cultural events that reflect the area's modern growth and traditions throughout the year.
+            Jeddah is a Red Sea port city known for its historic Al-Balad district, modern waterfront, and cultural diversity. Visitors enjoy art festivals, seafood cuisine, seaside promenades, historic coral architecture, vibrant markets, and events that celebrate its maritime heritage.
           </div>
           
         </div>
       </div>
-      <!-- (Al-baha slide) -->
+      <!-- (Taif slide) -->
       <div class="item">
-        <img src="image/albaha.JPG" alt="Western Region">
+        <img src="image/EwheUZDWYAQscSV.jpg" alt="Western Region">
         <div class="content" dir="ltr">
-          <div class="author">Southern of Saudi Arabia</div>
-          <div class="topic">Al-baha</div>
+          <div class="author">western of Saudi Arabia</div>
+          <div class="topic">Taif</div>
           <div class="des">
-            Al Baha is a green mountain city with a moderate climate, featuring terraced agricultural landscapes, heritage villages, and natural tourist sites, making it one of the prominent destinations in the south. Visitors enjoy historic villages, scenic lookout points, outdoor hiking, local markets with traditional crafts, seasonal festivals celebrating local culture, comfortable lodgings, and accessible routes for family travel throughout the year for visitors.
+            Taif sits on cool mountains and is famed for its rose cultivation, gardens, and summer resorts. Visitors attend rose festivals, explore historic sites, enjoy mountain scenery and local produce, and relax during cooler months in family-friendly mountain retreats.
           </div>
           
         </div>
       </div>
-      <!-- (Jazan slide) -->
+      <!-- (Medina slide) -->
       <div class="item">
-        <img src="image/jazan.JPG" alt="Southern Region">
+        <img src="image/photo-1591604129939-f1efa4d9f7fa.jpg" alt="Southern Region">
         <div class="content" dir="ltr">
-          <div class="author">Southern of Saudi Arabia</div>
-          <div class="topic">Jazan</div>
+          <div class="author">western of Saudi Arabia</div>
+          <div class="topic">Medina</div>
           <div class="des">
-            Jazan is a coastal city with diverse natural landscapes, located near the famous Farasan Islands, giving it significant touristic and economic importance in the southern Kingdom. Visitors take boat trips to Farasan, dive among coral reefs, explore mangrove walks, coastal markets, savor traditional seafood dishes, attend seasonal festivals, see birdlife, and experience warm local hospitality that celebrates maritime culture and traditions throughout the year.
+            Medina is Islam's second-holiest city centered on the Prophet's Mosque and sacred sites. Pilgrims and visitors come for prayer, reflection, historic neighborhoods, and educational centers, supported by hospitality services and peaceful community life throughout the year.
           </div>
           
         </div>
       </div>
-      <!-- (Najran slide) -->
+      <!-- (Yanbu slide) -->
       <div class="item">
-        <img src="image/najran.jpeg" alt="Eastern Region">
+        <img src="image/YIC-3-scaled-1.webp" alt="Eastern Region">
         <div class="content" dir="ltr">
-          <div class="author">Southern of Saudi Arabia</div>
-          <div class="topic">Najran</div>
+          <div class="author">western of Saudi Arabia</div>
+          <div class="topic">Yanbu</div>
           <div class="des">
-            Najran is a city with a rich historical heritage, characterized by vast deserts and the famous Najran Valley, featuring many archaeological sites and heritage landmarks reflecting the region’s ancient civilizations. Visitors can explore fortresses, traditional markets, ancient inscriptions, oasis settlements, local crafts, seasonal festivals, and guided tours that explain the area's long history and strong cultural traditions throughout the year.
+            Yanbu is a Red Sea port known for beaches, diving, and industry. Visitors enjoy diving and marine resorts, seafood, and waterfront leisure while the city balances industrial ports with growing tourism amenities, transport links, and cultural events for guests.
           </div>
           
         </div>
@@ -112,44 +136,44 @@
     </div>
     <!-- Thumbnails -->
     <div class="thumbnail">
-      <!-- Thumb: Abha -->
+      <!-- Thumb: Makkah -->
       <div class="item">
-        <img src="image/abha.jpeg" alt="Central Region">
+        <img src="image/swissotel_makkah_Hero-1.jpg" alt="Central Region">
         <div class="content" dir="ltr">
-          <div class="title">Abha</div>
-          <div class="description">Rijal Alma</div>
+          <div class="topic">Makkah</div>
+          <div class="description">the center of Islam</div>
         </div>
       </div>
-      <!-- Thumb: Khamis Mushait -->
+      <!-- Thumb: Jeddah -->
       <div class="item">
-        <img src="image/Khamis Mushait.jpg" alt="Northern Region">
+        <img src="image/King-Fahd-Fountain-Saudi.jpg" alt="Northern Region">
         <div class="content" dir="ltr">
-          <div class="title">Khamis Mushait</div>
-          <div class="description">Water Tower</div>
+          <div class="topic">Jeddah</div>
+          <div class="description">beautiful Red Sea coastline</div>
         </div>
       </div>
-      <!-- Thumb: Al-Baha -->
+      <!-- Thumb: Taif -->
       <div class="item">
-        <img src="image/albaha.JPG" alt="Western Region">
+        <img src="image/EwheUZDWYAQscSV.jpg" alt="Western Region">
         <div class="content" dir="ltr">
-          <div class="title">Al-Baha</div>
-          <div class="description">Al-Ays Bridge</div>
+          <div class="topic">Taif</div>
+          <div class="description">known for its cool weather, mountains, and famous Taif roses</div>
         </div>
       </div>
-      <!-- Thumb: Jazan -->
+      <!-- Thumb: Madinah -->
       <div class="item">
-        <img src="image/jazan.JPG" alt="Southern Region">
+        <img src="image/photo-1591604129939-f1efa4d9f7fa.jpg" alt="Southern Region">
         <div class="content" dir="ltr">
-          <div class="title">Jazan</div>
-          <div class="description">Farasan Island</div>
+          <div class="topic">Madinah</div>
+          <div class="description">is considered the second holiest city in Islam</div>
         </div>
       </div>
-      <!-- Thumb: Najran -->
+      <!-- Thumb: Yanbu -->
       <div class="item">
-        <img src="image/najran.jpeg" alt="Eastern Region">
+        <img src="image/YIC-3-scaled-1.webp" alt="Eastern Region">
         <div class="content" dir="ltr">
-          <div class="title">Najran</div>
-          <div class="description">Raum Castle</div>
+          <div class="topic">Yanbu</div>
+          <div class="description">known for its beautiful beaches, modern industrial areas</div>
         </div>
       </div>
     </div>
@@ -167,8 +191,8 @@
    <!-- Overview section -->
    <section id="overview" class="section section-intro">
     <div class="container">
-    <h2 dir="ltr">Southern Region Questions</h2>
-     <p dir="ltr">Questions about the Southern Region of Saudi Arabia.</p>
+    <h2 dir="ltr">Western Region Questions</h2>
+     <p dir="ltr">Questions about the Western Region of Saudi Arabia.</p>
      
       <!-- Main language filter -->
       <div class="question-filter">
@@ -209,8 +233,8 @@
   <!-- CTA section -->
   <section id="visit" class="section section-cta">
     <div class="container cta">
-     <h2>Challenge your knowledge of the Southern Region</h2>
-     <p>Test your knowledge about the Southern Region, its history, and heritage</p>
+     <h2>Challenge your knowledge of Saudi culture</h2>
+     <p>.Test your knowledge of Saudi culture with an engaging, authentic experience</p>
     <a class="btn btn-primary" href="quiz/QUIZ-en.php">Start now</a>
     </div>
    </section>
@@ -236,9 +260,8 @@
 (function(){if(!window.chatbase||window.chatbase("getState")!=="initialized"){window.chatbase=(...arguments)=>{if(!window.chatbase.q){window.chatbase.q=[]}window.chatbase.q.push(arguments)};window.chatbase=new Proxy(window.chatbase,{get(target,prop){if(prop==="q"){return target.q}return(...args)=>target(prop,...args)}})}const onLoad=function(){const script=document.createElement("script");script.src="https://www.chatbase.co/embed.min.js";script.id="PkSRl6nFY3Csgenh8koIS";script.domain="www.chatbase.co";document.body.appendChild(script)};if(document.readyState==="complete"){onLoad()}else{window.addEventListener("load",onLoad)}})();
 </script>
 
-  <!-- Page script -->
   <script>
-const REGION_FILE = "SOUTH";   // which data file to load
+const REGION_FILE = "WEST";   // which data file to load
 let currentFilter = "all";       // all | english | arabic
 let ALL_QUESTIONS = [];
 
