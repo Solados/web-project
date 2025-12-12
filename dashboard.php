@@ -241,7 +241,7 @@ $join_date = $login_time > 0 ? date('F j, Y', $login_time) : 'Unknown';
     <!-- Header -->
     <!-- Navigation -->
     <nav class="navbar" aria-label="Main navigation">
-     <a class="brand" href="index.html" aria-label="Back to home">Saudi Culture</a>
+     <a class="brand" href="index.php" aria-label="Back to home">Saudi Culture</a>
     <button class="menu-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Toggle menu">☰</button>
       <!-- Nav list -->
       <ul id="nav-links" class="nav-links">
@@ -251,15 +251,15 @@ $join_date = $login_time > 0 ? date('F j, Y', $login_time) : 'Unknown';
         <a class="dropbtn">Regions</a>
         <!-- Regions dropdown list -->
         <ul class="dropdown-content">
-          <li><a href="North.html">Northern Region</a></li>
-          <li><a href="South.html">Southern Region</a></li>
-          <li><a href="West.html">Western Region</a></li>
-          <li><a href="East.html">Eastern Region</a></li>
-          <li><a href="Central.html">Central Region</a></li>
+          <li><a href="North.php">Northern Region</a></li>
+          <li><a href="South.php">Southern Region</a></li>
+          <li><a href="West.php">Western Region</a></li>
+          <li><a href="East.php">Eastern Region</a></li>
+          <li><a href="Central.php">Central Region</a></li>
         </ul>
       </li>
-     <li><a href="index.html">Home</a></li>
-     <li><a href="index-ar.html" style="font-weight:700">اللغة العربية</a></li>
+     <li><a href="index.php">Home</a></li>
+     <li><a href="index-ar.php" style="font-weight:700">اللغة العربية</a></li>
     </ul>
    </nav>
   </header>
@@ -363,13 +363,13 @@ $join_date = $login_time > 0 ? date('F j, Y', $login_time) : 'Unknown';
           <div class="label" style="font-size: 1rem; font-weight: 600;">Start a Quiz</div>
         </div>
       </a>
-      <a href="North.html" style="text-decoration: none;">
+      <a href="North.php" style="text-decoration: none;">
         <div class="stat-card" style="cursor: pointer; transition: transform 0.2s;">
           <div class="icon">🗺️</div>
           <div class="label" style="font-size: 1rem; font-weight: 600;">Explore Regions</div>
         </div>
       </a>
-      <a href="index.html" style="text-decoration: none;">
+      <a href="index.php" style="text-decoration: none;">
         <div class="stat-card" style="cursor: pointer; transition: transform 0.2s;">
           <div class="icon">🏠</div>
           <div class="label" style="font-size: 1rem; font-weight: 600;">Back to Home</div>
@@ -411,7 +411,7 @@ $join_date = $login_time > 0 ? date('F j, Y', $login_time) : 'Unknown';
      <p>© 2025 All rights reserved</p>
     </div>
     <ul class="footer-links">
-     <li><a href="index.html">Back to Home</a></li>
+     <li><a href="index.php">Back to Home</a></li>
      <li><a href="dashboard.php">My Profile</a></li>
     </ul>
    </div>

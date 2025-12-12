@@ -1,3 +1,13 @@
+<?php
+if (session_status() === PHP_SESSION_NONE) {
+  session_start();
+}
+
+// جلب حالة المستخدم من الجلسة
+$LOGGED_IN = isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true;
+$USER_NAME = $_SESSION['user_name'] ?? "";
+$USER_EMAIL = $_SESSION['user_email'] ?? "";
+?>
 <!doctype html>
 <html lang="ar" dir="rtl">
 <head>
@@ -82,23 +92,29 @@
             
       <!-- زر تغيير اللغة -->
 
-      <li><a href="sign/Signup_Login_Form_ar.html">تسجيل الدخول</a></li>
+      <?php if ($LOGGED_IN): ?>
+    <li><a href="/dashboard.php">حسابي</a></li>
+    <li><a href="/sign/check_session.php?logout=true" onclick="return confirm('هل أنت متأكد أنك تريد تسجيل الخروج؟')">تسجيل الخروج</a></li>
+<?php else: ?>
+    <li><a href="/sign/SignUp_LogIn_Form.html">تسجيل الدخول</a></li>
+<?php endif; ?>
+
       <li><a href="quiz/QUIZ-ar.php">الاختبارات</a></li>
 
       <li class="dropdown">
         <a class="dropbtn">الأسئلة</a>
         <ul class="dropdown-content">
-          <li><a href="General-ar.html">أسئلة عامة</a></li>
-          <li><a href="North-ar.html">أسئلة المنطقة الشمالية</a></li>
-          <li><a href="South-ar.html">أسئلة المنطقة الجنوبية</a></li>
-          <li><a href="West-ar.html">أسئلة المنطقة الغربية</a></li>
-          <li><a href="East-ar.html">أسئلة المنطقة الشرقية</a></li>
-          <li><a href="Central-ar.html">أسئلة المنطقة الوسطى</a></li>
+          <li><a href="General-ar.php">أسئلة عامة</a></li>
+          <li><a href="North-ar.php">أسئلة المنطقة الشمالية</a></li>
+          <li><a href="South-ar.php">أسئلة المنطقة الجنوبية</a></li>
+          <li><a href="West-ar.php">أسئلة المنطقة الغربية</a></li>
+          <li><a href="East-ar.php">أسئلة المنطقة الشرقية</a></li>
+          <li><a href="Central-ar.php">أسئلة المنطقة الوسطى</a></li>
         </ul>
       </li>
 
-      <li><a href="index-ar.html">الرئيسية</a></li>
-      <li><a href="index.html" style="font-weight:700">English</a></li>
+      <li><a href="index-ar.php">الرئيسية</a></li>
+      <li><a href="index.php" style="font-weight:700">English</a></li>
 
     </ul>
 
@@ -179,7 +195,7 @@
               <h4>أسئلة عامة</h4>
               <p>أسئلة عامة حول الثقافة والتاريخ السعودي.</p>
             </div>
-            <a class="explore-btn" href="General-ar.html">استكشف</a>
+            <a class="explore-btn" href="General-ar.php">استكشف</a>
           </div>
           <div class="region-card sr-hidden">
             <div>
@@ -187,7 +203,7 @@
               <h4>أسئلة المنطقة الشمالية</h4>
               <p>أسئلة متعلقة بالالمنطقة الشمالية.</p>
             </div>
-            <a class="explore-btn" href="North-ar.html">استكشف</a>
+            <a class="explore-btn" href="North-ar.php">استكشف</a>
           </div>
           <div class="region-card sr-hidden">
             <div>
@@ -195,7 +211,7 @@
               <h4>أسئلة المنطقة الجنوبية</h4>
               <p>أسئلة متعلقة بالمنطقة الجنوبية.</p>
             </div>
-            <a class="explore-btn" href="South-ar.html">استكشف</a>
+            <a class="explore-btn" href="South-ar.php">استكشف</a>
           </div>
           <div class="region-card sr-hidden">
             <div>
@@ -203,7 +219,7 @@
               <h4>أسئلة المنطقة الشرقية</h4>
               <p>أسئلة متعلقة بالمنطقة الشرقية.</p>
             </div>
-            <a class="explore-btn" href="East-ar.html">استكشف</a>
+            <a class="explore-btn" href="East-ar.php">استكشف</a>
           </div>
           <div class="region-card sr-hidden">
             <div>
@@ -211,7 +227,7 @@
               <h4>أسئلة المنطقة الغربية</h4>
               <p>أسئلة متعلقة بالمنطقة الغربية.</p>
             </div>
-            <a class="explore-btn" href="West-ar.html">استكشف</a>
+            <a class="explore-btn" href="West-ar.php">استكشف</a>
           </div>
           <div class="region-card sr-hidden">
             <div>
@@ -219,7 +235,7 @@
               <h4>أسئلة المنطقة الوسطى</h4>
               <p>أسئلة متعلقة بالمنطقة الوسطى.</p>
             </div>
-            <a class="explore-btn" href="Central-ar.html">استكشف</a>
+            <a class="explore-btn" href="Central-ar.php">استكشف</a>
           </div>
         </div>
       </div>

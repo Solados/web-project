@@ -7,7 +7,7 @@ To add your attached Arar photo to the site:
 PowerShell example (adjust the source path where you saved the attachment):
 Copy-Item -Path "C:\path\to\downloaded\attachment.jpg" -Destination "c:\Users\Maznh\Documents\GitHub\web-project\image\arar.jpg"
 
-After copying, refresh your `North.html` page in the browser. The page prefers `image/arar.jpg`; if it's not present it will display the placeholder `image/arar.svg`.
+After copying, refresh your `North.php` page in the browser. The page prefers `image/arar.jpg`; if it's not present it will display the placeholder `image/arar.svg`.
 
 Notes:
 - Use the filename exactly `arar.jpg` (lowercase) to match the HTML reference.

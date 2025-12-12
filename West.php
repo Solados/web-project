@@ -1,10 +1,21 @@
+<?php
+if (session_status() === PHP_SESSION_NONE) {
+  session_start();
+}
+
+// جلب حالة المستخدم من الجلسة
+$LOGGED_IN = isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true;
+$USER_NAME = $_SESSION['user_name'] ?? "";
+$USER_EMAIL = $_SESSION['user_email'] ?? "";
+?>
+
 <!doctype html>
 <!-- Head -->
 <html lang="en" dir="ltr">
  <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Saudi Culture | East Page</title>
+  <title>Saudi Culture | West Page</title>
   <meta name="description" content="Discover customs, traditions, and regions of the Kingdom of Saudi Arabia.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -21,22 +32,28 @@
     <button class="menu-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Toggle menu">☰</button>
       <!-- Nav list -->
       <ul id="nav-links" class="nav-links">
-     <li><a href="sign/SignUp_LogIn_Form.html">Login</a></li>
+     <?php if ($LOGGED_IN): ?>
+    <li><a href="/dashboard.php">My Profile</a></li>
+    <li><a href="/sign/check_session.php?logout=true" onclick="return confirm('Are you sure you want to logout?')">Logout</a></li>
+<?php else: ?>
+    <li><a href="/sign/SignUp_LogIn_Form.html">Login</a></li>
+<?php endif; ?>
+
       <li><a href="quiz/QUIZ-en.php">Quizzes</a></li>
           <li class="dropdown">
         <a class="dropbtn">Questions</a>
         <!-- Questions dropdown list -->
         <ul class="dropdown-content">
-          <li><a href="General.html">General Questions</a></li>
-          <li><a href="North.html">Northern Questions</a></li>
-          <li><a href="South.html">Southern Questions</a></li>
-          <li><a href="West.html">Western Questions</a></li>
-          <li><a href="East.html">Eastern Questions</a></li>
-          <li><a href="Central.html">Central Questions</a></li>
+          <li><a href="General.php">General Questions</a></li>
+          <li><a href="North.php">Northern Questions</a></li>
+          <li><a href="South.php">Southern Questions</a></li>
+          <li><a href="West.php">Western Questions</a></li>
+          <li><a href="East.php">Eastern Questions</a></li>
+          <li><a href="Central.php">Central Questions</a></li>
         </ul>
       </li>
-     <li><a href="index.html">Home</a></li>
-     <li><a href="East-ar.html" style="font-weight:700">اللغة العربية</a></li>
+     <li><a href="index.php">Home</a></li>
+     <li><a href="West-ar.php" style="font-weight:700">اللغة العربية</a></li>
     </ul>
    </nav>
   </header>
@@ -45,102 +62,107 @@
   <div id="top" class="carousel">
     <!-- list item -->
     <div class="list">
-      <!-- (Dhahran slide) -->
+      <!-- (Makkah slide) -->
       <div class="item">
-        <img src="image/dharan1.jpg" alt="Dhahran">
+        <img src="image/swissotel_makkah_Hero-1.jpg" alt="Central Region">
         <div class="content" dir="ltr">
-          <div class="author">Eastern of Saudi Arabia</div>
-          <div class="topic">Dhahran</div>
+          <div class="author">western of Saudi Arabia</div>
+          <div class="topic">Makkah</div>
           <div class="des">
-          Dhahran hosts Saudi Aramco and planned residential areas, universities, and cultural centers. The city offers family parks, museums, and nearby coastal attractions. Visitors learn about the region's oil history while enjoying calm neighborhoods, community events, local festivals, and accessible services.
+            Makkah is Islam's holiest city and home to the Kaaba, drawing millions for Hajj and Umrah pilgrimage. Visitors experience deep spiritual rituals, large-scale hospitality services, historic sites, markets, and modern infrastructure that supports pilgrimage logistics and worshipper needs.
           </div>
+          
         </div>
       </div>
-      <!-- (Dammam slide) -->
+      <!-- (Jeddah slide) -->
       <div class="item">
-        <img src="image/damam.jpg" alt="Dammam">
+        <img src="image/King-Fahd-Fountain-Saudi.jpg" alt="Northern Region">
         <div class="content" dir="ltr">
-          <div class="author">Eastern of Saudi Arabia</div>
-          <div class="topic">Dammam</div>
+          <div class="author">western of Saudi Arabia</div>
+          <div class="topic">Jeddah</div>
           <div class="des">
-            Dammam is the Eastern Province capital with long beaches, vibrant markets, and a lively waterfront corniche. The city hosts cultural events, museums, family attractions, and festivals year-round, while providing easy access to Khobar and Dhahran for shopping, dining, and seaside leisure.
+            Jeddah is a Red Sea port city known for its historic Al-Balad district, modern waterfront, and cultural diversity. Visitors enjoy art festivals, seafood cuisine, seaside promenades, historic coral architecture, vibrant markets, and events that celebrate its maritime heritage.
           </div>
+          
         </div>
       </div>
-      <!-- (Jubail slide) -->
+      <!-- (Taif slide) -->
       <div class="item">
-        <img src="image/Jubail.avif" alt="Jubail">
+        <img src="image/EwheUZDWYAQscSV.jpg" alt="Western Region">
         <div class="content" dir="ltr">
-          <div class="author">Eastern of Saudi Arabia</div>
-          <div class="topic">Jubail</div>
+          <div class="author">western of Saudi Arabia</div>
+          <div class="topic">Taif</div>
           <div class="des">
-            Jubail combines a major industrial complex and a coastal city with calm beaches and traditional neighborhoods. The industrial port drives the economy, while visitors enjoy seaside walks, local markets, and heritage sites reflecting both modern industry and coastal traditions.
+            Taif sits on cool mountains and is famed for its rose cultivation, gardens, and summer resorts. Visitors attend rose festivals, explore historic sites, enjoy mountain scenery and local produce, and relax during cooler months in family-friendly mountain retreats.
           </div>
+          
         </div>
       </div>
-      <!-- (Al-Ahsa slide) -->
+      <!-- (Medina slide) -->
       <div class="item">
-        <img src="image/East.jpeg" alt="Al-Ahsa">
+        <img src="image/photo-1591604129939-f1efa4d9f7fa.jpg" alt="Southern Region">
         <div class="content" dir="ltr">
-          <div class="author">Eastern of Saudi Arabia</div>
-          <div class="topic">Al-Ahsa</div>
+          <div class="author">western of Saudi Arabia</div>
+          <div class="topic">Medina</div>
           <div class="des">
-            Al-Ahsa is a UNESCO-listed oasis region with vast palm groves, historic sites, and peaceful rural towns. Visitors explore Ibrahim Palace, Al-Qarah Mountain, traditional markets, and gardens that showcase agricultural heritage, date cultivation, and seasonal festivals.
+            Medina is Islam's second-holiest city centered on the Prophet's Mosque and sacred sites. Pilgrims and visitors come for prayer, reflection, historic neighborhoods, and educational centers, supported by hospitality services and peaceful community life throughout the year.
           </div>
+          
         </div>
       </div>
-      <!-- (Buqayq slide) -->
+      <!-- (Yanbu slide) -->
       <div class="item">
-        <img src="image/bgig.jpg" alt="Buqayq">
+        <img src="image/YIC-3-scaled-1.webp" alt="Eastern Region">
         <div class="content" dir="ltr">
-          <div class="author">Eastern of Saudi Arabia</div>
-          <div class="topic">Buqayq</div>
+          <div class="author">western of Saudi Arabia</div>
+          <div class="topic">Yanbu</div>
           <div class="des">
-            Buqayq is a small oil-area town near Dhahran with Aramco facilities and a quiet residential character. It is not a typical tourist destination, but visitors can learn about industrial heritage, nearby cultural sites, local livelihoods, and the region's social and economic development.
+            Yanbu is a Red Sea port known for beaches, diving, and industry. Visitors enjoy diving and marine resorts, seafood, and waterfront leisure while the city balances industrial ports with growing tourism amenities, transport links, and cultural events for guests.
           </div>
+          
         </div>
       </div>
     </div>
     <!-- Thumbnails -->
     <div class="thumbnail">
-      <!-- Thumb: Dhahran -->
+      <!-- Thumb: Makkah -->
       <div class="item">
-        <img src="image/dharan1.jpg" alt="Dhahran">
+        <img src="image/swissotel_makkah_Hero-1.jpg" alt="Central Region">
         <div class="content" dir="ltr">
-          <div class="topic">Dhahran</div>
-          <div class="description">Education and quiet city</div>
+          <div class="topic">Makkah</div>
+          <div class="description">the center of Islam</div>
         </div>
       </div>
-      <!-- Thumb: Dammam -->
+      <!-- Thumb: Jeddah -->
       <div class="item">
-        <img src="image/damam.jpg" alt="Dammam">
+        <img src="image/King-Fahd-Fountain-Saudi.jpg" alt="Northern Region">
         <div class="content" dir="ltr">
-          <div class="topic">Dammam</div>
-          <div class="description">Vibrant markets and beaches</div>
+          <div class="topic">Jeddah</div>
+          <div class="description">beautiful Red Sea coastline</div>
         </div>
       </div>
-      <!-- Thumb: Jubail -->
+      <!-- Thumb: Taif -->
       <div class="item">
-        <img src="image/Jubail.avif" alt="Jubail">
+        <img src="image/EwheUZDWYAQscSV.jpg" alt="Western Region">
         <div class="content" dir="ltr">
-          <div class="topic">Jubail</div>
-          <div class="description">Industry and calm coast</div>
+          <div class="topic">Taif</div>
+          <div class="description">known for its cool weather, mountains, and famous Taif roses</div>
         </div>
       </div>
-      <!-- Thumb: Al-Ahsa -->
+      <!-- Thumb: Madinah -->
       <div class="item">
-        <img src="image/East.jpeg" alt="Al-Ahsa">
+        <img src="image/photo-1591604129939-f1efa4d9f7fa.jpg" alt="Southern Region">
         <div class="content" dir="ltr">
-          <div class="topic">Al-Ahsa</div>
-          <div class="description">Historic oasis and palms</div>
+          <div class="topic">Madinah</div>
+          <div class="description">is considered the second holiest city in Islam</div>
         </div>
       </div>
-      <!-- Thumb: Buqayq -->
+      <!-- Thumb: Yanbu -->
       <div class="item">
-        <img src="image/bgig.jpg" alt="Buqayq">
+        <img src="image/YIC-3-scaled-1.webp" alt="Eastern Region">
         <div class="content" dir="ltr">
-          <div class="topic">Buqayq</div>
-          <div class="description">Oil and quiet town</div>
+          <div class="topic">Yanbu</div>
+          <div class="description">known for its beautiful beaches, modern industrial areas</div>
         </div>
       </div>
     </div>
@@ -158,8 +180,8 @@
    <!-- Overview section -->
    <section id="overview" class="section section-intro">
     <div class="container">
-    <h2 dir="ltr">Eastern Region Questions</h2>
-     <p dir="ltr">Questions about the Eastern Region of Saudi Arabia.</p>
+    <h2 dir="ltr">Western Region Questions</h2>
+     <p dir="ltr">Questions about the Western Region of Saudi Arabia.</p>
      
       <!-- Main language filter -->
       <div class="question-filter">
@@ -222,13 +244,13 @@
   </footer>
 
   <script src="assets/script.js"></script>
-  <!-- Chatbase Script -->
+<!-- Chatbase Script -->
   <script>
 (function(){if(!window.chatbase||window.chatbase("getState")!=="initialized"){window.chatbase=(...arguments)=>{if(!window.chatbase.q){window.chatbase.q=[]}window.chatbase.q.push(arguments)};window.chatbase=new Proxy(window.chatbase,{get(target,prop){if(prop==="q"){return target.q}return(...args)=>target(prop,...args)}})}const onLoad=function(){const script=document.createElement("script");script.src="https://www.chatbase.co/embed.min.js";script.id="PkSRl6nFY3Csgenh8koIS";script.domain="www.chatbase.co";document.body.appendChild(script)};if(document.readyState==="complete"){onLoad()}else{window.addEventListener("load",onLoad)}})();
 </script>
 
- <script>
-const REGION_FILE = "EAST";   // which data file to load
+  <script>
+const REGION_FILE = "WEST";   // which data file to load
 let currentFilter = "all";       // all | english | arabic
 let ALL_QUESTIONS = [];
 

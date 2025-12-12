@@ -1,17 +1,20 @@
 <?php
-// Start session first
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Check login manually
-if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
-    // CORRECT filename: Signup_Login_Form.html
-    echo '<script>window.location.href = "../sign/Signup_Login_Form.html";</script>';
-    echo '<noscript><meta http-equiv="refresh" content="0;url=../sign/Signup_Login_Form.html"></noscript>';
+// جلب حالة المستخدم
+$LOGGED_IN = isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true;
+$USER_NAME = $_SESSION['user_name'] ?? "";
+$USER_EMAIL = $_SESSION['user_email'] ?? "";
+
+// منع الوصول لغير المسجلين
+if (!$LOGGED_IN) {
+    header("Location: ../sign/SignUp_LogIn_Form.html");
     exit();
 }
 ?>
+
 <!DOCTYPE html>
 <!-- Head -->
 <html lang="en" dir="ltr">
@@ -39,20 +42,25 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
       <!-- Nav list -->
       <ul id="nav-links" class="nav-links">
 
-     <li><a href="../sign/SignUp_LogIn_Form.html">Login</a></li>
+     <?php if ($LOGGED_IN): ?>
+    <li><a href="/dashboard.php">My Profile</a></li>
+    <li><a href="/sign/check_session.php?logout=true" onclick="return confirm('Are you sure you want to logout?')">Logout</a></li>
+<?php else: ?>
+    <li><a href="../sign/SignUp_LogIn_Form.html">Login</a></li>
+<?php endif; ?>
       <li><a href="QUIZ-en.php">Quizzes</a></li>
           <li class="dropdown">
         <a class="dropbtn">Questions</a>
         <ul class="dropdown-content">
-                      <li><a href="../General.html">General Questions</a></li>
-                        <li><a href="../North.html">Northern Questions</a></li>
-                        <li><a href="../South.html">Southern Questions</a></li>
-                        <li><a href="../West.html">Western Questions</a></li>
-                        <li><a href="../East.html">Eastern Questions</a></li>
-                        <li><a href="../Central.html">Central Questions</a></li>
+                      <li><a href="../General.php">General Questions</a></li>
+                        <li><a href="../North.php">Northern Questions</a></li>
+                        <li><a href="../South.php">Southern Questions</a></li>
+                        <li><a href="../West.php">Western Questions</a></li>
+                        <li><a href="../East.php">Eastern Questions</a></li>
+                        <li><a href="../Central.php">Central Questions</a></li>
         </ul>
       </li>
-     <li><a href="../index.html">Home</a></li>
+     <li><a href="../index.php">Home</a></li>
                   <li><a href="QUIZ-ar.php" style="font-weight:700">اللغة العربية</a></li>
 
     </ul>

@@ -1,11 +1,21 @@
+<?php
+if (session_status() === PHP_SESSION_NONE) {
+  session_start();
+}
+
+// جلب حالة المستخدم من الجلسة
+$LOGGED_IN = isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true;
+$USER_NAME = $_SESSION['user_name'] ?? "";
+$USER_EMAIL = $_SESSION['user_email'] ?? "";
+?>
+
 <!doctype html>
 <html lang="ar" dir="rtl">
-<!-- Head -->
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>ثقافة السعودية | المنطقة الشمالية</title>
-  <meta name="description" content="اكتشف عادات وتقاليد ومواقع المنطقة الشمالية في المملكة.">
+  <title>ثقافة السعودية | المنطقة الشرقية</title>
+  <meta name="description" content="اكتشف عادات وتقاليد ومواقع المنطقة الشرقية في المملكة.">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -25,33 +35,39 @@
     .qs-pagination { direction: ltr; }
   </style>
 </head>
-<body>
+<body class="rtl">
   <!-- Header -->
   <header class="site-header">
     <nav class="navbar" aria-label="التنقل الرئيسي">
-      <a class="brand" href="index-ar.html" aria-label="العودة للرئيسية">الثقافة السعودية</a>
+      <a class="brand" href="index-ar.php" aria-label="العودة للرئيسية">الثقافة السعودية</a>
       <button class="menu-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="قائمة">☰</button>
 
       <ul id="nav-links" class="nav-links">
-        <li><a href="sign/Signup_Login_Form_ar.html">تسجيل الدخول</a></li>
+        <?php if ($LOGGED_IN): ?>
+    <li><a href="/dashboard.php">حسابي</a></li>
+    <li><a href="/sign/check_session.php?logout=true" onclick="return confirm('هل أنت متأكد أنك تريد تسجيل الخروج؟')">تسجيل الخروج</a></li>
+<?php else: ?>
+    <li><a href="/sign/SignUp_LogIn_Form.html">تسجيل الدخول</a></li>
+<?php endif; ?>
+
         <li><a href="quiz/QUIZ-ar.php">الاختبارات</a></li>
 
         <li class="dropdown">
-          <a class="dropbtn">الأسئلة</a>
-          <ul class="dropdown-content">
-            <li><a href="General-ar.html">أسئلة عامة</a></li>
-            <li><a href="North-ar.html">أسئلة المنطقة الشمالية</a></li>
-            <li><a href="South-ar.html">أسئلة المنطقة الجنوبية</a></li>
-            <li><a href="West-ar.html">أسئلة المنطقة الغربية</a></li>
-            <li><a href="East-ar.html">أسئلة المنطقة الشرقية</a></li>
-            <li><a href="Central-ar.html">أسئلة المنطقة الوسطى</a></li>
-          </ul>
-        </li>
+                    <a class="dropbtn">الأسئلة</a>
+                    <ul class="dropdown-content" role="menu">
+                        <li><a href="../General-ar.php">أسئلة عامة</a></li>
+                        <li><a href="../North-ar.php">أسئلة المنطقة الشمالية</a></li>
+                        <li><a href="../South-ar.php">أسئلة المنطقة الجنوبية</a></li>
+                        <li><a href="../West-ar.php">أسئلة المنطقة الغربية</a></li>
+                        <li><a href="../East-ar.php">أسئلة المنطقة الشرقية</a></li>
+                        <li><a href="../Central-ar.php">أسئلة المنطقة الوسطى</a></li>
+                    </ul>
+                </li>
 
-        <li><a href="index-ar.html">الرئيسية</a></li>
+        <li><a href="index-ar.php">الرئيسية</a></li>
 
         <!-- زر تبديل اللغة — يفتح الصفحة الإنجليزية المطابقة -->
-        <li><a href="South.html" style="font-weight:700">English</a></li>
+        <li><a href="East.php" style="font-weight:700">English</a></li>
       </ul>
     </nav>
   </header>
@@ -59,117 +75,109 @@
   <!-- Slider -->
   <div id="top" class="carousel">
     <div class="list">
-      <!-- أبها -->
       <div class="item">
-        <img src="image/abha.jpeg" alt="أبها">
-        <div class="content" dir="rtl">
-          <div class="author">المنطقة الجنوبية في السعودية</div>
-          <div class="topic">أبها</div>
+        <img src="image/dharan1.jpg" alt="الظهران">
+        <div class="content">
+          <div class="author">المنطقة الشرقية</div>
+          <div class="topic">الظهران</div>
           <div class="des">
-            أبها مدينة جبلية رائعة ذات مناخ معتدل طوال العام، تضم مواقع ثقافية وتراثية ومعالم سياحية حديثة، مما يجعلها وجهة مفضلة في الجنوب. يمكن للزوار الاستمتاع بالتلفريك، والمناطق الخلابة، والمهرجانات المحلية، والهندسة المعمارية التقليدية، والأسواق الحرفية، ومسارات المشي الجبلية، والحدائق العائلية، وعروض الزهور الموسمية التي تعزز التجربة الثقافية طوال السنة.
+            تستضيف الظهران شركة أرامكو السعودية والمناطق السكنية المخططة، والجامعات، والمراكز الثقافية. توفر المدينة حدائق عائلية، متاحف، ومعالم ساحلية قريبة. يمكن للزوار التعرف على تاريخ النفط في المنطقة أثناء الاستمتاع بالأحياء الهادئة، الفعاليات المجتمعية، المهرجانات المحلية، والخدمات المتاحة.
           </div>
         </div>
       </div>
-      <!-- خميس مشيط -->
       <div class="item">
-        <img src="image/Khamis Mushait.jpg" alt="خميس مشيط">
-        <div class="content" dir="rtl">
-          <div class="author">المنطقة الجنوبية في السعودية</div>
-          <div class="topic">خميس مشيط</div>
+        <img src="image/damam.jpg" alt="الدمام">
+        <div class="content">
+          <div class="author">المنطقة الشرقية</div>
+          <div class="topic">الدمام</div>
           <div class="des">
-            خميس مشيط مدينة حضرية مزدهرة اقتصاديًا ومعماريًا، تضم أسواقًا حديثة ومراكز تجارية، مما يعزز مكانتها كمركز اقتصادي رئيسي في الجنوب. تتميز بوسائل النقل، والخدمات التجارية، والصناعات المحلية، والمؤسسات التعليمية، والأسواق الأسبوعية النابضة بالحياة، مع مطاعم، ومقاهي، وفعاليات ثقافية تعكس النمو الحديث والتقاليد المحلية.
+            الدمام هي عاصمة المنطقة الشرقية بشواطئ طويلة، وأسواق حيوية، وكورنيش نابض بالحياة. تستضيف المدينة فعاليات ثقافية، متاحف، أماكن عائلية، ومهرجانات على مدار السنة، مع سهولة الوصول إلى الخبر والظهران للتسوق، وتناول الطعام، والاستجمام على البحر.
           </div>
         </div>
       </div>
-      <!-- الباحة -->
       <div class="item">
-        <img src="image/albaha.JPG" alt="الباحة">
-        <div class="content" dir="rtl">
-          <div class="author">المنطقة الجنوبية في السعودية</div>
-          <div class="topic">الباحة</div>
+        <img src="image/Jubail.avif" alt="الجُبيل">
+        <div class="content">
+          <div class="author">المنطقة الشرقية</div>
+          <div class="topic">الجُبيل</div>
           <div class="des">
-            الباحة مدينة جبلية خضراء ذات مناخ معتدل، تتميز بالمزارع المدرجة، والقرى التراثية، والمواقع الطبيعية السياحية، مما يجعلها من أبرز الوجهات في الجنوب. يمكن للزوار استكشاف القرى التاريخية، ونقاط المراقبة، ومسارات المشي الخارجية، والأسواق المحلية، والمهرجانات الموسمية، والإقامة المريحة، والمسارات المناسبة للعائلات.
+            تجمع الجبيل بين مجمع صناعي رئيسي ومدينة ساحلية بشواطئ هادئة وأحياء تقليدية. يدعم الميناء الصناعي الاقتصاد، بينما يستمتع الزوار بالمشي على الساحل، الأسواق المحلية، والمواقع التراثية التي تعكس الصناعة الحديثة والتقاليد الساحلية.
           </div>
         </div>
       </div>
-      <!-- جازان -->
       <div class="item">
-        <img src="image/jazan.JPG" alt="جازان">
-        <div class="content" dir="rtl">
-          <div class="author">المنطقة الجنوبية في السعودية</div>
-          <div class="topic">جازان</div>
+        <img src="image/East.jpeg" alt="الأحساء">
+        <div class="content">
+          <div class="author">المنطقة الشرقية</div>
+          <div class="topic">الأحساء</div>
           <div class="des">
-            جازان مدينة ساحلية ذات مناظر طبيعية متنوعة، تقع بالقرب من جزر فرسان الشهيرة، مما يمنحها أهمية سياحية واقتصادية كبيرة في الجنوب. يمكن للزوار القيام برحلات بحرية إلى فرسان، الغوص بين الشعاب المرجانية، استكشاف ممرات أشجار المانغروف، زيارة الأسواق الساحلية، تذوق المأكولات البحرية التقليدية، وحضور المهرجانات الموسمية.
+            الأحساء هي منطقة واحة مدرجة ضمن قائمة اليونسكو، تتميز بمزارع النخيل الواسعة، المواقع التاريخية، والقرى الريفية الهادئة. يمكن للزوار استكشاف قصر إبراهيم، جبل القارة، الأسواق التقليدية، والحدائق التي تعرض التراث الزراعي وزراعة التمور والمهرجانات الموسمية.
           </div>
         </div>
       </div>
-      <!-- نجران -->
       <div class="item">
-        <img src="image/najran.jpeg" alt="نجران">
-        <div class="content" dir="rtl">
-          <div class="author">المنطقة الجنوبية في السعودية</div>
-          <div class="topic">نجران</div>
+        <img src="image/bgig.jpg" alt="بقيق">
+        <div class="content">
+          <div class="author">المنطقة الشرقية</div>
+          <div class="topic">بقيق</div>
           <div class="des">
-            نجران مدينة ذات تراث تاريخي غني، تتميز بالصحراء الشاسعة ووادي نجران الشهير، وتحتوي على العديد من المواقع الأثرية والمعالم التراثية التي تعكس الحضارات القديمة. يمكن للزوار استكشاف الحصون، والأسواق التقليدية، والنقوش القديمة، والمستوطنات الواحية، والحرف المحلية، والمهرجانات الموسمية، والجولات الإرشادية التي تشرح تاريخ المنطقة وتراثها الثقافي.
+            بقيق هي مدينة صغيرة قرب الظهران بها مرافق أرامكو وطابع سكني هادئ. ليست وجهة سياحية نموذجية، لكن يمكن للزوار التعرف على التراث الصناعي، المواقع الثقافية القريبة، سبل العيش المحلية، والتطور الاجتماعي والاقتصادي للمنطقة.
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Thumbnails -->
     <div class="thumbnail">
       <div class="item">
-        <img src="image/abha.jpeg" alt="أبها">
-        <div class="content" dir="rtl">
-          <div class="title">أبها</div>
-          <div class="description">رجال ألمع</div>
+        <img src="image/dharan1.jpg" alt="الظهران">
+        <div class="content">
+          <div class="topic">الظهران</div>
+          <div class="description">مدينة تعليمية وهادئة</div>
         </div>
       </div>
       <div class="item">
-        <img src="image/Khamis Mushait.jpg" alt="خميس مشيط">
-        <div class="content" dir="rtl">
-          <div class="title">خميس مشيط</div>
-          <div class="description">برج المياه</div>
+        <img src="image/damam.jpg" alt="الدمام">
+        <div class="content">
+          <div class="topic">الدمام</div>
+          <div class="description">أسواق حيوية وشواطئ</div>
         </div>
       </div>
       <div class="item">
-        <img src="image/albaha.JPG" alt="الباحة">
-        <div class="content" dir="rtl">
-          <div class="title">الباحة</div>
-          <div class="description">جسر العيس</div>
+        <img src="image/Jubail.avif" alt="الجُبيل">
+        <div class="content">
+          <div class="topic">الجُبيل</div>
+          <div class="description">صناعة وساحل هادئ</div>
         </div>
       </div>
       <div class="item">
-        <img src="image/jazan.JPG" alt="جازان">
-        <div class="content" dir="rtl">
-          <div class="title">جازان</div>
-          <div class="description">جزيرة فرسان</div>
+        <img src="image/East.jpeg" alt="الأحساء">
+        <div class="content">
+          <div class="topic">الأحساء</div>
+          <div class="description">واحة تاريخية ونخيل</div>
         </div>
       </div>
       <div class="item">
-        <img src="image/najran.jpeg" alt="نجران">
-        <div class="content" dir="rtl">
-          <div class="title">نجران</div>
-          <div class="description">قلعة رجال</div>
+        <img src="image/bgig.jpg" alt="بقيق">
+        <div class="content">
+          <div class="topic">بقيق</div>
+          <div class="description">النفط ومدينة هادئة</div>
         </div>
       </div>
     </div>
 
-    <!-- next prev -->
     <div class="arrows">
-      <button id="prev">‹</button>
-      <button id="next">›</button>
+      <button id="prev"><</button>
+      <button id="next">></button>
     </div>
     <div class="time"></div>
   </div>
 
-  <!-- Main -->
   <main id="main">
     <section id="overview" class="section section-intro">
       <div class="container">
-        <h2 dir="rtl">نظرة عامة على المنطقة الجنوبية</h2>
-        <p dir="rtl">
-          المنطقة الجنوبية من المملكة العربية السعودية معروفة بتنوعها الطبيعي، حيث تجمع بين الجبال الخضراء والسواحل والصحاري. تشمل مدنًا رئيسية مثل أبها، خميس مشيط، جازان، نجران، والباحة. تشتهر المنطقة بتراثها الثقافي، ومناخها المعتدل، ومعالمها السياحية المتنوعة، مما يجعلها وجهة مفضلة للزوار.
+        <h2>نظرة عامة على المملكة العربية السعودية</h2>
+        <p>
+          المملكة العربية السعودية دولة ذات تراث غني وتنمية سريعة، تقع في قلب شبه الجزيرة العربية. هي مهد الإسلام وموطن مكة والمدينة، تجمع بين التقاليد العميقة ورؤية حديثة للمستقبل.
         </p>
 
         <!-- فلتر اللغة -->
@@ -208,18 +216,16 @@
       </div>
     </section>
 
-    <!-- CTA section -->
     <section id="visit" class="section section-cta">
       <div class="container cta">
-        <h2>اختبر معرفتك بالمنطقة الجنوبية</h2>
-        <p>اختبر معرفتك بالمنطقة الجنوبية، تاريخها وتراثها.</p>
+        <h2>اختبر معرفتك بثقافة السعودية</h2>
+        <p>اختبر معرفتك بثقافة السعودية من خلال تجربة ممتعة وحقيقية</p>
         <a class="btn btn-primary" href="quiz/QUIZ-ar.php">ابدأ الآن</a>
       </div>
     </section>
   </main>
 
-  <!-- Footer -->
-  <footer class="site-footer" aria-label="footer">
+  <footer class="site-footer" aria-label="تذييل الصفحة">
     <div class="container footer-grid">
       <div>
         <strong>ثقافة السعودية</strong>
@@ -234,7 +240,7 @@
 
   <script src="assets/script.js"></script>
 
-<!-- Page script -->
+  <!-- Page script -->
   <script>
 
 // ==========================
@@ -262,7 +268,7 @@ const TRANSLATIONS = {
   "dating": "التعارف والعلاقات"
 };
 
-const REGION_FILE = "SOUTH";   // which data file to load
+const REGION_FILE = "EAST";   // which data file to load
 let currentFilter = "all";       // all | english | arabic
 let ALL_QUESTIONS = [];
 

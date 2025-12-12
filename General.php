@@ -1,3 +1,13 @@
+<?php
+if (session_status() === PHP_SESSION_NONE) {
+	session_start();
+}
+
+// جلب حالة المستخدم من الجلسة
+$LOGGED_IN = isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true;
+$USER_NAME = $_SESSION['user_name'] ?? "";
+$USER_EMAIL = $_SESSION['user_email'] ?? "";
+?>
 <!doctype html>
 <html lang="en" dir="ltr">
  <!-- Head -->
@@ -23,22 +33,28 @@
 			<ul id="nav-links" class="nav-links">
 			<!-- Language switcher -->
 
-		 <li><a href="sign/SignUp_LogIn_Form.html">Login</a></li>
+		 <?php if ($LOGGED_IN): ?>
+    <li><a href="/dashboard.php">My Profile</a></li>
+    <li><a href="/sign/check_session.php?logout=true" onclick="return confirm('Are you sure you want to logout?')">Logout</a></li>
+<?php else: ?>
+    <li><a href="/sign/SignUp_LogIn_Form.html">Login</a></li>
+<?php endif; ?>
+
 			<li><a href="quiz/QUIZ-en.php">Quizzes</a></li>
 					<li class="dropdown">
 				<a class="dropbtn">Questions</a>
 				<!-- Questions dropdown list -->
 				<ul class="dropdown-content">
-					<li><a href="General.html">General Questions</a></li>
-					<li><a href="North.html">Northern Questions</a></li>
-					<li><a href="South.html">Southern Questions</a></li>
-					<li><a href="West.html">Western Questions</a></li>
-					<li><a href="East.html">Eastern Questions</a></li>
-					<li><a href="Central.html">Central Questions</a></li>
+					<li><a href="General.php">General Questions</a></li>
+					<li><a href="North.php">Northern Questions</a></li>
+					<li><a href="South.php">Southern Questions</a></li>
+					<li><a href="West.php">Western Questions</a></li>
+					<li><a href="East.php">Eastern Questions</a></li>
+					<li><a href="Central.php">Central Questions</a></li>
 				</ul>
 			</li>
-		 <li><a href="index.html">Home</a></li>
-					 <li><a href="General-ar.html" style="font-weight:700">اللغة العربية</a></li>
+		 <li><a href="index.php">Home</a></li>
+					 <li><a href="General-ar.php" style="font-weight:700">اللغة العربية</a></li>
 		</ul>
 	 </nav>
 	</header>
@@ -58,7 +74,7 @@
 					</div>
 					<!-- Link: Central -->
 					<div class="buttons">
-						<button type="button" onclick="location.href='Central.html'">Explore</button>
+						<button type="button" onclick="location.href='Central.php'">Explore</button>
 					</div>
 				</div>
 			</div>
@@ -73,7 +89,7 @@
 					</div>
 					<!-- Link: North -->
 					<div class="buttons">
-						<button type="button" onclick="location.href='North.html'">Explore</button>
+						<button type="button" onclick="location.href='North.php'">Explore</button>
 					</div>
 				</div>
 			</div>
@@ -88,7 +104,7 @@
 					</div>
 					<!-- Link: West -->
 					<div class="buttons">
-						<button type="button" onclick="location.href='West.html'">Explore</button>
+						<button type="button" onclick="location.href='West.php'">Explore</button>
 					</div>
 				</div>
 			</div>
@@ -103,7 +119,7 @@
 					</div>
 					<!-- Link: South -->
 					<div class="buttons">
-						<button type="button" onclick="location.href='South.html'">Explore</button>
+						<button type="button" onclick="location.href='South.php'">Explore</button>
 					</div>
 				</div>
 			</div>
@@ -118,7 +134,7 @@
 					</div>
 					<!-- Link: East -->
 					<div class="buttons">
-						<button type="button" onclick="location.href='East.html'">Explore</button>
+						<button type="button" onclick="location.href='East.php'">Explore</button>
 					</div>
 				</div>
 			</div>

@@ -1,10 +1,21 @@
+<?php
+if (session_status() === PHP_SESSION_NONE) {
+  session_start();
+}
+
+// جلب حالة المستخدم من الجلسة
+$LOGGED_IN = isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true;
+$USER_NAME = $_SESSION['user_name'] ?? "";
+$USER_EMAIL = $_SESSION['user_email'] ?? "";
+?>
+
 <!doctype html>
+<!-- Head -->
 <html lang="en" dir="ltr">
- <!-- Head -->
  <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Saudi Culture | Central Page</title>
+  <title>Saudi Culture | East Page</title>
   <meta name="description" content="Discover customs, traditions, and regions of the Kingdom of Saudi Arabia.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -21,23 +32,28 @@
     <button class="menu-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Toggle menu">☰</button>
       <!-- Nav list -->
       <ul id="nav-links" class="nav-links">
-     <li><a href="sign/SignUp_LogIn_Form.html">Login</a></li>
+     <?php if ($LOGGED_IN): ?>
+    <li><a href="/dashboard.php">My Profile</a></li>
+    <li><a href="/sign/check_session.php?logout=true" onclick="return confirm('Are you sure you want to logout?')">Logout</a></li>
+<?php else: ?>
+    <li><a href="/sign/SignUp_LogIn_Form.html">Login</a></li>
+<?php endif; ?>
+
       <li><a href="quiz/QUIZ-en.php">Quizzes</a></li>
           <li class="dropdown">
         <a class="dropbtn">Questions</a>
         <!-- Questions dropdown list -->
         <ul class="dropdown-content">
-          <li><a href="General.html">General Questions</a></li>
-          <li><a href="North.html">Northern Questions</a></li>
-          <li><a href="South.html">Southern Questions</a></li>
-          <li><a href="West.html">Western Questions</a></li>
-          <li><a href="East.html">Eastern Questions</a></li>
-          <li><a href="Central.html">Central Questions</a></li>
+          <li><a href="General.php">General Questions</a></li>
+          <li><a href="North.php">Northern Questions</a></li>
+          <li><a href="South.php">Southern Questions</a></li>
+          <li><a href="West.php">Western Questions</a></li>
+          <li><a href="East.php">Eastern Questions</a></li>
+          <li><a href="Central.php">Central Questions</a></li>
         </ul>
       </li>
-     <li><a href="index.html">Home</a></li>
-          <li><a href="Central-ar.html" style="font-weight:700">اللغة العربية</a></li>
-
+     <li><a href="index.php">Home</a></li>
+     <li><a href="East-ar.php" style="font-weight:700">اللغة العربية</a></li>
     </ul>
    </nav>
   </header>
@@ -46,133 +62,109 @@
   <div id="top" class="carousel">
     <!-- list item -->
     <div class="list">
-      <!-- (Al-Riyadh slide) -->
+      <!-- (Dhahran slide) -->
       <div class="item">
-        <img src="image/Al-Riyadh.jpg" alt="Riyadh">
+        <img src="image/dharan1.jpg" alt="Dhahran">
         <div class="content" dir="ltr">
-          <div class="author">Centeral of Saudi Arabia</div>
-          <div class="topic">Al-Riyadh</div>
+          <div class="author">Eastern of Saudi Arabia</div>
+          <div class="topic">Dhahran</div>
           <div class="des">
-            Riyadh, the capital city, blends modern skyscrapers with historical treasures like Masmak Fortress. Visitors enjoy cultural museums, luxury dining, and vibrant city life that represents the heart of Saudi Arabia.
-        </div>
-        </div>
-      </div>
-      
-      <!-- (Al-Rass slide) -->
-     <div class="item">
-          <img src="image/Al-Rass.jpg" alt="Al-Rass">
-          <div class="content" dir="ltr">
-          <div class="author">Centeral of Saudi Arabia</div>
-          <div class="topic">Al-Rass</div>
-          <div class="des">
-           Al-Rass is a historic city in the Qassim region, known for its rich Najdi heritage, traditional architecture, and cultural landmarks such as the historic Al-Rass Castle and old markets. The city blends history, agriculture, and modern development, making it one of the notable destinations in central Saudi Arabia.       
+          Dhahran hosts Saudi Aramco and planned residential areas, universities, and cultural centers. The city offers family parks, museums, and nearby coastal attractions. Visitors learn about the region's oil history while enjoying calm neighborhoods, community events, local festivals, and accessible services.
+          </div>
         </div>
       </div>
-    </div>
-      <!-- (Unaizah slide) -->
-     <div class="item">
-          <img src="image/Qassim.jpg" alt="Unaizah">
-          <div class="content" dir="ltr">
-          <div class="author">Centeral of Saudi Arabia</div>
-          <div class="topic">Unaizah</div>
-          <div class="des">
-            Unaizah is famous for its agricultural heritage, date festivals, cultural markets, and traditional architecture. The region is a charming destination for those interested in classic Najdi customs.
-        </div>
-      </div>
-      </div>
-      <!-- (Buraidah slide) -->
-     <div class="item">
-          <img src="image/Buraidah.jpg" alt="Buraidah">
-          <div class="content" dir="ltr">
-          <div class="author">Centeral of Saudi Arabia</div>
-          <div class="topic">Buraidah</div>
-          <div class="des">
-            Buraidah is known for its massive date market—one of the largest in the world. The city's museums, parks, and traditional Najdi architecture create a rich cultural and family-friendly atmosphere.
-        </div>
-      </div>
-      </div>
-    </div>
-    <div class="list">
+      <!-- (Dammam slide) -->
       <div class="item">
-          <img src="image/Al-Riyadh.jpg" alt="Riyadh">
-          <div class="content" dir="ltr">
-          <div class="author">Centeral of Saudi Arabia</div>
-          <div class="topic">Al-Riyadh</div>
+        <img src="image/damam.jpg" alt="Dammam">
+        <div class="content" dir="ltr">
+          <div class="author">Eastern of Saudi Arabia</div>
+          <div class="topic">Dammam</div>
           <div class="des">
-            Riyadh, the capital city, blends modern skyscrapers with historical treasures like Masmak Fortress. Visitors enjoy cultural museums, luxury dining, and vibrant city life that represents the heart of Saudi Arabia.
-        </div>
+            Dammam is the Eastern Province capital with long beaches, vibrant markets, and a lively waterfront corniche. The city hosts cultural events, museums, family attractions, and festivals year-round, while providing easy access to Khobar and Dhahran for shopping, dining, and seaside leisure.
+          </div>
         </div>
       </div>
-         <div class="item">
-          <img src="image/Al-Rass.jpg" alt="Al-Rass">
-          <div class="content" dir="ltr">
-          <div class="author">Centeral of Saudi Arabia</div>
-          <div class="topic">Al-Rass</div>
+      <!-- (Jubail slide) -->
+      <div class="item">
+        <img src="image/Jubail.avif" alt="Jubail">
+        <div class="content" dir="ltr">
+          <div class="author">Eastern of Saudi Arabia</div>
+          <div class="topic">Jubail</div>
           <div class="des">
-           Al-Rass is a historic city in the Qassim region, known for its rich Najdi heritage, traditional architecture, and cultural landmarks such as the historic Al-Rass Castle and old markets. The city blends history, agriculture, and modern development, making it one of the notable destinations in central Saudi Arabia.       
+            Jubail combines a major industrial complex and a coastal city with calm beaches and traditional neighborhoods. The industrial port drives the economy, while visitors enjoy seaside walks, local markets, and heritage sites reflecting both modern industry and coastal traditions.
+          </div>
         </div>
       </div>
-    </div>
-     <div class="item">
-          <img src="image/Qassim.jpg" alt="Unaizah">
-          <div class="content" dir="ltr">
-          <div class="author">Centeral of Saudi Arabia</div>
-          <div class="topic">Unaizah</div>
+      <!-- (Al-Ahsa slide) -->
+      <div class="item">
+        <img src="image/East.jpeg" alt="Al-Ahsa">
+        <div class="content" dir="ltr">
+          <div class="author">Eastern of Saudi Arabia</div>
+          <div class="topic">Al-Ahsa</div>
           <div class="des">
-            Unaizah is famous for its agricultural heritage, date festivals, cultural markets, and traditional architecture. The region is a charming destination for those interested in classic Najdi customs.
+            Al-Ahsa is a UNESCO-listed oasis region with vast palm groves, historic sites, and peaceful rural towns. Visitors explore Ibrahim Palace, Al-Qarah Mountain, traditional markets, and gardens that showcase agricultural heritage, date cultivation, and seasonal festivals.
+          </div>
         </div>
       </div>
-      </div>
-         <div class="item">
-          <img src="image/Buraidah.jpg" alt="Buraidah">
-          <div class="content" dir="ltr">
-          <div class="author">Centeral of Saudi Arabia</div>
-          <div class="topic">Buraidah</div>
+      <!-- (Buqayq slide) -->
+      <div class="item">
+        <img src="image/bgig.jpg" alt="Buqayq">
+        <div class="content" dir="ltr">
+          <div class="author">Eastern of Saudi Arabia</div>
+          <div class="topic">Buqayq</div>
           <div class="des">
-            Buraidah is known for its massive date market—one of the largest in the world. The city's museums, parks, and traditional Najdi architecture create a rich cultural and family-friendly atmosphere.
+            Buqayq is a small oil-area town near Dhahran with Aramco facilities and a quiet residential character. It is not a typical tourist destination, but visitors can learn about industrial heritage, nearby cultural sites, local livelihoods, and the region's social and economic development.
+          </div>
         </div>
-      </div>
       </div>
     </div>
     <!-- Thumbnails -->
     <div class="thumbnail">
-      <!-- Thumb: Al-Riyadh -->
+      <!-- Thumb: Dhahran -->
       <div class="item">
-        <img src="image/Al-Riyadh.jpg" alt="Central Region">
+        <img src="image/dharan1.jpg" alt="Dhahran">
         <div class="content" dir="ltr">
-          <div class="topic">Al-Riyadh</div>
-          <div class="description">Capital city & heritage</div>
+          <div class="topic">Dhahran</div>
+          <div class="description">Education and quiet city</div>
         </div>
       </div>
-      <!-- Thumb: Al-Rass -->
+      <!-- Thumb: Dammam -->
       <div class="item">
-        <img src="image/Al-Rass.jpg" alt="Northern Region">
+        <img src="image/damam.jpg" alt="Dammam">
         <div class="content" dir="ltr">
-          <div class="topic">Al-Rass</div>
-          <div class="description">Historic city & Najdi heritage</div>
+          <div class="topic">Dammam</div>
+          <div class="description">Vibrant markets and beaches</div>
         </div>
       </div>
-      <!-- Thumb: Unaizah -->
+      <!-- Thumb: Jubail -->
       <div class="item">
-        <img src="image/Qassim.jpg" alt="Western Region">
+        <img src="image/Jubail.avif" alt="Jubail">
         <div class="content" dir="ltr">
-          <div class="topic">Unaizah</div>
-          <div class="description">Agriculture & culture</div>
+          <div class="topic">Jubail</div>
+          <div class="description">Industry and calm coast</div>
         </div>
       </div>
-      <!-- Thumb: Buraidah -->
+      <!-- Thumb: Al-Ahsa -->
       <div class="item">
-        <img src="image/Buraidah.jpg" alt="Southern Region">
+        <img src="image/East.jpeg" alt="Al-Ahsa">
         <div class="content" dir="ltr">
-          <div class="topic">Buraidah</div>
-          <div class="description">Dates & heritage</div>
+          <div class="topic">Al-Ahsa</div>
+          <div class="description">Historic oasis and palms</div>
+        </div>
+      </div>
+      <!-- Thumb: Buqayq -->
+      <div class="item">
+        <img src="image/bgig.jpg" alt="Buqayq">
+        <div class="content" dir="ltr">
+          <div class="topic">Buqayq</div>
+          <div class="description">Oil and quiet town</div>
         </div>
       </div>
     </div>
     <!-- next prev -->
     <div class="arrows">
-      <button id="prev">‹</button>
-      <button id="next">›</button>
+      <button id="prev"><</button>
+      <button id="next">></button>
     </div>
     <!-- time running -->
     <div class="time"></div>
@@ -183,8 +175,8 @@
    <!-- Overview section -->
    <section id="overview" class="section section-intro">
     <div class="container">
-    <h2 dir="ltr">Central Region Questions</h2>
-     <p dir="ltr">Questions about the Central Region of Saudi Arabia.</p>
+    <h2 dir="ltr">Eastern Region Questions</h2>
+     <p dir="ltr">Questions about the Eastern Region of Saudi Arabia.</p>
      
       <!-- Main language filter -->
       <div class="question-filter">
@@ -227,7 +219,7 @@
     <div class="container cta">
      <h2>Challenge your knowledge of Saudi culture</h2>
      <p>.Test your knowledge of Saudi culture with an engaging, authentic experience</p>
-     <a class="btn btn-primary" href="#top">Start now</a>
+    <a class="btn btn-primary" href="quiz/QUIZ-en.php">Start now</a>
     </div>
    </section>
   </main>
@@ -247,14 +239,13 @@
   </footer>
 
   <script src="assets/script.js"></script>
-
   <!-- Chatbase Script -->
   <script>
 (function(){if(!window.chatbase||window.chatbase("getState")!=="initialized"){window.chatbase=(...arguments)=>{if(!window.chatbase.q){window.chatbase.q=[]}window.chatbase.q.push(arguments)};window.chatbase=new Proxy(window.chatbase,{get(target,prop){if(prop==="q"){return target.q}return(...args)=>target(prop,...args)}})}const onLoad=function(){const script=document.createElement("script");script.src="https://www.chatbase.co/embed.min.js";script.id="PkSRl6nFY3Csgenh8koIS";script.domain="www.chatbase.co";document.body.appendChild(script)};if(document.readyState==="complete"){onLoad()}else{window.addEventListener("load",onLoad)}})();
 </script>
 
-  <script>
-const REGION_FILE = "CENTERAL";   // which data file to load
+ <script>
+const REGION_FILE = "EAST";   // which data file to load
 let currentFilter = "all";       // all | english | arabic
 let ALL_QUESTIONS = [];
 
