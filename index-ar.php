@@ -82,9 +82,9 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
 <header class="site-header">
   <nav class="navbar">
 
-    <a class="brand" href="#top">
-          <img src="image/Hawiyah.png" alt="Logo" class="site-logo">
-      </a>
+   <a class="brand" href="index-ar.php">
+    <img src="image/Hawiyah.png" alt="Logo" class="site-logo">
+</a>
 
     <button class="menu-toggle">☰</button>
 
