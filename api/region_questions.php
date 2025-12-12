@@ -154,6 +154,52 @@ function extractFullCorrectAnswer($text) {
 }
 
 /* ----------------------------------------------
+   تحويل choices النصية إلى مصفوفة [A => text]
+-----------------------------------------------*/
+function parseChoices($choicesText) {
+    $choices = [];
+    if (!$choicesText) return $choices;
+
+    // مثال: A. Circle B. Square C. Rectangle D. Straight line
+    preg_match_all('/([A-Z])\.\s*(.*?)(?=\s+[A-Z]\.|$)/', $choicesText, $matches, PREG_SET_ORDER);
+
+    foreach ($matches as $m) {
+        $letter = trim($m[1]);
+        $text   = trim($m[2]);
+        $choices[$letter] = $text;
+    }
+
+    return $choices;
+}
+
+/* ----------------------------------------------
+   استخراج نص الإجابة من Answer + Choices
+-----------------------------------------------*/
+function extractEnglishAnswerTextByType($answerLetters, $choicesText, $questionType) {
+    if (!$answerLetters || !$choicesText) return "";
+
+    $choices = parseChoices($choicesText);
+
+    // استخراج جميع الحروف (A, B, C...)
+    preg_match_all('/[A-Z]/', $answerLetters, $matches);
+    $letters = $matches[0];
+
+    // MCQ (one correct) → أول حرف فقط
+    if (stripos($questionType, 'one correct') !== false) {
+        $letters = array_slice($letters, 0, 1);
+    }
+
+    $answers = [];
+    foreach ($letters as $l) {
+        if (isset($choices[$l])) {
+            $answers[] = $choices[$l];
+        }
+    }
+
+    return implode(" / ", $answers);
+}
+
+/* ----------------------------------------------
    تحميل الأسئلة الإنجليزية
 -----------------------------------------------*/
 function loadEnglishQuestions($dataDir, $files) {
@@ -166,16 +212,29 @@ function loadEnglishQuestions($dataDir, $files) {
         foreach ($rows as $r) {
             $q = trim($r['Question'] ?? '');
             $a = trim($r['Answer'] ?? '');
+            $choicesText = trim($r['Choices'] ?? '');
 
-            if ($q !== '' && $a !== '') {
-                $output[] = [
-                    'question' => $q,
-                    'answer'   => $a,
-                    'lang'     => 'english',
-                    "english_type"     => strtolower($r["Question Type"] ?? ""),
-                    "english_category" => strtolower($r["Category"] ?? "")
-                ];
+            if ($q === '' || $a === '') continue;
+
+            // لو السؤال MCQ → استخرج نص الإجابة من Choices
+            $finalAnswer = $a;
+
+            $questionType = strtolower(trim($r["Question Type"] ?? ""));
+
+            if (!empty($choicesText) && $questionType !== "") {
+                $extracted = extractEnglishAnswerTextByType($a, $choicesText, $questionType);
+                if ($extracted !== "") {
+                    $finalAnswer = $extracted;
+                }
             }
+
+            $output[] = [
+                'question' => $q,
+                'answer'   => $finalAnswer,
+                'lang'     => 'english',
+                'english_type'     => strtolower($r["Question Type"] ?? ""),
+                'english_category' => strtolower($r["Category"] ?? "")
+            ];
         }
     }
 
