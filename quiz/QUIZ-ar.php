@@ -137,9 +137,12 @@ if (!$LOGGED_IN) {
         <div class="select-wrapper">
           <select id="typeFilter" class="quiz-gold-select">
             <option value="all">كل الأنواع</option>
-            <option value="mcq">اختيار من متعدد</option>
-            <option value="fill">املأ الفراغ</option>
-            <option value="multi">اختيارات متعددة</option>
+            <option value="Location_Recognition_question">تعرّف على الموقع</option>
+            <option value="Cultural_Interpretation_question">التفسير الثقافي</option>
+            <option value="Contextual_Usage_question">الاستخدام السياقي</option>
+            <option value="Fill_in_Blank_question">املأ الفراغ (حقل تعبئة)</option>
+            <option value="True_False_question">صح أم خطأ</option>
+            <option value="Meaning_question">معنى الكلمة</option>
           </select>
         </div>
 
@@ -218,7 +221,11 @@ if (!$LOGGED_IN) {
     const mappedType = mapTypeFilter(type);
     const category = document.getElementById('categoryFilter') ? document.getElementById('categoryFilter').value : 'all';
 
-    if (typeof fetchQuestions === 'function'){
+    // Prefer server-side fetching for Arabic datasets when a specific filter is selected
+    const arabicDatasets = ['Words','Phrases','Proverbs'];
+    const preferServerForArabicFilter = arabicDatasets.includes(source) && mappedType && mappedType !== 'all';
+
+    if (!preferServerForArabicFilter && typeof fetchQuestions === 'function'){
       try{
           const clientQ = await fetchQuestions(source, count, lang, mappedType, category);
         if(Array.isArray(clientQ) && clientQ.length>0){
@@ -245,7 +252,16 @@ if (!$LOGGED_IN) {
     const timeout = setTimeout(() => controller.abort(), 6000);
 
     try {
-      const qs = new URLSearchParams({ source: source, count: String(count), type: mappedType === 'all' ? '' : mappedType, category: category || '' });
+      // Build query params; for Arabic datasets we may send `arabic_filter` for dialect/block filters
+      const qsObj = { source: source, count: String(count), type: mappedType === 'all' ? '' : mappedType, category: category || '' };
+      if (['Words','Phrases','Proverbs'].includes(source) && mappedType && mappedType !== 'all') {
+        const blockCols = ['Location_Recognition_question','Cultural_Interpretation_question','Contextual_Usage_question','Fill_in_Blank_question','True_False_question','Meaning_question'];
+        if (blockCols.includes(mappedType) || !['MCQ (one correct)','MCQ (multiple correct)','Open-ended'].includes(mappedType)) {
+          qsObj.arabic_filter = mappedType;
+          qsObj.type = '';
+        }
+      }
+      const qs = new URLSearchParams(qsObj);
       const resp = await fetch(`quiz.php?${qs.toString()}`, { signal: controller.signal });
       clearTimeout(timeout);
       if (resp.ok) {
@@ -461,6 +477,16 @@ shareContainer.innerHTML = `
 
 }
 
+  // Human-friendly Arabic labels for the block question column names
+  const blockLabels = {
+    Location_Recognition_question: 'تعرّف على الموقع',
+    Cultural_Interpretation_question: 'التفسير الثقافي',
+    Contextual_Usage_question: 'الاستخدام السياقي',
+    Fill_in_Blank_question: 'املأ الفراغ',
+    True_False_question: 'صح أم خطأ',
+    Meaning_question: 'معنى الكلمة'
+  };
+
   document.addEventListener('DOMContentLoaded', () => {
     const startBtn = document.getElementById('startBtn');
     if(startBtn) startBtn.addEventListener('click', (e) => { 
@@ -473,43 +499,62 @@ shareContainer.innerHTML = `
       const typeSelect = document.getElementById('typeFilter');
       if (!typeSelect || !regionSelect) return;
       const src = regionSelect.value || 'Words';
-      typeSelect.innerHTML = '';
-      const optAll = document.createElement('option'); optAll.value = 'all'; optAll.textContent = 'كل الأنواع';
-      typeSelect.appendChild(optAll);
-      // Always include the common UI filters for the Arabic page (Arabic labels)
-      const staticLabels = [
-        { v: 'mcq', t: 'اختيار من متعدد' },
-        { v: 'multi', t: 'اختيارات متعددة (اختَر أكثر من واحد)' },
-        { v: 'fill', t: 'املأ الفراغ' }
-      ];
-      for (const l of staticLabels) {
-        const o = document.createElement('option'); o.value = l.v; o.textContent = l.t; typeSelect.appendChild(o);
+      // Preserve any hardcoded options in the select and only append missing items
+      const existing = new Set(Array.from(typeSelect.options || []).map(o => String(o.value)));
+      if (!existing.has('all')) {
+        const optAll = document.createElement('option'); optAll.value = 'all'; optAll.textContent = 'كل الأنواع';
+        typeSelect.insertBefore(optAll, typeSelect.firstChild || null);
+        existing.add('all');
       }
+      // Do not auto-insert MCQ/multi/fill UI options here; preserve only hardcoded block types
 
-      // Try to discover data-driven types and append them (don't remove the static UI labels).
-      let types = [];
-      if (typeof fetchQuestionTypes === 'function') {
-        try { types = await fetchQuestionTypes(src); } catch (e) { types = []; }
-      }
-      if ((!types || types.length === 0)) {
+      // If Arabic dataset, try to extract dialects and block-question columns
+      const arabicDatasets = ['Words','Phrases','Proverbs'];
+      if (arabicDatasets.includes(src)) {
         try {
-          const qs = new URLSearchParams({ action: 'types', source: src });
-          const resp = await fetch(`quiz.php?${qs.toString()}`);
+          const csvUrl = `../data/${src}.csv`;
+          const resp = await fetch(csvUrl);
           if (resp.ok) {
-            const data = await resp.json(); if (data && Array.isArray(data.types)) types = data.types;
-          }
-        } catch (e) { /* ignore */ }
-      }
+            const txt = await resp.text();
+            const lines = txt.split(/\r?\n/);
+            if (lines.length > 0) {
+              const header = lines[0].split(/,(?=(?:[^"]*"[^"]*")*[^"]*$)/).map(h => h.replace(/^\"|\"$/g,'').trim());
+              const dialectIdx = header.findIndex(h => h.toLowerCase() === 'dialect type' || h.toLowerCase() === 'dialect_type');
+              const blockCols = ['Location_Recognition_question','Cultural_Interpretation_question','Contextual_Usage_question','Fill_in_Blank_question','True_False_question','Meaning_question'];
 
-      if (types && types.length > 0) {
-        // Avoid adding duplicates: only append types whose text/value is not already present
-        const existing = new Set(Array.from(typeSelect.options).map(o => String(o.value)));
-        for (const t of types) {
-          if (!existing.has(String(t))) {
-            const o = document.createElement('option'); o.value = t; o.textContent = t; typeSelect.appendChild(o);
-            existing.add(String(t));
+              // collect dialects set (only short, sensible values — avoid appending long question blocks)
+              if (dialectIdx >= 0) {
+                const set = new Set();
+                for (let i=1;i<lines.length;i++){
+                  if (!lines[i]) continue;
+                  const cols = lines[i].split(/,(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)/);
+                  let val = (cols[dialectIdx] || '').trim().replace(/^\"|\"$/g,'');
+                  if (!val) continue;
+                  // discard overly long values (likely question text) and values with punctuation
+                  if (val.length > 3) continue;
+                  // accept letters, digits, spaces, parentheses and hyphens
+                  if (!/^[\p{L}\d\-\s()]+$/u.test(val)) continue;
+                  set.add(val);
+                  if (set.size >= 20) break; // safety cap
+                }
+                for (const d of Array.from(set)) {
+                  if (!existing.has(d)) {
+                    const o = document.createElement('option'); o.value = d; o.textContent = d; typeSelect.appendChild(o);
+                    existing.add(d);
+                  }
+                }
+              }
+
+              for (const col of blockCols) {
+                const found = header.find(h => h && h.toLowerCase() === col.toLowerCase());
+                if (found && !existing.has(col)) {
+                  const o = document.createElement('option'); o.value = col; o.textContent = blockLabels[col] || col; typeSelect.appendChild(o);
+                  existing.add(col);
+                }
+              }
+            }
           }
-        }
+        } catch (e) { /* ignore CSV parse errors */ }
       }
     }
 

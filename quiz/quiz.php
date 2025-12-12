@@ -16,306 +16,382 @@ session_set_cookie_params([
 
 session_start();
 ?>
-<?php require_once 'php/check_session.php'; ?>
+<?php
+// include session checker if available (try local then sibling sign folder)
+$check_local = __DIR__ . DIRECTORY_SEPARATOR . 'php' . DIRECTORY_SEPARATOR . 'check_session.php';
+$check_sign = __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'sign' . DIRECTORY_SEPARATOR . 'check_session.php';
+if (file_exists($check_local)) {
+    require_once $check_local;
+} elseif (file_exists($check_sign)) {
+    require_once $check_sign;
+} else {
+    // no session checker found; continue without forcing redirect
+}
+?>
 <?php
 // quiz.php
 // Returns a JSON array of randomized quiz questions from CSV files in /data
 
 header('Content-Type: application/json; charset=utf-8');
 
-$source = isset($_GET['source']) ? $_GET['source'] : 'Words';
-$count = isset($_GET['count']) ? (int)$_GET['count'] : 5;
-// optional filters
-$type = isset($_GET['type']) ? trim($_GET['type']) : '';
-$category = isset($_GET['category']) ? trim($_GET['category']) : '';
-// optional action (e.g., 'types' to list available question types)
-$action = isset($_GET['action']) ? trim($_GET['action']) : '';
-
-// basic sanitize: allow only letters, numbers, dash and underscore
-if (!preg_match('/^[A-Za-z0-9_\-]+$/', $source)) {
-    http_response_code(400);
-    echo json_encode(['error' => 'Invalid source parameter']);
-    exit;
-}
-
-$count = max(1, min(100, $count));
-
-$dataDir = realpath(__DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'data');
-if ($dataDir === false) {
-    // fallback to previous relative path (best-effort)
-    $dataDir = __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'data';
-}
-$csvFile = $dataDir . DIRECTORY_SEPARATOR . $source . '.csv';
-
-if (!file_exists($csvFile) || !is_readable($csvFile)) {
-    http_response_code(404);
-    echo json_encode(['error' => 'Source not found']);
-    exit;
-}
-
-$fp = fopen($csvFile, 'r');
-if (!$fp) {
-    http_response_code(500);
-    echo json_encode(['error' => 'Unable to open CSV file']);
-    exit;
-}
-
-// read header
-$header = fgetcsv($fp);
-if ($header === false) {
-    fclose($fp);
-    echo json_encode(['error' => 'Empty CSV']);
-    exit;
-}
-
-// build lowercase header map for lookups
-$lowerMap = [];
-foreach ($header as $col) { $lowerMap[mb_strtolower($col)] = $col; }
-
-$rows = [];
-while (($row = fgetcsv($fp)) !== false) {
-    // map header to row
-    $assoc = [];
-    foreach ($header as $i => $col) {
-        $assoc[$col] = isset($row[$i]) ? $row[$i] : '';
-    }
-    $rows[] = $assoc;
-}
-fclose($fp);
-
-if (count($rows) === 0) {
-    echo json_encode(['error' => 'No data rows']);
-    exit;
-}
-
-// If the caller only wants available question types, return them
-if ($action === 'types') {
-    $types = [];
-    // check explicit type headers
-    $typeKeys = ['type','question type','question_type','qtype','questiontype'];
-    $foundType = null;
-    foreach ($typeKeys as $k) { if (isset($lowerMap[$k])) { $foundType = $lowerMap[$k]; break; } }
-    if ($foundType !== null) {
-        foreach ($rows as $r) {
-            $v = isset($r[$foundType]) ? trim($r[$foundType]) : '';
-            if ($v !== '') $types[$v] = true;
-        }
-        echo json_encode(['types' => array_values(array_keys($types))], JSON_UNESCAPED_UNICODE);
+// If `source` parameter is provided (used by Arabic UI), serve questions from the specific CSV
+if (isset($_GET['source'])) {
+    $source = trim($_GET['source']);
+    $allowed = ['Words','Phrases','Proverbs'];
+    if (!in_array($source, $allowed)) {
+        echo json_encode(['questions'=>[]], JSON_UNESCAPED_UNICODE);
         exit;
     }
 
-    // fallback: infer from Choices/Answer
-    $choicesKeys = ['choices','choice','options'];
-    $choicesCol = null;
-    foreach ($choicesKeys as $k) { if (isset($lowerMap[$k])) { $choicesCol = $lowerMap[$k]; break; } }
-    $hasMCQ = false; $hasMulti = false; $hasOpen = false;
-    $ansCol = isset($lowerMap['answer']) ? $lowerMap['answer'] : null;
+    $count = isset($_GET['count']) ? intval($_GET['count']) : 0;
+    $arabic_filter = isset($_GET['arabic_filter']) ? trim($_GET['arabic_filter']) : '';
+
+    $dataDirPath = realpath(__DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'data');
+    if ($dataDirPath === false) $dataDirPath = __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'data';
+    $path = rtrim($dataDirPath, '/\\') . DIRECTORY_SEPARATOR . $source . '.csv';
+    if (!file_exists($path)) {
+        echo json_encode(['questions'=>[]], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+
+    // lightweight CSV loader
+    $rows = [];
+    if (($h = fopen($path, 'r')) !== false) {
+        $header = fgetcsv($h, 0, ',');
+        if ($header !== false) {
+            $header = array_map('trim', $header);
+            while (($data = fgetcsv($h, 0, ',')) !== false) {
+                $row = [];
+                foreach ($header as $i => $col) $row[$col] = $data[$i] ?? '';
+                $rows[] = $row;
+            }
+        }
+        fclose($h);
+    }
+
+    // small helpers (unique names to avoid collisions)
+    function __src_extractQuestionFromBlock($text) {
+        if (!$text) return '';
+        $lines = preg_split("/\r\n|\r|\n/", trim($text));
+        foreach ($lines as $line) {
+            $line = trim($line);
+            if (mb_strpos($line, 'السؤال') === 0) {
+                $parts = explode(':', $line, 2);
+                return trim($parts[1] ?? $line);
+            }
+        }
+        foreach ($lines as $line) {
+            $line = trim($line);
+            if ($line !== '' && mb_strpos($line, 'المهمة') !== 0) return $line;
+        }
+        return '';
+    }
+
+    function __src_extractCorrectLetter($text) {
+        if (!$text) return '';
+        $lines = preg_split("/\r\n|\r|\n/", trim($text));
+        foreach ($lines as $line) {
+            $line = trim($line);
+            if (mb_strpos($line, 'الإجابة الصحيحة') === 0) {
+                $parts = explode(':', $line, 2);
+                $ans = trim($parts[1] ?? '');
+                return mb_substr($ans, 0, 1);
+            }
+        }
+        return '';
+    }
+
+    function __src_extractFullCorrectAnswer($text) {
+        $letter = __src_extractCorrectLetter($text);
+        if ($letter === '') return '';
+        $lines = preg_split("/\r\n|\r|\n/", trim($text));
+        foreach ($lines as $line) {
+            $line = trim($line);
+            if (preg_match('/^[أبجده]\)/u', $line)) {
+                if (mb_substr($line, 0, 1) === $letter) {
+                    return trim(preg_replace('/^[أبجده]\)\s*/u', '', $line));
+                }
+            }
+        }
+        return '';
+    }
+
+    function __src_extractOptionsArray($text) {
+        $opts = [];
+        if (!$text) return $opts;
+        $lines = preg_split("/\r\n|\r|\n/", trim($text));
+        foreach ($lines as $line) {
+            $line = trim($line);
+            if (preg_match('/^[أبجده]\)\s*(.*)/u', $line, $m)) {
+                $opts[] = trim($m[1]);
+            }
+        }
+        return $opts;
+    }
+
+    $blockCols = ['Location_Recognition_question','Cultural_Interpretation_question','Contextual_Usage_question','Fill_in_Blank_question','True_False_question','Meaning_question'];
+    $blockColsLower = array_map('strtolower', $blockCols);
+    $filterLower = mb_strtolower($arabic_filter);
+
+    $questions = [];
     foreach ($rows as $r) {
-        if ($choicesCol !== null) {
-            $c = isset($r[$choicesCol]) ? trim($r[$choicesCol]) : '';
-            if ($c !== '' && $c !== '–') {
-                $hasMCQ = true;
-                $a = $ansCol ? (isset($r[$ansCol]) ? $r[$ansCol] : '') : '';
-                if (preg_match('/\band\b|,|and|\bوا\b/ui', $a) || preg_match('/[A-D]\s*(and|,)/i', $a)) $hasMulti = true;
-            } else {
-                $hasOpen = true;
+        $dialect = strtolower(trim($r['Dialect type'] ?? ''));
+        // if arabic_filter is a dialect, skip other dialects
+        if ($arabic_filter !== '' && !in_array($filterLower, $blockColsLower)) {
+            if ($dialect !== $filterLower) continue;
+        }
+
+        // if arabic_filter is a block column, only extract from that column
+        if ($arabic_filter !== '' && in_array($filterLower, $blockColsLower)) {
+            $col = $blockCols[array_search($filterLower, array_map('strtolower', $blockCols))];
+            $block = trim($r[$col] ?? '');
+            if ($block === '') continue;
+            $qText = __src_extractQuestionFromBlock($block);
+            $aText = __src_extractFullCorrectAnswer($block);
+            $choices = __src_extractOptionsArray($block);
+            if ($qText !== '' && $aText !== '') {
+                $entry = ['question'=>$qText,'answer'=>$aText,'lang'=>'arabic','arabic_type'=>strtolower($col)];
+                // Treat Fill_in_Blank_question as Open-ended regardless of detected choices
+                if (strcasecmp($col, 'Fill_in_Blank_question') === 0) {
+                    $entry['type'] = 'Open-ended';
+                } else {
+                    if (!empty($choices)) { $entry['choices'] = $choices; $entry['type'] = 'MCQ'; }
+                }
+                $questions[] = $entry;
             }
         } else {
-            $hasOpen = true;
+            // otherwise extract from all block columns available in this row
+                foreach ($blockCols as $col) {
+                $block = trim($r[$col] ?? '');
+                if ($block === '') continue;
+                $qText = __src_extractQuestionFromBlock($block);
+                $aText = __src_extractFullCorrectAnswer($block);
+                $choices = __src_extractOptionsArray($block);
+                if ($qText !== '' && $aText !== '') {
+                    $entry = ['question'=>$qText,'answer'=>$aText,'lang'=>'arabic','arabic_type'=>strtolower($col),'dialect'=>$dialect];
+                    // Fill-in-blank should be open-ended
+                    if (strcasecmp($col, 'Fill_in_Blank_question') === 0) {
+                        $entry['type'] = 'Open-ended';
+                    } else {
+                        if (!empty($choices)) { $entry['choices'] = $choices; $entry['type'] = 'MCQ'; }
+                    }
+                    $questions[] = $entry;
+                }
+            }
         }
     }
-    if ($hasOpen) $types[] = 'Open-ended';
-    if ($hasMCQ) $types[] = 'MCQ (one correct)';
-    if ($hasMulti) $types[] = 'MCQ (multiple correct)';
-    echo json_encode(['types' => $types], JSON_UNESCAPED_UNICODE);
+
+    if (count($questions) > 1) shuffle($questions);
+    if ($count > 0) $questions = array_slice($questions, 0, max(1, min(100, $count)));
+
+    echo json_encode(['questions'=>$questions], JSON_UNESCAPED_UNICODE);
     exit;
 }
 
-// Apply server-side filtering for type and category if present
-if ($type !== '' || $category !== '') {
-    // build lowercase header map
-    $lowerMap = [];
-    foreach ($header as $col) {
-        $lowerMap[mb_strtolower($col)] = $col;
+// If `file` parameter is provided, serve region-based questions (in-process)
+if (isset($_GET['file'])) {
+    $file = isset($_GET['file']) ? strtoupper(trim($_GET['file'])) : 'GENERAL';
+    $page = isset($_GET['page']) ? intval($_GET['page']) : 0;
+    $lang = isset($_GET['lang']) ? strtolower(trim($_GET['lang'])) : 'all';
+    if (!in_array($lang, ['all','english','arabic'])) $lang = 'all';
+
+    $regionConfig = [
+        'GENERAL' => ['englishFiles' => ['GENERAL.csv'], 'dialects' => ['general']],
+        'NORTH' => ['englishFiles' => ['NORTH.csv'], 'dialects' => ['northern','north']],
+        'SOUTH' => ['englishFiles' => ['SOUTH.csv'], 'dialects' => ['southern','south']],
+        'EAST'  => ['englishFiles' => ['EAST.csv'],  'dialects' => ['eastern','east']],
+        'WEST'  => ['englishFiles' => ['WEST.csv'],  'dialects' => ['western','west']],
+        'CENTERAL'=> ['englishFiles'=>['CENTERAL.csv'],'dialects'=>['central']]
+    ];
+
+    if (!isset($regionConfig[$file])) {
+        echo json_encode(['error' => 'Invalid region'], JSON_UNESCAPED_UNICODE);
+        exit;
     }
 
-    // possible header keys
-    $typeKeys = ['type','question_type','qtype','questiontype'];
-    $catKeys = ['category','categories','topic','tag','tags','category_name'];
+    // small helper to read CSV into associative arrays
+    $dataDirPath = realpath(__DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'data');
+    if ($dataDirPath === false) $dataDirPath = __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'data';
+    function __region_loadCsvAssoc($path) {
+        if (!file_exists($path)) return [];
+        $rows = [];
+        if (($h = fopen($path, 'r')) !== false) {
+            $header = fgetcsv($h, 0, ',');
+            if ($header === false) { fclose($h); return []; }
+            $header = array_map('trim', $header);
+            while (($data = fgetcsv($h, 0, ',')) !== false) {
+                $row = [];
+                foreach ($header as $i => $col) $row[$col] = $data[$i] ?? '';
+                $rows[] = $row;
+            }
+            fclose($h);
+        }
+        return $rows;
+    }
 
-    $typeCol = null;
-    foreach ($typeKeys as $k) { if (isset($lowerMap[$k])) { $typeCol = $lowerMap[$k]; break; } }
-    $catCol = null;
-    foreach ($catKeys as $k) { if (isset($lowerMap[$k])) { $catCol = $lowerMap[$k]; break; } }
+    function __region_extractQuestionFromBlock($text) {
+        if (!$text) return '';
+        $lines = preg_split("/\r\n|\r|\n/", trim($text));
+        foreach ($lines as $line) {
+            $line = trim($line);
+            if (mb_strpos($line, 'السؤال') === 0) {
+                $parts = explode(':', $line, 2);
+                return trim($parts[1] ?? $line);
+            }
+        }
+        foreach ($lines as $line) {
+            $line = trim($line);
+            if ($line !== '' && mb_strpos($line, 'المهمة') !== 0) return $line;
+        }
+        return '';
+    }
 
-    $rows = array_filter($rows, function($r) use ($type, $category, $typeCol, $catCol, $lowerMap) {
-        // type filtering: prefer explicit type column
-        if ($type !== '') {
-            if ($typeCol !== null) {
-                $val = isset($r[$typeCol]) ? $r[$typeCol] : '';
-                if ($val === '' || mb_stripos($val, $type) === false) return false;
-            } else {
-                // fallback: use Choices presence
-                $choicesKeys = ['choices','choice','options'];
-                $choicesCol = null;
-                foreach ($choicesKeys as $k) { if (isset($lowerMap[$k])) { $choicesCol = $lowerMap[$k]; break; } }
-                if ($choicesCol !== null) {
-                    $cval = isset($r[$choicesCol]) ? trim($r[$choicesCol]) : '';
-                    $tl = mb_strtolower($type);
-                    if (mb_stripos($tl, 'mcq') !== false || mb_stripos($tl, 'one correct') !== false || mb_stripos($tl, 'multiple') !== false) {
-                        // keep rows that have choices
-                        if ($cval === '' || $cval === '–') return false;
-                    } else if (mb_stripos($tl, 'open') !== false || mb_stripos($tl, 'fill') !== false) {
-                        // keep rows without choices
-                        if ($cval !== '' && $cval !== '–') return false;
-                    }
+    function __region_extractCorrectLetter($text) {
+        if (!$text) return "";
+        $lines = preg_split("/\r\n|\r|\n/", trim($text));
+        foreach ($lines as $line) {
+            $line = trim($line);
+            if (mb_strpos($line, "الإجابة الصحيحة") === 0) {
+                $parts = explode(":", $line, 2);
+                $ans = trim($parts[1] ?? "");
+                return mb_substr($ans, 0, 1);
+            }
+        }
+        return "";
+    }
+
+    function __region_extractOptionsFromBlock($text) {
+        $options = [];
+        $lines = preg_split("/\r\n|\r|\n/", trim($text));
+        foreach ($lines as $line) {
+            $line = trim($line);
+            if (preg_match("/^[أبجده]\)/u", $line)) $options[] = $line;
+        }
+        return $options;
+    }
+
+    function __region_extractFullCorrectAnswer($text) {
+        $letter = __region_extractCorrectLetter($text);
+        if ($letter === "") return "";
+        $options = __region_extractOptionsFromBlock($text);
+        foreach ($options as $opt) {
+            if (mb_substr($opt, 0, 1) === $letter) return trim(preg_replace("/^[أبجده]\)\s*/u", "", $opt));
+        }
+        return "";
+    }
+
+    function __region_parseChoices($choicesText) {
+        $choices = [];
+        if (!$choicesText) return $choices;
+        preg_match_all('/([A-Z])\.\s*(.*?)(?=\s+[A-Z]\\.|$)/', $choicesText, $matches, PREG_SET_ORDER);
+        foreach ($matches as $m) $choices[trim($m[1])] = trim($m[2]);
+        return $choices;
+    }
+
+    function __region_extractEnglishAnswerTextByType($answerLetters, $choicesText, $questionType) {
+        if (!$answerLetters || !$choicesText) return "";
+        $choices = __region_parseChoices($choicesText);
+        preg_match_all('/[A-Z]/', $answerLetters, $matches);
+        $letters = $matches[0];
+        if (stripos($questionType, 'one correct') !== false) $letters = array_slice($letters, 0, 1);
+        $answers = [];
+        foreach ($letters as $l) if (isset($choices[$l])) $answers[] = $choices[$l];
+        return implode(' / ', $answers);
+    }
+
+    function __region_loadEnglishQuestions($dataDir, $files) {
+        $output = [];
+        foreach ($files as $name) {
+            $path = rtrim($dataDir, '/\\') . DIRECTORY_SEPARATOR . $name;
+            $rows = __region_loadCsvAssoc($path);
+            foreach ($rows as $r) {
+                $q = trim($r['Question'] ?? '');
+                $a = trim($r['Answer'] ?? '');
+                $choicesText = trim($r['Choices'] ?? '');
+                if ($q === '' || $a === '') continue;
+                $finalAnswer = $a;
+                $questionType = strtolower(trim($r['Question Type'] ?? ""));
+                if (!empty($choicesText) && $questionType !== "") {
+                    $extracted = __region_extractEnglishAnswerTextByType($a, $choicesText, $questionType);
+                    if ($extracted !== "") $finalAnswer = $extracted;
+                }
+                $output[] = ['question'=>$q,'answer'=>$finalAnswer,'lang'=>'english','english_type'=>strtolower($r['Question Type'] ?? ''),'english_category'=>strtolower($r['Category'] ?? '')];
+            }
+        }
+        return $output;
+    }
+
+    function __region_loadArabicQuestions($dataDir, $dialectsLower) {
+        $result = [];
+        $arabicFiles = ['Words.csv','Phrases.csv','Proverbs.csv'];
+        foreach ($arabicFiles as $file) {
+            $path = rtrim($dataDir, '/\\') . DIRECTORY_SEPARATOR . $file;
+            if (!file_exists($path)) continue;
+            $rows = __region_loadCsvAssoc($path);
+            foreach ($rows as $row) {
+                $dialect = strtolower(trim($row['Dialect type'] ?? ''));
+                if (!in_array($dialect, $dialectsLower)) continue;
+                $blockColumns = ['Location_Recognition_question','Cultural_Interpretation_question','Contextual_Usage_question','Fill_in_Blank_question','True_False_question','Meaning_question'];
+                foreach ($blockColumns as $col) {
+                    if (!isset($row[$col])) continue;
+                    $block = trim($row[$col]); if ($block === '') continue;
+                    $qText = __region_extractQuestionFromBlock($block);
+                    $aText = __region_extractFullCorrectAnswer($block);
+                    if ($qText !== '' && $aText !== '') $result[] = ['question'=>$qText,'answer'=>$aText,'lang'=>'arabic','arabic_type'=>strtolower($col)];
                 }
             }
         }
-        if ($category !== '' && $catCol !== null) {
-            $val = isset($r[$catCol]) ? $r[$catCol] : '';
-            if ($val === '' || mb_stripos($val, $category) === false) return false;
-        }
-        return true;
-    });
+        return $result;
+    }
 
-    // reindex
-    $rows = array_values($rows);
+    $config = $regionConfig[$file];
+    $requestedArabicFilter = isset($_GET['arabic_filter']) ? trim($_GET['arabic_filter']) : '';
+    $count = isset($_GET['count']) ? intval($_GET['count']) : 0;
+
+    // Decide whether the arabic_filter is a block-column name or a dialect value.
+    $blockColumns = ['Location_Recognition_question','Cultural_Interpretation_question','Contextual_Usage_question','Fill_in_Blank_question','True_False_question','Meaning_question'];
+    $blockColsLower = array_map('strtolower', $blockColumns);
+    $filterLower = mb_strtolower($requestedArabicFilter);
+
+    if ($requestedArabicFilter !== '') {
+        if (in_array($filterLower, $blockColsLower)) {
+            // it's a block-column filter; keep dialects as configured
+            $dialectsLower = array_map('strtolower', $config['dialects']);
+            $isBlockFilter = true;
+        } else {
+            // treat as a dialect value: restrict to that dialect
+            $dialectsLower = [$filterLower];
+            $isBlockFilter = false;
+        }
+    } else {
+        $dialectsLower = array_map('strtolower', $config['dialects']);
+        $isBlockFilter = false;
+    }
+
+    $english = __region_loadEnglishQuestions($dataDirPath, $config['englishFiles']);
+    $arabic = __region_loadArabicQuestions($dataDirPath, $dialectsLower);
+
+    // If filter requested a specific block column name, keep only arabic questions of that type
+    if (!empty($requestedArabicFilter) && !empty($isBlockFilter) && $isBlockFilter === true) {
+        $arabic = array_values(array_filter($arabic, function($q) use ($filterLower) {
+            return isset($q['arabic_type']) && mb_strtolower($q['arabic_type']) === $filterLower;
+        }));
+    }
+    $questions = array_merge($english, $arabic);
+
+    if ($lang === 'all') shuffle($questions);
+    if ($lang !== 'all') {
+        $questions = array_values(array_filter($questions, function($q) use ($lang) { return isset($q['lang']) && $q['lang'] === $lang; }));
+    }
+
+    if ($count > 0) {
+        shuffle($questions);
+        $questions = array_slice($questions, 0, max(1, min(100, $count)));
+    }
+
+    if (is_array($questions) && count($questions) > 1) shuffle($questions);
+
+    echo json_encode(['questions' => $questions], JSON_UNESCAPED_UNICODE);
+    exit;
 }
 
-// shuffle and take $count
-shuffle($rows);
-$rows = array_slice($rows, 0, $count);
-
-// helper: parse a question block from a CSV cell
-function parseQuestionBlock($text) {
-    $result = ['question' => '', 'choices' => [], 'answer' => null];
-    if (trim($text) === '') return null;
-
-    // normalize newlines
-    $lines = preg_split('/\r\n|\r|\n/', $text);
-
-    // try to find the line that starts with 'السؤال:' and use following text as question
-    foreach ($lines as $line) {
-        if (mb_strpos($line, 'السؤال:') !== false) {
-            $parts = explode('السؤال:', $line, 2);
-            $result['question'] = trim($parts[1]);
-            break;
-        }
-    }
-    // if not found, try line that starts with 'المهمة:' or fallback to first non-empty line
-    if ($result['question'] === '') {
-        foreach ($lines as $line) {
-            if (mb_strpos($line, 'المهمة:') !== false) {
-                $parts = explode('المهمة:', $line, 2);
-                $result['question'] = trim($parts[1]);
-                break;
-            }
-        }
-    }
-    if ($result['question'] === '') {
-        foreach ($lines as $line) {
-            if (trim($line) !== '') { $result['question'] = trim($line); break; }
-        }
-    }
-
-    // collect options lines that look like 'أ) ...' or 'أ)'
-    $choices = [];
-    foreach ($lines as $line) {
-        $line = trim($line);
-        // match Arabic option markers like 'أ)' 'ب)' 'ج)' 'د)'
-        if (preg_match('/^[\x{0621}-\x{064A}]\)/u', $line)) {
-            // remove first two chars (letter and parenthesis)
-            $choiceText = preg_replace('/^[\x{0621}-\x{064A}]\)\s*/u', '', $line);
-            $choices[] = trim($choiceText);
-        }
-        // some rows use Arabic letter followed by ')' and then more text on next lines; we ignore that complexity for now
-    }
-
-    $result['choices'] = $choices;
-
-    // find correct answer line like 'الإجابة الصحيحة: أ' or 'الإجابة الصحيحة: ب'
-    foreach ($lines as $line) {
-        if (mb_strpos($line, 'الإجابة الصحيحة') !== false) {
-            // extract Arabic letter
-            if (preg_match('/الإجابة\s*الصحيحة\s*:\s*([\x{0621}-\x{064A}])/u', $line, $m)) {
-                $letter = $m[1];
-                $map = ['أ' => 0, 'ب' => 1, 'ج' => 2, 'د' => 3];
-                if (isset($map[$letter]) && isset($choices[$map[$letter]])) {
-                    $result['answer'] = $choices[$map[$letter]];
-                }
-            }
-            break;
-        }
-    }
-
-    // if we have choices but no parsed answer, try to find an option that matches 'الإجابة:' pattern with text
-    if ($result['answer'] === null && count($choices) > 0) {
-        // try to find a line like 'الإجابة الصحيحة: <text>'
-        foreach ($lines as $line) {
-            if (mb_strpos($line, 'الإجابة الصحيحة') !== false && preg_match('/الإجابة\s*الصحيحة\s*:\s*(.+)$/u', $line, $m)) {
-                $ansText = trim($m[1]);
-                // try to match to one of the choices
-                foreach ($choices as $c) {
-                    if ($c === $ansText || mb_stripos($c, $ansText) !== false) {
-                        $result['answer'] = $c; break 2;
-                    }
-                }
-            }
-        }
-    }
-
-    // if no choices found, return null to indicate unparsable block
-    if (count($choices) === 0) return null;
-    // if no answer, we still return question with choices but answer null
-    return $result;
-}
-
-$questionsOut = [];
-foreach ($rows as $r) {
-    // try columns in this order (based on Words.csv structure)
-    $colsToTry = ['Location_Recognition_question','Cultural_Interpretation_question','Contextual_Usage_question','Fill_in_Blank_question','True_False_question','Meaning_question'];
-    $parsed = null;
-
-    // If the CSV uses a simple 'Question' + 'Answer' structure (like GENERAL.csv), use it directly
-    if (isset($r['Question']) && trim($r['Question']) !== '') {
-        $answer = isset($r['Answer']) ? $r['Answer'] : '';
-        $parsed = ['question' => trim($r['Question']), 'choices' => [], 'answer' => trim($answer)];
-        // if a Choices column exists (e.g., GENERAL.csv), parse it into choices
-        $choicesCol = null;
-        foreach (['choices','choice','options'] as $ck) { if (isset($lowerMap[$ck])) { $choicesCol = $lowerMap[$ck]; break; } }
-        if ($choicesCol !== null) {
-            $raw = isset($r[$choicesCol]) ? trim($r[$choicesCol]) : '';
-            if ($raw !== '' && $raw !== '–') {
-                // split by common separators and A./B./C./D. markers
-                $parts = preg_split('/\s*[;|\|]\s*|\s*A\.\s*|\s*B\.\s*|\s*C\.\s*|\s*D\.\s*/i', $raw);
-                $choices = array_values(array_filter(array_map('trim', $parts)));
-                if (count($choices) > 0) $parsed['choices'] = array_slice(array_unique($choices), 0, 4);
-            }
-        }
-    }
-
-    // otherwise try the more complex columns
-    if ($parsed === null) {
-        foreach ($colsToTry as $c) {
-            if (isset($r[$c]) && trim($r[$c]) !== '') {
-                $parsed = parseQuestionBlock($r[$c]);
-                if ($parsed !== null) break;
-            }
-        }
-    }
-    if ($parsed !== null) {
-        // include type/category if present in row (check variants)
-        $typeKey = null;
-        foreach (['type','question type','question_type','qtype','questiontype'] as $k) { if (isset($lowerMap[$k])) { $typeKey = $lowerMap[$k]; break; } }
-        $catKey = null;
-        foreach (['category','categories','topic','tag','tags','category_name'] as $k) { if (isset($lowerMap[$k])) { $catKey = $lowerMap[$k]; break; } }
-        if ($typeKey !== null && isset($r[$typeKey])) $parsed['type'] = $r[$typeKey];
-        if ($catKey !== null && isset($r[$catKey])) $parsed['category'] = $r[$catKey];
-        $questionsOut[] = $parsed;
-    }
-}
-
-echo json_encode(['questions' => $questionsOut], JSON_UNESCAPED_UNICODE);
-
-?>
