@@ -38,14 +38,9 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
   <!-- Header -->
   <header class="site-header">
     <nav class="navbar" aria-label="التنقل الرئيسي">
-<<<<<<< HEAD:North-ar.html
-      <a class="brand" href="index-ar.html" aria-label="العودة للرئيسية">
-                  <img src="image/Hawiyah.png" alt="Logo" class="site-logo">
-
+      <a class="brand" href="index-ar.php" aria-label="العودة للرئيسية"> 
+        <img src="image/Hawiyah.png" alt="Logo" class="site-logo">
       </a>
-=======
-      <a class="brand" href="index-ar.php" aria-label="العودة للرئيسية">الثقافة السعودية</a>
->>>>>>> 75d80716f1f392d2bc2b409371740e55bbbfe0c1:North-ar.php
       <button class="menu-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="قائمة">☰</button>
 
       <ul id="nav-links" class="nav-links">

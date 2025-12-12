@@ -118,7 +118,12 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
 				<div class="topic">جدة</div>
 				<div class="des">ثقافة بحرية وتنوع حضاري مميز.</div>
 			</div>
-		</div>
+		  	<!-- Link: Central -->
+					<div class="buttons">
+						<button type="button" onclick="location.href='Central.php'">Explore</button>
+					</div>
+				</div>
+			</div>
 
 		<div class="item">
 			<img src="image/South.jpeg" alt="المنطقة الجنوبية">
