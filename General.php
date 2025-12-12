@@ -20,6 +20,65 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@300;400;600;700&display=swap" rel="stylesheet">
 	<link rel="stylesheet" href="assets/styles.css">
+	<style>		
+		.icon-btn {
+  width: 20px;
+  height: 20px;
+  margin-right: 5px;
+  vertical-align: middle;
+}
+
+.card-actions button {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 10px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+.copyBtn { background: #2196F3; color: white; }
+.copyBtn:hover { background: #1976D2; }
+
+.card-actions button:nth-child(2) { background: #3b5998; color: white; } /* Facebook */
+.card-actions button:nth-child(2):hover { background: #2d4373; }
+
+.card-actions button:nth-child(3) { background: #25D366; color: white; } /* WhatsApp */
+.card-actions button:nth-child(3):hover { background: #1ebe57; }
+
+.card-actions button:nth-child(4) { background: #1DA1F2; color: white; } /* Twitter */
+.card-actions button:nth-child(4):hover { background: #0d95e8; }
+
+.card-actions button:nth-child(5) { background: #0077B5; color: white; } /* LinkedIn */
+.card-actions button:nth-child(5):hover { background: #005983; }
+.copy-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background-color: #4CAF50; /* أخضر جذاب */
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 5px 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.copy-btn:hover {
+  background-color: #45a049;
+}
+
+.copy-btn .icon-btn {
+  width: 18px;
+  height: 18px;
+}
+
+	</style>
  </head>
  <!-- Body -->
  <body>
@@ -463,28 +522,99 @@ async function render(pageIndex = 0) {
   container.innerHTML = "";
 
   // render cards
-  pageItems.forEach(q => {
-    const card = document.createElement("article");
-    card.className = "feature-card";
+pageItems.forEach(q => {
+  const card = document.createElement("article");
+  card.className = "feature-card " + (q.lang === "english" ? "en" : "ar");
 
-    const h3 = document.createElement("h3");
-    const p = document.createElement("p");
+  const h3 = document.createElement("h3");
+  const p = document.createElement("p");
 
-    if (q.lang === "arabic") {
-      h3.textContent = "س: " + q.question;
-      p.textContent = "ج: " + q.answer;
-    } else {
-      h3.textContent = "Q: " + q.question;
-      p.textContent = "Answer: " + q.answer;
-    }
+  if (q.lang === "arabic") {
+    h3.textContent = "س: " + q.question;
+    p.textContent = "ج: " + q.answer;
+  } else {
+    h3.textContent = "Q: " + q.question;
+    p.textContent = "Answer: " + q.answer;
+  }
 
-    h3.dir = "auto";
-    p.dir = "auto";
+  h3.dir = "auto";
+  p.dir = "auto";
 
-    card.appendChild(h3);
-    card.appendChild(p);
-    container.appendChild(card);
-  });
+  card.appendChild(h3);
+  card.appendChild(p);
+
+  // Container للأزرار
+  const actions = document.createElement("div");
+  actions.className = "card-actions";
+  actions.style.marginTop = "8px";
+
+  // --- زر النسخ مع toast ---
+  const copyBtn = document.createElement("button");
+  copyBtn.textContent = "copy 📋";
+  copyBtn.style.marginRight = "5px";
+  copyBtn.onclick = () => {
+    // تحديد النص مع س / Q و ج / Answer
+    let textToCopy = q.lang === "arabic" ? `س: ${q.question}\nج: ${q.answer}` : `Q: ${q.question}\nAnswer: ${q.answer}`;
+    navigator.clipboard.writeText(textToCopy);
+
+    // toast
+    const toast = document.createElement("div");
+    toast.textContent = "تم النسخ 📋";
+    toast.style.position = "fixed";
+    toast.style.bottom = "20px";
+    toast.style.right = "20px";
+    toast.style.backgroundColor = "#4CAF50";
+    toast.style.color = "#fff";
+    toast.style.padding = "10px 15px";
+    toast.style.borderRadius = "6px";
+    toast.style.boxShadow = "0 4px 12px rgba(0,0,0,0.2)";
+    toast.style.fontWeight = "600";
+    toast.style.opacity = "0";
+    toast.style.transition = "opacity 0.4s ease, transform 0.4s ease";
+    toast.style.transform = "translateY(20px)";
+    document.body.appendChild(toast);
+
+    setTimeout(() => {
+      toast.style.opacity = "1";
+      toast.style.transform = "translateY(0)";
+    }, 10);
+
+    setTimeout(() => {
+      toast.style.opacity = "0";
+      toast.style.transform = "translateY(20px)";
+      setTimeout(() => toast.remove(), 400);
+    }, 2000);
+  };
+  actions.appendChild(copyBtn);
+
+  // --- زر X ---
+  const xBtn = document.createElement("a");
+  xBtn.href = `https://x.com/intent/tweet?text=${encodeURIComponent(q.lang === "arabic" ? `س: ${q.question}\nج: ${q.answer}` : `Q: ${q.question}\nAnswer: ${q.answer}`)}`;
+  xBtn.target = "_blank";
+  xBtn.innerHTML = `<img src="image/X_logo.jpg.webp" class="icon-btn" alt="X Logo">`;
+  actions.appendChild(xBtn);
+
+  // --- زر WhatsApp ---
+  const waBtn = document.createElement("a");
+  waBtn.href = `https://api.whatsapp.com/send?text=${encodeURIComponent(q.lang === "arabic" ? `س: ${q.question}\nج: ${q.answer}` : `Q: ${q.question}\nAnswer: ${q.answer}`)}`;
+  waBtn.target = "_blank";
+  waBtn.innerHTML = `<img src="https://cdn-icons-png.flaticon.com/512/733/733585.png" class="icon-btn" alt="WhatsApp">`;
+  actions.appendChild(waBtn);
+
+  // --- زر Facebook ---
+  const fbBtn = document.createElement("a");
+  fbBtn.href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}&quote=${encodeURIComponent(q.lang === "arabic" ? `س: ${q.question}\nج: ${q.answer}` : `Q: ${q.question}\nAnswer: ${q.answer}`)}`;
+  fbBtn.target = "_blank";
+  fbBtn.innerHTML = `<img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" class="icon-btn" alt="Facebook">`;
+  actions.appendChild(fbBtn);
+
+  card.appendChild(actions);
+  container.appendChild(card);
+});
+
+
+
+
 
   const bottomSlider = createSlider(pageIndex, totalPages, render);
   container.after(bottomSlider);
@@ -531,6 +661,7 @@ document.getElementById("langFilter").addEventListener("change", (e) => {
 
 // initial load
 render(0);
+
 </script>
 
 
