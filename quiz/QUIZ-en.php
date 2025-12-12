@@ -503,9 +503,22 @@ if (!$LOGGED_IN) {
     const total = selectedQuestions.length || 1;
     const percent = Math.round((score/total)*100);
 
-    document.getElementById('result').innerHTML =
-      `Your score: <strong>${score} / ${total} (${percent}%)</strong><br><br>
-       <canvas id="scoreChart" style="max-width:300px;margin:0 auto;display:block;"></canvas>`;
+document.getElementById('result').innerHTML = `
+<div class="score-box animate" data-correct="${score}" data-wrong="${total - score}" data-total="${total}">
+    <h2 class="score-title">Your Result</h2>
+    <div class="score-values">
+        <span class="score-main">${score} / ${total}</span>
+    </div>
+
+    <div class="tooltip">
+        Correct: ${score}<br>
+        Wrong: ${total - score}<br>
+        Total: ${total}
+    </div>
+</div>
+
+<canvas id="scoreChart" style="max-width:300px;margin:20px auto;display:block;"></canvas>
+`;
 
     function loadChart(callback){
         if (window.Chart){
@@ -521,14 +534,54 @@ if (!$LOGGED_IN) {
     loadChart(() => {
         const ctx = document.getElementById("scoreChart");
         if (window.quizChart){ window.quizChart.destroy(); }
-        window.quizChart = new Chart(ctx, {
-            type: "pie",
-            data: {
-                labels: ["Correct", "Wrong"],
-                datasets: [{ data: [score, total - score], backgroundColor: ["#4CAF50", "#F44336"] }]
+       window.quizChart = new Chart(ctx, {
+    type: "doughnut",
+    data: {
+        labels: ["Correct", "Wrong"],
+        datasets: [{
+            data: [score, total - score],
+            backgroundColor: ["#1A7F3C", "#C9A86A"],   // أخضر + ذهبي
+            borderWidth: 2,
+            hoverOffset: 10
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: {
+                position: "bottom",
+                labels: {
+                    font: {size: 14, family: "Noto Kufi Arabic"},
+                    padding: 15
+                }
             },
-            options: { responsive: true, plugins: { legend: { position: "bottom" } } }
-        });
+            title: {
+                display: false,
+              
+            },
+            tooltip: {
+                bodyFont: { family: "Noto Kufi Arabic" },
+                titleFont: { family: "Noto Kufi Arabic" }
+            }
+        },
+        cutout: "65%" // حجم الدائرة الداخلية
+    }
+});
+
+// إضافة النص داخل الدائرة
+Chart.register({
+    id: 'centerText',
+    afterDraw(chart, args, options) {
+        const {ctx, chartArea: {width, height}} = chart;
+        ctx.save();
+        
+        ctx.font = "bold 26px Noto Kufi Arabic";
+        ctx.fillStyle = "#333";
+        ctx.textAlign = "center";
+        ctx.fillText(`${percent}%`, width / 2, height / 1.8);
+    }
+});
+
     });
   }
 
