@@ -100,3 +100,42 @@ if (dropdown && dropbtn) {
     }
   });
 }
+
+// ===== NAV SEARCH TOGGLE =====
+document.querySelectorAll('.nav-search').forEach((wrap) => {
+  const btn = wrap.querySelector('.search-toggle');
+  const form = wrap.querySelector('.nav-search-form');
+  const input = wrap.querySelector('input[type="search"]');
+  if (!btn || !form || !input) return;
+
+  const open = () => {
+    form.classList.add('open');
+    btn.setAttribute('aria-expanded', 'true');
+    input.focus();
+  };
+
+  const close = () => {
+    form.classList.remove('open');
+    btn.setAttribute('aria-expanded', 'false');
+  };
+
+  btn.addEventListener('click', (e) => {
+    e.preventDefault();
+    form.classList.contains('open') ? close() : open();
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!wrap.contains(e.target)) close();
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') close();
+  });
+
+  form.addEventListener('submit', (e) => {
+    if (!input.value.trim()) {
+      e.preventDefault();
+      input.focus();
+    }
+  });
+});

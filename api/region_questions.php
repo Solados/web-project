@@ -3,7 +3,7 @@ header("Content-Type: application/json; charset=UTF-8;");
 
 // قراءة بارامترات الطلب
 $file = isset($_GET['file']) ? strtoupper(trim($_GET['file'])) : 'GENERAL';
-$page = isset($_GET['page']) ? max(0, intval($_GET['page'])) : 0;
+$page = isset($_GET['page']) ? intval($_GET['page']) : 0;
 
 $lang = isset($_GET['lang']) ? strtolower(trim($_GET['lang'])) : 'all';
 if (!in_array($lang, ['all', 'english', 'arabic'])) {
@@ -154,6 +154,52 @@ function extractFullCorrectAnswer($text) {
 }
 
 /* ----------------------------------------------
+   تحويل choices النصية إلى مصفوفة [A => text]
+-----------------------------------------------*/
+function parseChoices($choicesText) {
+    $choices = [];
+    if (!$choicesText) return $choices;
+
+    // مثال: A. Circle B. Square C. Rectangle D. Straight line
+    preg_match_all('/([A-Z])\.\s*(.*?)(?=\s+[A-Z]\.|$)/', $choicesText, $matches, PREG_SET_ORDER);
+
+    foreach ($matches as $m) {
+        $letter = trim($m[1]);
+        $text   = trim($m[2]);
+        $choices[$letter] = $text;
+    }
+
+    return $choices;
+}
+
+/* ----------------------------------------------
+   استخراج نص الإجابة من Answer + Choices
+-----------------------------------------------*/
+function extractEnglishAnswerTextByType($answerLetters, $choicesText, $questionType) {
+    if (!$answerLetters || !$choicesText) return "";
+
+    $choices = parseChoices($choicesText);
+
+    // استخراج جميع الحروف (A, B, C...)
+    preg_match_all('/[A-Z]/', $answerLetters, $matches);
+    $letters = $matches[0];
+
+    // MCQ (one correct) → أول حرف فقط
+    if (stripos($questionType, 'one correct') !== false) {
+        $letters = array_slice($letters, 0, 1);
+    }
+
+    $answers = [];
+    foreach ($letters as $l) {
+        if (isset($choices[$l])) {
+            $answers[] = $choices[$l];
+        }
+    }
+
+    return implode(" / ", $answers);
+}
+
+/* ----------------------------------------------
    تحميل الأسئلة الإنجليزية
 -----------------------------------------------*/
 function loadEnglishQuestions($dataDir, $files) {
@@ -166,14 +212,29 @@ function loadEnglishQuestions($dataDir, $files) {
         foreach ($rows as $r) {
             $q = trim($r['Question'] ?? '');
             $a = trim($r['Answer'] ?? '');
+            $choicesText = trim($r['Choices'] ?? '');
 
-            if ($q !== '' && $a !== '') {
-                $output[] = [
-                    'question' => $q,
-                    'answer'   => $a,
-                    'lang'     => 'english'
-                ];
+            if ($q === '' || $a === '') continue;
+
+            // لو السؤال MCQ → استخرج نص الإجابة من Choices
+            $finalAnswer = $a;
+
+            $questionType = strtolower(trim($r["Question Type"] ?? ""));
+
+            if (!empty($choicesText) && $questionType !== "") {
+                $extracted = extractEnglishAnswerTextByType($a, $choicesText, $questionType);
+                if ($extracted !== "") {
+                    $finalAnswer = $extracted;
+                }
             }
+
+            $output[] = [
+                'question' => $q,
+                'answer'   => $finalAnswer,
+                'lang'     => 'english',
+                'english_type'     => strtolower($r["Question Type"] ?? ""),
+                'english_category' => strtolower($r["Category"] ?? "")
+            ];
         }
     }
 
@@ -196,18 +257,6 @@ function loadArabicQuestions($dataDir, $dialectsLower) {
         foreach ($rows as $row) {
             $dialect = strtolower(trim($row['Dialect type'] ?? ''));
             if (!in_array($dialect, $dialectsLower)) continue;
-
-            // السؤال الرئيسي Term + Meaning_of_term
-            $term = trim($row['Term'] ?? '');
-            $mean = trim($row['Meaning_of_term'] ?? '');
-
-            if ($term !== "" && $mean !== "") {
-                $result[] = [
-                    'question' => $term,
-                    'answer'   => $mean,
-                    'lang'     => 'arabic'
-                ];
-            }
 
             // الأعمدة الأخرى كبلوكات
             $blockColumns = [
@@ -232,7 +281,8 @@ function loadArabicQuestions($dataDir, $dialectsLower) {
                     $result[] = [
                         'question' => $qText,
                         'answer'   => $aText,
-                        'lang'     => 'arabic'
+                        'lang'     => 'arabic',
+                        'arabic_type' => strtolower($col)
                     ];
                 }
             }
@@ -253,24 +303,19 @@ $arabic  = loadArabicQuestions($dataDir, $dialectsLower);
 
 $questions = array_merge($english, $arabic);
 
+// Shuffle only if no language filter is applied
+if ($lang === 'all') {
+    shuffle($questions);
+}
+
+
 if ($lang !== 'all') {
     $questions = array_values(array_filter($questions, function($q) use ($lang) {
         return isset($q['lang']) && $q['lang'] === $lang;
     }));
 }
 
-// خلط
-shuffle($questions);
-
-// تقسيم صفحات
-$total = count($questions);
-$start = $page * $perPage;
-$chunk = array_slice($questions, $start, $perPage);
-
-// النتيجة
+// لا نستخدم التقسيم هنا — JS يتكفل بالصفحات
 echo json_encode([
-    'page'      => $page,
-    'count'     => $perPage,
-    'total'     => $total,
-    'questions' => $chunk
+    'questions' => $questions
 ], JSON_UNESCAPED_UNICODE);

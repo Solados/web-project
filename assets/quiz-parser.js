@@ -68,19 +68,60 @@ const builtin = [
   }
 
   // parse a CSV and return {header:[], rows:[[]]}
+  // Robust parser: supports quoted fields that contain commas and newlines.
   function parseCSV(text) {
-    const lines = text.split(/\r?\n/).filter(l => l.trim() !== '');
-    if (lines.length === 0) return { header: [], rows: [] };
-    const header = parseCSVLine(lines[0]);
+    if (!text || typeof text !== 'string') return { header: [], rows: [] };
     const rows = [];
-    for (let i = 1; i < lines.length; i++) {
-      try {
-        rows.push(parseCSVLine(lines[i]));
-      } catch (e) {
-        // skip malformed
+    let field = '';
+    let row = [];
+    let inQuote = false;
+    for (let i = 0; i < text.length; i++) {
+      const ch = text[i];
+      const next = text[i + 1];
+      if (ch === '"') {
+        if (inQuote && next === '"') {
+          // escaped quote
+          field += '"';
+          i++; // skip escaped quote
+          continue;
+        }
+        inQuote = !inQuote;
+        continue;
       }
+      if (!inQuote && ch === ',') {
+        row.push(field);
+        field = '';
+        continue;
+      }
+      if (!inQuote && (ch === '\n' || ch === '\r')) {
+        // handle CRLF
+        if (ch === '\r' && text[i + 1] === '\n') { i++; }
+        row.push(field);
+        rows.push(row);
+        row = [];
+        field = '';
+        continue;
+      }
+      field += ch;
     }
-    return { header, rows };
+    // push last field/row
+    // if there is any leftover (including possible final newline-less row)
+    if (inQuote) {
+      // unterminated quote — try to salvage
+      // treat remaining field as-is
+    }
+    if (field !== '' || row.length > 0) {
+      row.push(field);
+      rows.push(row);
+    }
+
+    if (rows.length === 0) return { header: [], rows: [] };
+    // normalize header and rows (trim but preserve internal spacing)
+    const header = rows[0].map(s => (s || '').toString().trim());
+    const dataRows = rows.slice(1).map(r => r.map(s => (s || '').toString().trim()));
+    // filter out completely empty rows
+    const filtered = dataRows.filter(r => r.some(c => c !== ''));
+    return { header, rows: filtered };
   }
 
   // normalize header name -> index map (lowercase trimmed)
@@ -110,7 +151,7 @@ const builtin = [
       if (qIdx === undefined) break;
       if (!r[qIdx]) continue;
       const qText = r[qIdx];
-      const correct = ansIdx !== undefined ? (r[ansIdx] || '').trim() : '';
+      let correct = ansIdx !== undefined ? (r[ansIdx] || '').trim() : '';
       let choices = [];
 
       // If choices column exists and is not '–', parse it (use database choices as-is)
@@ -123,10 +164,26 @@ const builtin = [
       // ensure unique and at most 4 when choices were provided
       if (choices.length > 0) {
         choices = Array.from(new Set(choices)).slice(0, 4);
-        // ensure correct answer exists in choices
+        // If the correct answer is expressed as letters (e.g., "A & C", "A,C", "A and C"), map
+        // those letters to the actual choice texts so we don't inject the raw "A & C" string into choices.
         if (correct && !choices.includes(correct)) {
-          // replace first element with the correct answer to guarantee presence
-          choices[0] = correct;
+          const letterMatches = correct.match(/[A-D]/gi);
+          if (letterMatches && letterMatches.length > 0) {
+            const letterMap = { A:0, B:1, C:2, D:3 };
+            const resolved = letterMatches.map(l => {
+              const idx = letterMap[(l||'').toUpperCase()];
+              return (typeof idx === 'number' && choices[idx]) ? choices[idx] : null;
+            }).filter(Boolean);
+            const uniqueResolved = Array.from(new Set(resolved));
+            if (uniqueResolved.length > 0) {
+              // set the correct variable to the resolved texts joined by a separator
+              correct = uniqueResolved.join(' / ');
+            }
+          }
+          // ensure the (possibly resolved) correct answer is present in choices
+          if (!choices.includes(correct)) {
+            choices[0] = correct;
+          }
         }
       }
 
@@ -163,33 +220,45 @@ const builtin = [
       }
     }
 
-    // find choices (lines with أ) ب) ج) د) or A) B) C) D))
+    // find choices (Arabic أ ب ج د or Latin A B C D with ) or . markers)
     for (const line of lines) {
       let match;
-      if ((match = line.match(/^[أ][\))]?\s*(.+)$/))) {
-        choices.push(match[1].trim());
-      } else if ((match = line.match(/^[ب][\))]?\s*(.+)$/))) {
-        choices.push(match[1].trim());
-      } else if ((match = line.match(/^[ج][\))]?\s*(.+)$/))) {
-        choices.push(match[1].trim());
-      } else if ((match = line.match(/^[د][\))]?\s*(.+)$/))) {
-        choices.push(match[1].trim());
+      // Arabic markers: أ ب ج د (with optional ) or ) or .)
+      if ((match = line.match(/^[\s\-]*([أابجد])\s*[)\.\-]\s*(.+)$/i))) {
+        choices.push(match[2].trim());
+        continue;
+      }
+      // Latin markers A B C D (A) or A. or A - )
+      if ((match = line.match(/^[\s\-]*([A-D])\s*[)\.\-]\s*(.+)$/i))) {
+        choices.push(match[2].trim());
+        continue;
+      }
+      // Some files list 'الخيارات:' followed by indented lines without markers; capture lines that look like option lines (start with Arabic letter then ) without space)
+      if ((match = line.match(/^[\s]*[A-Za-zأبجد][\)\.\-]?\s*(.+)$/i))) {
+        // only add if it looks like a short option (heuristic)
+        const txt = match[1].trim();
+        if (txt && txt.length < 200) choices.push(txt);
       }
     }
 
     // find correct answer
     for (const line of lines) {
       if (/الإجابة\s*الصحيحة\s*:/i.test(line)) {
-        const match = line.match(/الإجابة\s*الصحيحة\s*:\s*([أبجد])|الإجابة\s*الصحيحة\s*:\s*([^,]+)/i);
-        if (match) {
-          if (match[1]) {
-            // letter answer (أ = 0, ب = 1, ج = 2, د = 3)
-            const letterMap = { 'أ': 0, 'ب': 1, 'ج': 2, 'د': 3 };
-            const idx = letterMap[match[1]];
-            if (idx !== undefined && choices[idx]) answer = choices[idx];
-          } else if (match[2]) {
-            // text answer
-            answer = match[2].trim();
+        // try Arabic letter, then Latin letter, then text
+        const m = line.match(/الإجابة\s*الصحيحة\s*:\s*([أبجد])/i) || line.match(/الإجابة\s*الصحيحة\s*:\s*([A-D])/i) || line.match(/الإجابة\s*الصحيحة\s*:\s*(.+)$/i);
+        if (m) {
+          const val = (m[1] || '').toString().trim();
+          // map Arabic letters
+          const letterMap = { 'أ': 0, 'ا': 0, 'ب': 1, 'ج': 2, 'د': 3 };
+          if (val && (val in letterMap)) {
+            const idx = letterMap[val];
+            if (choices[idx]) answer = choices[idx];
+          } else if (/^[A-D]$/i.test(val)) {
+            const idx = ['A','B','C','D'].indexOf(val.toUpperCase());
+            if (idx !== -1 && choices[idx]) answer = choices[idx];
+          } else if (m[1]) {
+            // text answer — m[1] already contains the text in this branch
+            answer = m[1].trim();
             if (!choices.includes(answer)) {
               choices[0] = answer; // replace first if not in list
             }
@@ -221,6 +290,7 @@ const builtin = [
       if (keys.length >= 2) meaningIdx = 1;
     }
 
+    const hasChoicesColumn = Object.keys(hmap).some(k => ['choices', 'choice', 'options'].includes(k));
     const questions = [];
     const questionCols = Object.keys(hmap).filter(k => /question/i.test(k) || /سؤال/i.test(k));
 
@@ -244,22 +314,29 @@ const builtin = [
     if (questions.length < count) {
       const items = rows.map(r => ({ term: r[termIdx] || '', meaning: (meaningIdx !== undefined ? r[meaningIdx] : '') || '' })).filter(x => x.term && x.meaning);
       if (items.length > 0) {
-        shuffle(items);
-        const poolMeanings = items.map(i => i.meaning);
-        for (const it of items) {
-          if (questions.length >= count) break;
-          const correct = it.meaning;
-          const pool = poolMeanings.filter(m => m && m !== correct);
-          shuffle(pool);
-          const distractors = pool.slice(0, 3);
-          let choices = [correct].concat(distractors).slice(0, 4);
-          shuffle(choices);
-          const qText = (lang === 'en') ? `What is the meaning of "${it.term}"?` : `ما معنى "${it.term}"؟`;
-          const qObj = { question: qText, choices, answer: correct };
-          if (typeIdx !== undefined) qObj.type = (it.type || '').trim();
-          questions.push(qObj);
+          shuffle(items);
+          const poolMeanings = items.map(i => i.meaning);
+          for (const it of items) {
+            if (questions.length >= count) break;
+            const correct = it.meaning;
+            const pool = poolMeanings.filter(m => m && m !== correct);
+            shuffle(pool);
+            // If the source CSV does not include an explicit choices/options column
+            // do not synthesize/pad extra options — leave as open-ended (no choices).
+            let qObj;
+            const qText = (lang === 'en') ? `What is the meaning of "${it.term}"?` : `ما معنى "${it.term}"؟`;
+            if (!hasChoicesColumn) {
+              qObj = { question: qText, choices: [], answer: correct };
+            } else {
+              const distractors = pool.slice(0, 3);
+              let choices = [correct].concat(distractors).slice(0, 4);
+              shuffle(choices);
+              qObj = { question: qText, choices, answer: correct };
+            }
+            if (typeIdx !== undefined) qObj.type = (it.type || '').trim();
+            questions.push(qObj);
+          }
         }
-      }
     }
 
     return questions.slice(0, count);
@@ -270,14 +347,20 @@ const builtin = [
   async function fetchQuestions(source, count, lang, type, category) {
     count = Number(count) || 5;
     lang = String(lang || 'ar');
-    let file = 'data/Words.csv';
-    if (source && source !== 'Words') file = `data/${source}.csv`;
+    // Determine the correct data directory prefix depending on page location.
+    // If the page is served from the `quiz/` folder, use `../data/`, otherwise `data/`.
+    const _pathname = (window.location && window.location.pathname) ? window.location.pathname : '';
+    const dataPrefix = (_pathname.split && _pathname.split('/').indexOf('quiz') !== -1) ? '../data/' : 'data/';
+    let file = dataPrefix + 'Words.csv';
+    if (source && source !== 'Words') file = `${dataPrefix}${source}.csv`;
 
     try {
       const txt = await fetchText(file);
       const parsed = parseCSV(txt);
       if (!parsed.header || parsed.header.length === 0) throw new Error('No header');
       const hmap = headerMap(parsed.header);
+
+      const hasChoicesColumn = Object.keys(hmap).some(k => ['choices', 'choice', 'options'].includes(k));
 
       // filter rows client-side based on type/category if possible
       let filteredRows = parsed.rows.slice();
@@ -352,10 +435,15 @@ const builtin = [
           const row = parsed.rows[i];
           const q = row[0] || ('Question ' + (i + 1));
           const a = row[1] || pool[i] || 'Answer';
-          const distract = pool.filter(x => x !== a).slice(0, 3);
-          let choices = [a].concat(distract).slice(0, 4);
-          shuffle(choices);
-          const qObj = { question: (lang === 'en' ? q : q), choices, answer: a };
+          let qObj;
+          if (!hasChoicesColumn) {
+            qObj = { question: (lang === 'en' ? q : q), choices: [], answer: a };
+          } else {
+            const distract = pool.filter(x => x !== a).slice(0, 3);
+            let choices = [a].concat(distract).slice(0, 4);
+            shuffle(choices);
+            qObj = { question: (lang === 'en' ? q : q), choices, answer: a };
+          }
           if (typeIdx !== undefined) qObj.type = (row[typeIdx] || '').trim();
           questions.push(qObj);
         }
@@ -373,8 +461,10 @@ const builtin = [
   // fetchQuestionTypes(source) -> Promise<string[]>
   // Returns distinct Question Type strings present in the CSV, or inferred types when missing.
   async function fetchQuestionTypes(source) {
-    let file = 'data/Words.csv';
-    if (source && source !== 'Words') file = `data/${source}.csv`;
+    const _p2 = (window.location && window.location.pathname) ? window.location.pathname : '';
+    const dataPrefix2 = (_p2.split && _p2.split('/').indexOf('quiz') !== -1) ? '../data/' : 'data/';
+    let file = dataPrefix2 + 'Words.csv';
+    if (source && source !== 'Words') file = `${dataPrefix2}${source}.csv`;
     try {
       const txt = await fetchText(file);
       const parsed = parseCSV(txt);
@@ -435,3 +525,4 @@ const builtin = [
   window.allQuestions = builtin.slice();
 
 })(window);
+
