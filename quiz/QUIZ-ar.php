@@ -36,7 +36,7 @@ if (!$LOGGED_IN) {
   .navbar .brand { order: 0; }
   .feature-card h3 { text-align: right; }
   .quiz-gold-box { text-align: right; }
-  .qs-pagination { direction: ltr; }
+  [dir="rtl"] .qs-pagination { direction: ltr; }
 
   /* تعديل شكل جميع select العربية */
   .quiz-gold-select {
@@ -54,6 +54,8 @@ if (!$LOGGED_IN) {
     background-repeat: no-repeat;
     background-position: left 14px center;
   }
+
+
 </style>
 
 </head>
@@ -67,10 +69,10 @@ if (!$LOGGED_IN) {
 
         <?php if ($LOGGED_IN): ?>
     <li class="dropdown">
-            <a class="dropbtn">حسابي</a>
+            <a class="dropbtn">ملفي الشخصي</a>
             <!-- Profile dropdown list -->
             <ul class="dropdown-content">
-              <li><a href="../dashboard.php">حسابي</a></li>
+              <li><a href="../dashboard-ar.php">ملفي الشخصي</a></li>
               <li><a href="Favorites.php">المفضلة</a></li>
               <li><a href="My_quizzes.php">اختباراتي</a></li>
               <li><a href="sign/check_session.php?logout=true" onclick="return confirm('هل أنت متأكد أنك تريد تسجيل الخروج؟')">تسجيل خروج</a></li>
@@ -81,7 +83,7 @@ if (!$LOGGED_IN) {
 <?php endif; ?>
         <li><a href="QUIZ-ar.php">الاختبارات</a></li>
 
-        <li class="dropdown">
+        <li class="dropdown" >
           <a class="dropbtn">الأسئلة</a>
           <ul class="dropdown-content">
             <li><a href="../General-ar.php">أسئلة عامة</a></li>
@@ -119,7 +121,7 @@ if (!$LOGGED_IN) {
           </select>
         </div>
 
-        <label class="quiz-gold-label">المصدر / المنطقة:</label>
+        <label class="quiz-gold-label"> فئة السؤال :</label>
         <div class="select-wrapper">
           <select id="regionFilter" class="quiz-gold-select">
             <option value="Words">كلمات</option>

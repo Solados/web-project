@@ -29,7 +29,7 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
 		.dropdown-content { text-align: right; right: 0; left: auto; }
 		.carousel .content { direction: rtl !important; text-align: right; }
 		.question-filter { direction: rtl; }
-		.qs-pagination { direction: rtl; }
+		[dir="rtl"] { direction: rtl; }
 	</style>
 </head>
 
@@ -57,10 +57,10 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
 			<!-- زر تغيير اللغة -->
 			<?php if ($LOGGED_IN): ?>
     <li class="dropdown">
-            <a class="dropbtn">حسابي</a>
+            <a class="dropbtn">ملفي الشخصي</a>
             <!-- Profile dropdown list -->
             <ul class="dropdown-content">
-              <li><a href="dashboard.php">حسابي</a></li>
+              <li><a href="dashboard-ar.php">ملفي الشخصي</a></li>
               <li><a href="Favorites.php">المفضلة</a></li>
               <li><a href="My_quizzes.php">اختباراتي</a></li>
               <li><a href="sign/check_session.php?logout=true" onclick="return confirm('هل أنت متأكد أنك تريد تسجيل الخروج؟')">تسجيل خروج</a></li>

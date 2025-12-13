@@ -283,10 +283,10 @@ $join_date_ar = "$day $month $year";
 
 <?php if ($LOGGED_IN): ?>
     <li class="dropdown">
-            <a class="dropbtn">ملفي</a>
+            <a class="dropbtn">ملفي الشخصي</a>
             <!-- Profile dropdown list -->
             <ul class="dropdown-content">
-              <li><a href="dashboard.php">ملفي</a></li>
+              <li><a href="dashboard-ar.php">ملفي الشخصي</a></li>
               <li><a href="Favorites.php">المفضلة</a></li>
               <li><a href="My_quizzes.php">اختباراتي</a></li>
               <li><a href="sign/check_session.php?logout=true" onclick="return confirm('هل أنت متأكد أنك تريد تسجيل الخروج؟')">تسجيل الخروج</a></li>
@@ -296,6 +296,8 @@ $join_date_ar = "$day $month $year";
 <?php else: ?>
     <li><a href="/sign/SignUp_LogIn_Form.html">تسجيل الدخول</a></li>
 <?php endif; ?>
+
+<li><a href="quiz/QUIZ-ar.php">الاختبارات</a></li>
 
        <li class="dropdown">
                     <a class="dropbtn">الأسئلة</a>
@@ -428,7 +430,7 @@ $join_date_ar = "$day $month $year";
     </div>
     <ul class="footer-links">
      <li><a href="index-ar.php">العودة للرئيسية</a></li>
-     <li><a href="dashboard.php">ملفي</a></li>
+     <li><a href="dashboard-ar.php">ملفي الشخصي</a></li>
     </ul>
    </div>
   </footer>
