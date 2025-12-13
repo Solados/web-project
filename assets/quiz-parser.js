@@ -151,7 +151,7 @@ const builtin = [
       if (qIdx === undefined) break;
       if (!r[qIdx]) continue;
       const qText = r[qIdx];
-      const correct = ansIdx !== undefined ? (r[ansIdx] || '').trim() : '';
+      let correct = ansIdx !== undefined ? (r[ansIdx] || '').trim() : '';
       let choices = [];
 
       // If choices column exists and is not '–', parse it (use database choices as-is)
@@ -164,10 +164,26 @@ const builtin = [
       // ensure unique and at most 4 when choices were provided
       if (choices.length > 0) {
         choices = Array.from(new Set(choices)).slice(0, 4);
-        // ensure correct answer exists in choices
+        // If the correct answer is expressed as letters (e.g., "A & C", "A,C", "A and C"), map
+        // those letters to the actual choice texts so we don't inject the raw "A & C" string into choices.
         if (correct && !choices.includes(correct)) {
-          // replace first element with the correct answer to guarantee presence
-          choices[0] = correct;
+          const letterMatches = correct.match(/[A-D]/gi);
+          if (letterMatches && letterMatches.length > 0) {
+            const letterMap = { A:0, B:1, C:2, D:3 };
+            const resolved = letterMatches.map(l => {
+              const idx = letterMap[(l||'').toUpperCase()];
+              return (typeof idx === 'number' && choices[idx]) ? choices[idx] : null;
+            }).filter(Boolean);
+            const uniqueResolved = Array.from(new Set(resolved));
+            if (uniqueResolved.length > 0) {
+              // set the correct variable to the resolved texts joined by a separator
+              correct = uniqueResolved.join(' / ');
+            }
+          }
+          // ensure the (possibly resolved) correct answer is present in choices
+          if (!choices.includes(correct)) {
+            choices[0] = correct;
+          }
         }
       }
 

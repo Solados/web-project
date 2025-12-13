@@ -379,6 +379,43 @@ if (isset($_GET['file'])) {
     }
     $questions = array_merge($english, $arabic);
 
+    // Apply optional type filter from GET parameter (e.g., "MCQ (multiple correct)")
+    $requestedType = isset($_GET['type']) ? trim($_GET['type']) : '';
+    if ($requestedType !== '') {
+        $tlow = mb_strtolower($requestedType);
+        // If requesting multiple-correct MCQs, keep questions that are labeled multiple
+        if (mb_strpos($tlow, 'multiple') !== false || mb_strpos($tlow, 'multiple correct') !== false || mb_strpos($tlow, 'multiple answers') !== false) {
+            $questions = array_values(array_filter($questions, function($q) {
+                $etype = isset($q['english_type']) ? mb_strtolower($q['english_type']) : '';
+                $ans = isset($q['answer']) ? (string)$q['answer'] : '';
+                // accept if explicit english_type mentions multiple
+                if ($etype !== '' && mb_strpos($etype, 'multiple') !== false) return true;
+                // accept if answer appears to contain multiple values (slashes, commas, or ' and ')
+                if (strpos($ans, '/') !== false) return true;
+                if (strpos($ans, ',') !== false) return true;
+                if (preg_match('/\band\b/i', $ans)) return true;
+                // also accept if answer is short letters sequence like 'AB' or 'A B'
+                if (preg_match('/^[A-Za-z]{2,}$/', preg_replace('/\s+/', '', $ans))) return true;
+                return false;
+            }));
+        } elseif (mb_strpos($tlow, 'one correct') !== false || mb_strpos($tlow, 'mcq (one') !== false) {
+            // keep only single-correct MCQs
+            $questions = array_values(array_filter($questions, function($q) {
+                $etype = isset($q['english_type']) ? mb_strtolower($q['english_type']) : '';
+                $ans = isset($q['answer']) ? (string)$q['answer'] : '';
+                if ($etype !== '' && (mb_strpos($etype, 'one') !== false || mb_strpos($etype, 'one correct') !== false)) return true;
+                // heuristics: not multi
+                if (strpos($ans, '/') === false && strpos($ans, ',') === false && !preg_match('/\band\b/i', $ans)) return true;
+                return false;
+            }));
+        } elseif (mb_strpos($tlow, 'open') !== false || mb_strpos($tlow, 'fill') !== false) {
+            // keep open-ended (no choices)
+            $questions = array_values(array_filter($questions, function($q) {
+                return empty($q['choices']);
+            }));
+        }
+    }
+
     if ($lang === 'all') shuffle($questions);
     if ($lang !== 'all') {
         $questions = array_values(array_filter($questions, function($q) use ($lang) { return isset($q['lang']) && $q['lang'] === $lang; }));
