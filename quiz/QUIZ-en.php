@@ -44,7 +44,9 @@ if (!$LOGGED_IN) {
     <!-- Header -->
     <!-- Navigation -->
     <nav class="navbar" aria-label="Main navigation">
-     <a class="brand" href="#top" aria-label="Back to top">Saudi Culture</a>
+    <a class="brand" href="#top" aria-label="Back to top">
+                <img src="../image/Hawiyah.png" alt="Logo" class="site-logo">
+     </a>
     <button class="menu-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Toggle menu">☰</button>
       <!-- Nav list -->
       <ul id="nav-links" class="nav-links">
@@ -204,6 +206,19 @@ if (!$LOGGED_IN) {
     }
   }
 
+  // detect whether a question should be treated as multiple-correct
+  function isMultiple(q) {
+    if (!q) return false;
+    const t = String(q.type || q.english_type || q.arabic_type || '').toLowerCase();
+    if (t.indexOf('multiple') !== -1 || t.indexOf('multiple correct') !== -1 || t.indexOf('multiple answers') !== -1) return true;
+    if (typeof q.answer === 'string') {
+      if (q.answer.indexOf('/') !== -1) return true;
+      if (q.answer.indexOf(',') !== -1) return true;
+      if (/\band\b/i.test(q.answer)) return true;
+    }
+    return false;
+  }
+
   // Array to store randomly selected questions
   let selectedQuestions = [];
 
@@ -251,8 +266,11 @@ if (!$LOGGED_IN) {
           selectedQuestions = clientQ.map(q => ({
             question: q.question,
             choices: Array.isArray(q.choices) ? q.choices.slice() : [],
-            answer: q.answer || null
+            answer: q.answer || null,
+            type: q.type || q.english_type || q.arabic_type || null
           }));
+          // shuffle question order for variety
+          shuffle(selectedQuestions);
           selectedQuestions.forEach(q => shuffle(q.choices));
           displayQuestions();
           resultEl.innerHTML = '';
@@ -280,8 +298,11 @@ if (!$LOGGED_IN) {
           selectedQuestions = data.questions.map(q => ({
             question: q.question,
             choices: Array.isArray(q.choices) ? q.choices.slice() : [],
-            answer: q.answer || null
+            answer: q.answer || null,
+            type: q.type || q.english_type || q.arabic_type || null
           }));
+          // shuffle question order for variety
+          shuffle(selectedQuestions);
           // shuffle choices for each question
           selectedQuestions.forEach(q => shuffle(q.choices));
           displayQuestions();
@@ -322,21 +343,26 @@ if (!$LOGGED_IN) {
     const container = document.getElementById('quizContainer');
     container.innerHTML = '';
 
+    
+
     selectedQuestions.forEach((q, i) => {
       const box = document.createElement('div');
       box.className = 'feature-card';
 
       // determine a short type label for the badge
       const inferredType = (q.type && q.type.trim()) ? q.type.trim() : (Array.isArray(q.choices) && q.choices.length > 0 ? 'MCQ' : 'Open-ended');
-      let html = `<h3 dir="ltr">${i+1}. ${q.question} <span class="q-badge" style="font-size:.7rem;padding:.15rem .4rem;margin-left:.6rem;border-radius:4px;background:#efefef;color:#333;border:1px solid #ddd">${inferredType}</span></h3>`;
+      const multi = isMultiple(q);
+      const badgeText = multi ? 'MCQ (multiple correct)' : (inferredType === 'MCQ' ? 'MCQ (one correct)' : inferredType);
+      let html = `<h3 dir="ltr">${i+1}. ${q.question} <span class="q-badge" style="font-size:.7rem;padding:.15rem .4rem;margin-left:.6rem;border-radius:4px;background:#efefef;color:#333;border:1px solid #ddd">${badgeText}</span></h3>`;
 
       // If the question has choices, render radios; otherwise render an open-answer textarea
       if (Array.isArray(q.choices) && q.choices.length > 0) {
         q.choices.forEach(choice => {
-          html += `
-          <label style="display:block;margin:.25rem 0">
-            <input type="radio" name="q${i}" value="${choice}"> ${choice}
-          </label>`;
+          if (multi) {
+            html += `\n          <label style="display:block;margin:.25rem 0">\n            <input type="checkbox" name="q${i}" value="${choice}"> ${choice}\n          </label>`;
+          } else {
+            html += `\n          <label style="display:block;margin:.25rem 0">\n            <input type="radio" name="q${i}" value="${choice}"> ${choice}\n          </label>`;
+          }
         });
       } else {
         html += `
@@ -479,10 +505,24 @@ if (!$LOGGED_IN) {
       let isCorrect = false;
 
       if (Array.isArray(q.choices) && q.choices.length > 0) {
-        const sel = document.querySelector(`input[name="q${i}"]:checked`);
-        if(sel && sel.value === q.answer){
-            score++;
-            isCorrect = true;
+        const multiple = isMultiple(q);
+        if (multiple) {
+          const sels = Array.from(document.querySelectorAll(`input[name="q${i}"]:checked`)).map(el => (el.value || '').trim());
+          // build expected array from q.answer (support strings like 'A / B' or 'Ans1 / Ans2')
+          let expected = [];
+          if (Array.isArray(q.answer)) expected = q.answer.map(x => (x||'').trim());
+          else if (typeof q.answer === 'string') expected = q.answer.split(/\s*\/\s*|\s*,\s*|\s+and\s+/i).map(s => s.trim()).filter(Boolean);
+
+          const aSet = new Set(sels.map(s => s.toLowerCase()));
+          const bSet = new Set(expected.map(s => s.toLowerCase()));
+          const equal = aSet.size === bSet.size && [...aSet].every(v => bSet.has(v));
+          if (equal) { score++; isCorrect = true; }
+        } else {
+          const sel = document.querySelector(`input[name="q${i}"]:checked`);
+          if(sel && sel.value === q.answer){
+              score++;
+              isCorrect = true;
+          }
         }
       } else {
         const ta = document.querySelector(`textarea[name="q${i}_open"]`);

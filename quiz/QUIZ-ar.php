@@ -63,7 +63,9 @@ if (!$LOGGED_IN) {
   <!-- Header -->
   <header class="site-header">
     <nav class="navbar" aria-label="Main navigation">
-      <a class="brand" href="#top" aria-label="Back to top">ثقافة السعودية</a>
+      <a class="brand" href="#top" aria-label="Back to top">
+      <img src="../image/Hawiyah.png" alt="Logo" class="site-logo">
+     </a>
       <button class="menu-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Toggle menu">☰</button>
       <ul id="nav-links" class="nav-links">
 

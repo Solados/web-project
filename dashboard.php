@@ -27,7 +27,8 @@ $join_date = $login_time > 0 ? date('F j, Y', $login_time) : 'Unknown';
     .profile-hero {
       background: linear-gradient(135deg, var(--green-700) 0%, var(--green-600) 100%);
       color: white;
-      padding: 2rem 0;
+      
+      padding: calc(2rem + 70px) 0 2rem;
       margin-bottom: 2rem;
     }
     
@@ -241,7 +242,9 @@ $join_date = $login_time > 0 ? date('F j, Y', $login_time) : 'Unknown';
     <!-- Header -->
     <!-- Navigation -->
     <nav class="navbar" aria-label="Main navigation">
-     <a class="brand" href="index.php" aria-label="Back to home">Saudi Culture</a>
+    <a class="brand" href="#top" aria-label="Back to top">
+      <img src="image/Hawiyah.png" alt="Logo" class="site-logo">
+     </a>
     <button class="menu-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Toggle menu">☰</button>
       <!-- Nav list -->
       <ul id="nav-links" class="nav-links">
