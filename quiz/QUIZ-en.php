@@ -542,6 +542,8 @@ document.getElementById('result').innerHTML = `
     loadChart(() => {
         const ctx = document.getElementById("scoreChart");
         if (window.quizChart){ window.quizChart.destroy(); }
+  
+
        window.quizChart = new Chart(ctx, {
     type: "doughnut",
     data: {
@@ -576,19 +578,8 @@ document.getElementById('result').innerHTML = `
     }
 });
 
-// إضافة النص داخل الدائرة
-Chart.register({
-    id: 'centerText',
-    afterDraw(chart, args, options) {
-        const {ctx, chartArea: {width, height}} = chart;
-        ctx.save();
-        
-        ctx.font = "bold 26px Noto Kufi Arabic";
-        ctx.fillStyle = "#333";
-        ctx.textAlign = "center";
-        ctx.fillText(`${percent}%`, width / 2, height / 1.8);
-    }
-});
+
+
 
     });
 
