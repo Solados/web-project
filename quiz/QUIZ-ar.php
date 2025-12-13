@@ -352,7 +352,24 @@ if (!$LOGGED_IN) {
 
     container.appendChild(checkBtn);
   }
+ const centerTextPlugin = {
+  id: 'centerText',
+  beforeDraw(chart) {
+    const { width, height, ctx } = chart;
+    ctx.save();
 
+    const text = chart.config.data.centerText;
+    if (!text) return;
+    const fontSize = height / 8;
+    ctx.font = `bold ${fontSize}px Noto Kufi Arabic`;
+    ctx.fillStyle = "#000";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(text, width / 2, height / 2 - fontSize * 0.3);
+
+    ctx.restore();
+  }
+};
   function checkAnswers(){
     let score = 0;
 
@@ -383,9 +400,9 @@ if (!$LOGGED_IN) {
       const box = document.getElementById("quizContainer").children[i];
       if (box) {
         if (isCorrect){
-          box.style.background = "rgba(0,255,0,0.12)";
+          box.style.background = "rgba(0,255,0,0.2)";
         } else {
-          box.style.background = "rgba(255,0,0,0.08)";
+          box.style.background = "rgba(255,0,0,0.2)";
         }
         box.style.transition = "0.3s";
       }
@@ -443,10 +460,11 @@ if (!$LOGGED_IN) {
                 labels: ["صحيح", "خاطئ"],
                 datasets: [{
                     data: [score, Math.max(0, total - score)],
-                    backgroundColor: ["#1A7F3C", "#C9A86A"],
+                    backgroundColor: ["#1A7F3C", "#e4645aff"],
                     borderWidth: 2,
                     hoverOffset: 10
-                }]
+                }],
+                centerText: percent + "%"
             },
             options: {
                 responsive: true,
@@ -454,8 +472,8 @@ if (!$LOGGED_IN) {
                 plugins: {
                     legend: { position: "bottom" }
                 }
-         
-              }
+              },
+              plugins: [centerTextPlugin]
         });
         // إضافة أزرار المشاركة
         const shareContainerId = "shareResultContainer";

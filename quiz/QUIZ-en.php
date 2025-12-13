@@ -525,6 +525,25 @@ if (!$LOGGED_IN) {
     - Calculates percentage
     - Colors the score based on performance
   */
+ const centerTextPlugin = {
+  id: 'centerText',
+  beforeDraw(chart) {
+    const { width, height, ctx } = chart;
+    ctx.save();
+
+    const text = chart.config.data.centerText;
+    if (!text) return;
+    const fontSize = height / 8;
+    ctx.font = `bold ${fontSize}px Noto Kufi Arabic`;
+    ctx.fillStyle = "#000";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(text, width / 2, height / 2 - fontSize * 0.3);
+
+    ctx.restore();
+  }
+};
+
   function checkAnswers(){
     let score = 0;
 
@@ -618,10 +637,11 @@ document.getElementById('result').innerHTML = `
         labels: ["Correct", "Wrong"],
         datasets: [{
             data: [score, total - score],
-            backgroundColor: ["#1A7F3C", "#C9A86A"],   // أخضر + ذهبي
+            backgroundColor: ["#1A7F3C", "#e4645aff"],   
             borderWidth: 2,
             hoverOffset: 10
-        }]
+        }],
+         centerText: percent + "%" 
     },
     options: {
         responsive: true,
@@ -643,12 +663,9 @@ document.getElementById('result').innerHTML = `
             }
         },
         cutout: "65%" // حجم الدائرة الداخلية
-    }
+    },
+    plugins: [centerTextPlugin]
 });
-
-
-
-
     });
 
       // Send result to server to attach to user profile
