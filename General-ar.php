@@ -29,7 +29,7 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
 		.dropdown-content { text-align: right; right: 0; left: auto; }
 		.carousel .content { direction: rtl !important; text-align: right; }
 		.question-filter { direction: rtl; }
-		.qs-pagination { direction: rtl; }
+		[dir="rtl"] { direction: rtl; }
 	</style>
 </head>
 
@@ -37,25 +37,30 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
 
 <!-- Header -->
 <header class="site-header">
-	<nav class="navbar">
-
+	<nav class="navbar" aria-label="التنقل الرئيسي">
 		<a class="brand" href="#top">
                 <img src="image/Hawiyah.png" alt="Logo" class="site-logo">
-
     </a>
 
-		<button class="menu-toggle">☰</button>
+		<button class="menu-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="قائمة">☰</button>
 
-		<ul class="nav-links">
+		<ul id="nav-links" class="nav-links">
             
-			<!-- زر تغيير اللغة -->
+          <li class="nav-search">
+            <button class="search-toggle" type="button" aria-label="Search" aria-expanded="false">🔍</button>
+            <form class="nav-search-form" action="Search-ar.php" method="get" role="search">
+              <input type="search" name="q" placeholder="اكتب كلمة..." autocomplete="off">
+              <button type="submit">بحث</button>
+            </form>
+          </li>
 
+			<!-- زر تغيير اللغة -->
 			<?php if ($LOGGED_IN): ?>
     <li class="dropdown">
-            <a class="dropbtn">حسابي</a>
+            <a class="dropbtn">ملفي الشخصي</a>
             <!-- Profile dropdown list -->
             <ul class="dropdown-content">
-              <li><a href="dashboard.php">حسابي</a></li>
+              <li><a href="dashboard-ar.php">ملفي الشخصي</a></li>
               <li><a href="Favorites.php">المفضلة</a></li>
               <li><a href="My_quizzes.php">اختباراتي</a></li>
               <li><a href="sign/check_session.php?logout=true" onclick="return confirm('هل أنت متأكد أنك تريد تسجيل الخروج؟')">تسجيل خروج</a></li>

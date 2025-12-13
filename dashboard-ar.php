@@ -1,5 +1,14 @@
 <?php
-// Include session check with authentication
+if (session_status() === PHP_SESSION_NONE) {
+  session_start();
+}
+
+// جلب حالة المستخدم من الجلسة
+$LOGGED_IN = isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true;
+$USER_NAME = $_SESSION['user_name'] ?? "";
+$USER_EMAIL = $_SESSION['user_email'] ?? "";
+
+// Include session check with authentication (kept for existing logic)
 include_once 'sign/check_session.php';
 
 // Get user data from session (already validated in check_session.php)
@@ -11,19 +20,42 @@ $login_time = $_SESSION['login_time'] ?? 0;
 // Format login date
 $join_date = $login_time > 0 ? date('F j, Y', $login_time) : 'Unknown';
 ?>
+
+<?php
+$months = [
+    1 => 'يناير', 2 => 'فبراير', 3 => 'مارس',
+    4 => 'أبريل', 5 => 'مايو', 6 => 'يونيو',
+    7 => 'يوليو', 8 => 'أغسطس', 9 => 'سبتمبر',
+    10 => 'أكتوبر', 11 => 'نوفمبر', 12 => 'ديسمبر'
+];
+
+$time = strtotime($join_date);
+$day = date('j', $time);
+$month = $months[(int)date('n', $time)];
+$year = date('Y', $time);
+
+$join_date_ar = "$day $month $year";
+?>
+
 <!doctype html>
-<html lang="en" dir="ltr">
+<html lang="ar" dir="rtl">
  <!-- Head -->
  <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Saudi Culture | My Profile</title>
-  <meta name="description" content="Manage your profile and track your progress on Saudi Culture.">
+  <title>ثقافة السعودية | ملفي</title>
+  <meta name="description" content="إدارة ملفك ومتابعة تقدمك على موقع ثقافة السعودية.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/styles.css">
   <style>
+    /* RTL overrides for Arabic layout */
+    html, body { direction: rtl; text-align: right; }
+    .navbar { flex-direction: row-reverse; }
+    .nav-links { flex-direction: row-reverse; }
+    .dropdown-content { right: 0; left: auto; text-align: right; }
+
     .profile-hero {
       background: linear-gradient(135deg, var(--green-700) 0%, var(--green-600) 100%);
       color: white;
@@ -240,8 +272,8 @@ $join_date = $login_time > 0 ? date('F j, Y', $login_time) : 'Unknown';
   <header class="site-header">
     <!-- Header -->
     <!-- Navigation -->
-    <nav class="navbar" aria-label="Main navigation">
-     <a class="brand" href="index.php" aria-label="Back to home">Saudi Culture</a>
+    <nav class="navbar" aria-label="التنقل الرئيسي">
+     <a class="brand" href="index-ar.php" aria-label="العودة للرئيسية">الثقافة السعودية</a>
     <button class="menu-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Toggle menu">☰</button>
       <!-- Nav list -->
       <ul id="nav-links" class="nav-links">
@@ -251,41 +283,40 @@ $join_date = $login_time > 0 ? date('F j, Y', $login_time) : 'Unknown';
 
 <?php if ($LOGGED_IN): ?>
     <li class="dropdown">
-            <a class="dropbtn">My profile</a>
+            <a class="dropbtn">ملفي الشخصي</a>
             <!-- Profile dropdown list -->
             <ul class="dropdown-content">
-              <li><a href="dashboard.php">My profile</a></li>
-              <li><a href="Favorites.php">Favorites</a></li>
-              <li><a href="My_quizzes.php">My Quizzes</a></li>
-              <li><a href="sign/check_session.php?logout=true" onclick="return confirm('Are you sure you want to logout?')">Logout</a></li>
+              <li><a href="dashboard-ar.php">ملفي الشخصي</a></li>
+              <li><a href="Favorites.php">المفضلة</a></li>
+              <li><a href="My_quizzes.php">اختباراتي</a></li>
+              <li><a href="sign/check_session.php?logout=true" onclick="return confirm('هل أنت متأكد أنك تريد تسجيل الخروج؟')">تسجيل الخروج</a></li>
             </ul>
           </li>
     
 <?php else: ?>
-    <?php if ($LOGGED_IN): ?>
-<?php else: ?>
-    <li><a href="/sign/SignUp_LogIn_Form.html">Login</a></li>
+    <li><a href="/sign/SignUp_LogIn_Form.html">تسجيل الدخول</a></li>
 <?php endif; ?>
 
-<?php endif; ?>
+<li><a href="quiz/QUIZ-ar.php">الاختبارات</a></li>
 
-      <li><a href="quiz/QUIZ-en.php">Quizzes</a></li>
-            <li class="dropdown">
-                <a class="dropbtn">Questions</a>
-                <!-- Questions dropdown list -->
-                <ul class="dropdown-content">
-                    <li><a href="General.php">General Questions</a></li>
-                    <li><a href="North.php">Northern Questions</a></li>
-                    <li><a href="South.php">Southern Questions</a></li>
-                    <li><a href="West.php">Western Questions</a></li>
-                    <li><a href="East.php">Eastern Questions</a></li>
-                    <li><a href="Central.php">Central Questions</a></li>
-                </ul>
-            </li>
-     <li><a href="index.php">Home</a></li>
-           <li><a href="dashboard-ar.php" style="font-weight:700">اللغة العربية</a></li>
-    </ul>
-   </nav>
+       <li class="dropdown">
+                    <a class="dropbtn">الأسئلة</a>
+                    <ul class="dropdown-content" role="menu">
+                        <li><a href="../General-ar.php">أسئلة عامة</a></li>
+                        <li><a href="../North-ar.php">أسئلة المنطقة الشمالية</a></li>
+                        <li><a href="../South-ar.php">أسئلة المنطقة الجنوبية</a></li>
+                        <li><a href="../West-ar.php">أسئلة المنطقة الغربية</a></li>
+                        <li><a href="../East-ar.php">أسئلة المنطقة الشرقية</a></li>
+                        <li><a href="../Central-ar.php">أسئلة المنطقة الوسطى</a></li>
+                    </ul>
+                </li>
+
+        <li><a href="index-ar.php">الرئيسية</a></li>
+
+        <!-- زر تبديل اللغة — يفتح الصفحة الإنجليزية المطابقة -->
+        <li><a href="East.php" style="font-weight:700">English</a></li>
+      </ul>
+    </nav>
   </header>
 
   <!-- Profile Hero -->
@@ -294,14 +325,14 @@ $join_date = $login_time > 0 ? date('F j, Y', $login_time) : 'Unknown';
       <div class="profile-header">
         <div class="profile-avatar">👤</div>
         <div class="profile-info">
-          <h1><?php echo htmlspecialchars($username); ?></h1>
-          <p><?php echo htmlspecialchars($email); ?></p>
-          <p style="font-size: 0.95rem;">Member since <?php echo $join_date; ?></p>
-        </div>
-        <div class="profile-actions">
-          <button onclick="document.getElementById('editModal').style.display='flex'">Edit Profile</button>
-          <button class="logout" onclick="logout()">Logout</button>
-        </div>
+              <h1><?php echo htmlspecialchars($username); ?></h1>
+              <p><?php echo htmlspecialchars($email); ?></p>
+              <p style="font-size: 0.95rem;">عضو منذ <?php echo $join_date_ar; ?></p>
+            </div>
+            <div class="profile-actions">
+              <button onclick="document.getElementById('editModal').style.display='flex'">تعديل الملف الشخصي</button>
+              <button class="logout" onclick="logout()">تسجيل الخروج</button>
+            </div>
       </div>
     </div>
   </div>
@@ -309,57 +340,57 @@ $join_date = $login_time > 0 ? date('F j, Y', $login_time) : 'Unknown';
   <!-- Main Content -->
   <main class="container">
     <!-- Statistics -->
-    <h2 class="section-title">Your Progress</h2>
+    <h2 class="section-title">تقدمك</h2>
     <div class="dashboard-grid">
       <div class="stat-card">
         <div class="icon">📚</div>
         <div class="number">0</div>
-        <div class="label">Quizzes Completed</div>
+        <div class="label">الإختبارات المكتملة</div>
       </div>
       <div class="stat-card">
         <div class="icon">⭐</div>
         <div class="number">0</div>
-        <div class="label">Correct Answers</div>
+        <div class="label">الأجوبة الصحيحة</div>
       </div>
     </div>
     <!-- Profile Settings -->
-    <h2 class="section-title">Profile Settings</h2>
+    <h2 class="section-title">إعدادات الملف الشخصي</h2>
     <div class="profile-section">
-      <h3 style="margin-top: 0; color: var(--green-700);">Account Information</h3>
+      <h3 style="margin-top: 0; color: var(--green-700);">معلومات الحساب</h3>
       
       <div class="form-group">
-        <label>Username</label>
+        <label>اسم المستخدم</label>
         <input type="text" value="<?php echo htmlspecialchars($username); ?>" disabled style="background: var(--sand-100); cursor: not-allowed;">
       </div>
       <div class="form-group">
-        <label>Email</label>
+        <label>البريد الإلكتروني</label>
         <input type="email" value="<?php echo htmlspecialchars($email); ?>" disabled style="background: var(--sand-100); cursor: not-allowed;">
       </div>
-      <p style="color: var(--text-700); font-size: 0.9rem; margin-top: 1rem;">Click "Edit Profile" to update your information.</p>
+      <p style="color: var(--text-700); font-size: 0.9rem; margin-top: 1rem;">اضغط "تعديل الملف الشخصي" لتحديث معلوماتك.</p>
       <div class="profile-actions">
-          <button onclick="document.getElementById('editModal').style.display='flex'">Edit Profile</button>
-          <button class="logout" onclick="logout()">Logout</button>
+          <button onclick="document.getElementById('editModal').style.display='flex'">تعديل الملف الشخصي</button>
+          <button class="logout" onclick="logout()">تسجيل الخروج</button>
         </div>
     </div>
     <!-- Quick Links -->
-    <h2 class="section-title">Quick Links</h2>
+    <h2 class="section-title">روابط سريعة</h2>
     <div class="dashboard-grid">
       <a href="quiz/QUIZ-en.php" style="text-decoration: none;">
         <div class="stat-card" style="cursor: pointer; transition: transform 0.2s;">
           <div class="icon">📝</div>
-          <div class="label" style="font-size: 1rem; font-weight: 600;">Start a Quiz</div>
+          <div class="label" style="font-size: 1rem; font-weight: 600;">ابدأ اختبارًا</div>
         </div>
       </a>
       <a href="General.php" style="text-decoration: none;">
         <div class="stat-card" style="cursor: pointer; transition: transform 0.2s;">
           <div class="icon">🗺️</div>
-          <div class="label" style="font-size: 1rem; font-weight: 600;">Explore Regions</div>
+          <div class="label" style="font-size: 1rem; font-weight: 600;">استكشف المناطق</div>
         </div>
       </a>
       <a href="index.php" style="text-decoration: none;">
         <div class="stat-card" style="cursor: pointer; transition: transform 0.2s;">
           <div class="icon">🏠</div>
-          <div class="label" style="font-size: 1rem; font-weight: 600;">Back to Home</div>
+          <div class="label" style="font-size: 1rem; font-weight: 600;">العودة للرئيسية</div>
         </div>
       </a>
     </div>
@@ -368,38 +399,38 @@ $join_date = $login_time > 0 ? date('F j, Y', $login_time) : 'Unknown';
   <!-- Edit Profile Modal -->
   <div id="editModal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center; padding: 1rem;">
     <div style="background: white; border-radius: 1rem; padding: 2rem; max-width: 500px; width: 100%; box-shadow: 0 20px 60px rgba(0,0,0,0.3);">
-      <h2 style="margin-top: 0; color: var(--green-700);">Edit Profile</h2>
+      <h2 style="margin-top: 0; color: var(--green-700);">تعديل الملف الشخصي</h2>
       <form style="display: flex; flex-direction: column; gap: 1rem;">
         <div class="form-group">
-          <label>Username</label>
-          <input type="text" value="<?php echo htmlspecialchars($username); ?>" placeholder="Enter your username">
+          <label>اسم المستخدم</label>
+          <input type="text" value="<?php echo htmlspecialchars($username); ?>" placeholder="أدخل اسم المستخدم">
         </div>
         <div class="form-group">
-          <label>Email</label>
-          <input type="email" value="<?php echo htmlspecialchars($email); ?>" placeholder="Enter your email">
+          <label>البريد الإلكتروني</label>
+          <input type="email" value="<?php echo htmlspecialchars($email); ?>" placeholder="أدخل البريد الإلكتروني">
         </div>
         <div class="form-group">
-          <label>Password (leave empty to keep current)</label>
-          <input type="password" placeholder="Enter new password">
+          <label>كلمة المرور (اتركها فارغة إذا لم تتغير)</label>
+          <input type="password" placeholder="أدخل كلمة مرور جديدة">
         </div>
         <div style="display: flex; gap: 0.75rem;">
-          <button type="button" style="background: var(--gold-500); color: #1a1a1a; border: none; padding: 0.6rem 1rem; border-radius: 0.6rem; font-weight: 600; cursor: pointer; flex: 1;">Save Changes</button>
-          <button type="button" onclick="document.getElementById('editModal').style.display='none'" style="background: var(--sand-200); color: var(--text-700); border: none; padding: 0.6rem 1rem; border-radius: 0.6rem; font-weight: 600; cursor: pointer; flex: 1;">Cancel</button>
+          <button type="button" style="background: var(--gold-500); color: #1a1a1a; border: none; padding: 0.6rem 1rem; border-radius: 0.6rem; font-weight: 600; cursor: pointer; flex: 1;">حفظ التغييرات</button>
+          <button type="button" onclick="document.getElementById('editModal').style.display='none'" style="background: var(--sand-200); color: var(--text-700); border: none; padding: 0.6rem 1rem; border-radius: 0.6rem; font-weight: 600; cursor: pointer; flex: 1;">إلغاء</button>
         </div>
       </form>
     </div>
   </div>
 
   <!-- Footer -->
-  <footer class="site-footer" aria-label="footer">
+  <footer class="site-footer" aria-label="تذييل الصفحة">
    <div class="container footer-grid">
     <div>
-     <strong>Saudi Culture</strong>
-     <p>© 2025 All rights reserved</p>
+     <strong>ثقافة السعودية</strong>
+     <p>© 2025 جميع الحقوق محفوظة</p>
     </div>
     <ul class="footer-links">
-     <li><a href="index.php">Back to Home</a></li>
-     <li><a href="dashboard.php">My Profile</a></li>
+     <li><a href="index-ar.php">العودة للرئيسية</a></li>
+     <li><a href="dashboard-ar.php">ملفي الشخصي</a></li>
     </ul>
    </div>
   </footer>

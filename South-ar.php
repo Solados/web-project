@@ -9,6 +9,16 @@ $USER_NAME = $_SESSION['user_name'] ?? "";
 $USER_EMAIL = $_SESSION['user_email'] ?? "";
 ?>
 
+<?php
+if (session_status() === PHP_SESSION_NONE) {
+  session_start();
+}
+
+// جلب حالة المستخدم من الجلسة
+$LOGGED_IN = isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true;
+$USER_NAME = $_SESSION['user_name'] ?? "";
+$USER_EMAIL = $_SESSION['user_email'] ?? "";
+?>
 <!doctype html>
 <html lang="ar" dir="rtl">
 <!-- Head -->
@@ -46,12 +56,21 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
       <button class="menu-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="قائمة">☰</button>
 
       <ul id="nav-links" class="nav-links">
+
+          <li class="nav-search">
+            <button class="search-toggle" type="button" aria-label="Search" aria-expanded="false">🔍</button>
+            <form class="nav-search-form" action="Search-ar.php" method="get" role="search">
+              <input type="search" name="q" placeholder="اكتب كلمة..." autocomplete="off">
+              <button type="submit">بحث</button>
+            </form>
+          </li>
+
         <?php if ($LOGGED_IN): ?>
     <li class="dropdown">
-            <a class="dropbtn">حسابي</a>
+            <a class="dropbtn">ملفي الشخصي</a>
             <!-- Profile dropdown list -->
             <ul class="dropdown-content">
-              <li><a href="dashboard.php">حسابي</a></li>
+              <li><a href="dashboard-ar.php">ملفي الشخصي</a></li>
               <li><a href="Favorites.php">المفضلة</a></li>
               <li><a href="My_quizzes.php">اختباراتي</a></li>
               <li><a href="sign/check_session.php?logout=true" onclick="return confirm('هل أنت متأكد أنك تريد تسجيل الخروج؟')">تسجيل خروج</a></li>

@@ -1,4 +1,4 @@
-<<?php
+<?php
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
@@ -28,8 +28,6 @@ if (!$LOGGED_IN) {
   <link rel="stylesheet" href="../assets/styles.css">
   <link rel="stylesheet" href="../assets/quiz-style.css">
 
-
-  <!-- سريع: بعض تعديلات RTL خفيفة لضمان ترتيب-navbar والبطاقات -->
 <style>
   /* override direction for the whole page */
   html, body { direction: rtl; }
@@ -38,25 +36,26 @@ if (!$LOGGED_IN) {
   .navbar .brand { order: 0; }
   .feature-card h3 { text-align: right; }
   .quiz-gold-box { text-align: right; }
-  .qs-pagination { direction: ltr; }
+  [dir="rtl"] .qs-pagination { direction: ltr; }
 
   /* تعديل شكل جميع select العربية */
-.quiz-gold-select {
-  width: 100%;
-  padding: 12px 14px;
-  border-radius: 12px;
-  border: 1.8px solid rgba(215,181,109,0.55);
-  background: linear-gradient(180deg, #fff9ef, #f7e9cd);
-  color: #4b2d1b;
-  font-size: 15px;
-  appearance: none;
-  cursor: pointer;
-  transition: .25s ease;
+  .quiz-gold-select {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 12px;
+    border: 1.8px solid rgba(215,181,109,0.55);
+    background: linear-gradient(180deg, #fff9ef, #f7e9cd);
+    color: #4b2d1b;
+    font-size: 15px;
+    appearance: none;
+    cursor: pointer;
+    transition: .25s ease;
+    background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L6 6L11 1' stroke='%23b38a42' stroke-width='2'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: left 14px center;
+  }
 
-  background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L6 6L11 1' stroke='%23b38a42' stroke-width='2'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: left 14px center;
-}
+
 </style>
 
 </head>
@@ -67,15 +66,13 @@ if (!$LOGGED_IN) {
       <a class="brand" href="#top" aria-label="Back to top">ثقافة السعودية</a>
       <button class="menu-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Toggle menu">☰</button>
       <ul id="nav-links" class="nav-links">
-        <!-- Language switch: links to the English page and current Arabic page -->
-
 
         <?php if ($LOGGED_IN): ?>
     <li class="dropdown">
-            <a class="dropbtn">حسابي</a>
+            <a class="dropbtn">ملفي الشخصي</a>
             <!-- Profile dropdown list -->
             <ul class="dropdown-content">
-              <li><a href="../dashboard.php">حسابي</a></li>
+              <li><a href="../dashboard-ar.php">ملفي الشخصي</a></li>
               <li><a href="Favorites.php">المفضلة</a></li>
               <li><a href="My_quizzes.php">اختباراتي</a></li>
               <li><a href="sign/check_session.php?logout=true" onclick="return confirm('هل أنت متأكد أنك تريد تسجيل الخروج؟')">تسجيل خروج</a></li>
@@ -86,10 +83,10 @@ if (!$LOGGED_IN) {
 <?php endif; ?>
         <li><a href="QUIZ-ar.php">الاختبارات</a></li>
 
-        <li class="dropdown">
+        <li class="dropdown" >
           <a class="dropbtn">الأسئلة</a>
           <ul class="dropdown-content">
-          <li><a href="../General-ar.php">أسئلة عامة</a></li>
+            <li><a href="../General-ar.php">أسئلة عامة</a></li>
             <li><a href="../North-ar.php">أسئلة المنطقة الشمالية</a></li>
             <li><a href="../South-ar.php">أسئلة المنطقة الجنوبية</a></li>
             <li><a href="../West-ar.php">أسئلة المنطقة الغربية</a></li>
@@ -99,7 +96,7 @@ if (!$LOGGED_IN) {
         </li>
 
         <li><a href="../index-ar.php">الرئيسية</a></li>
-                <li><a href="QUIZ-en.php" style="font-weight:700">English</a></li>
+        <li><a href="QUIZ-en.php" style="font-weight:700">English</a></li>
 
       </ul>
     </nav>
@@ -124,7 +121,7 @@ if (!$LOGGED_IN) {
           </select>
         </div>
 
-        <label class="quiz-gold-label">المصدر / المنطقة:</label>
+        <label class="quiz-gold-label"> فئة السؤال :</label>
         <div class="select-wrapper">
           <select id="regionFilter" class="quiz-gold-select">
             <option value="Words">كلمات</option>
@@ -145,7 +142,6 @@ if (!$LOGGED_IN) {
             <option value="Meaning_question">معنى الكلمة</option>
           </select>
         </div>
-
 
         <!-- زر البداية -->
         <button id="startBtn" class="quiz-gold-btn">ابدأ الاختبار</button>
@@ -194,7 +190,6 @@ if (!$LOGGED_IN) {
     const count = Number(document.getElementById('questionCount').value) || 5;
     const regionSelect = document.getElementById('regionFilter');
     const regionValue = regionSelect ? regionSelect.value : 'Words';
-    // Arabic page only uses these datasets
     const regionFiles = ['Words','Phrases','Proverbs'];
 
     let source = 'Words';
@@ -317,16 +312,12 @@ if (!$LOGGED_IN) {
       const box = document.createElement('div');
       box.className = 'feature-card';
 
-      // keep the question text as-is (do not translate/change it)
       const inferredType = (q.type && q.type.trim()) ? q.type.trim() : (Array.isArray(q.choices) && q.choices.length > 0 ? 'MCQ' : 'Open-ended');
 
-      // Note: preserve question text direction exactly as original dataset requested.
-      // We'll keep dir="ltr" so dataset questions (likely English) render correctly.
       let html = `<h3 dir="ltr">${i+1}. ${q.question} <span class="q-badge" style="font-size:.7rem;padding:.15rem .4rem;margin-left:.6rem;border-radius:4px;background:#efefef;color:#333;border:1px solid #ddd">${inferredType}</span></h3>`;
 
       if (Array.isArray(q.choices) && q.choices.length > 0) {
         q.choices.forEach(choice => {
-          // keep choice text untouched as well
           html += `
           <label style="display:block;margin:.25rem 0; text-align:right;" dir="rtl">
             <input type="radio" name="q${i}" value="${choice}"> ${choice}
@@ -335,7 +326,7 @@ if (!$LOGGED_IN) {
       } else {
         html += `
           <div style="margin-top:.5rem">
-            <textarea name="q${i}_open" placeholder="اكتب إجابتك هنا..." 
+            <textarea name="q${i}_open" placeholder="اكتب إجابتك هنا..."
               style="width:100%;min-height:88px;padding:.5rem;border:1px solid #e0e0e0;border-radius:6px;font-size:1rem;font-family:inherit;resize:vertical"></textarea>
           </div>`;
       }
@@ -352,15 +343,15 @@ if (!$LOGGED_IN) {
     checkBtn.style.display = 'inline-block';
     checkBtn.style.marginTop = '1rem';
 
-    checkBtn.addEventListener('click', (e) => { 
-      e.preventDefault(); 
-      checkAnswers(); 
+    checkBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      checkAnswers();
     });
 
     container.appendChild(checkBtn);
   }
 
-function checkAnswers(){
+  function checkAnswers(){
     let score = 0;
 
     for(let i=0;i<selectedQuestions.length;i++){
@@ -387,25 +378,41 @@ function checkAnswers(){
         }
       }
 
-      // 🔥 تلوين صندوق السؤال بدون تغيير أي شيء ثاني
       const box = document.getElementById("quizContainer").children[i];
-      if (isCorrect){
-        box.style.background = "rgba(0,255,0,0.2)"; // أخضر شفاف
-      } else {
-        box.style.background = "rgba(255,0,0,0.2)"; // أحمر شفاف
+      if (box) {
+        if (isCorrect){
+          box.style.background = "rgba(0,255,0,0.12)";
+        } else {
+          box.style.background = "rgba(255,0,0,0.08)";
+        }
+        box.style.transition = "0.3s";
       }
-      box.style.transition = "0.3s";
     }
 
     const total = selectedQuestions.length || 1;
     const percent = Math.round((score/total)*100);
 
-    // ⚠ استبدال طريقة كتابة النتيجة — لا نغيّر شيء آخر
-    document.getElementById('result').innerHTML =
-      `نتيجتك: <strong>${score} / ${total} (${percent}%)</strong><br><br>
-       <canvas id="scoreChart" style="max-width:300px;margin:0 auto;display:block;"></canvas>`;
 
-    // 🔥 تحميل Chart.js تلقائياً إذا لم يكن موجود
+  document.getElementById('result').innerHTML = `
+<div class="score-box animate" data-correct="${score}" data-wrong="${total - score}" data-total="${total}">
+    <h2 class="score-title">نتيجتك</h2>
+    <div class="score-values">
+        <span class="score-main">${score} / ${total}</span>
+    </div>
+
+    <div class="tooltip">
+        الإجابات الصحيحة: ${score}<br>
+        الإجابات الخاطئة: ${total - score}<br>
+        إجمالي الأسئلة: ${total}
+    </div>
+</div>
+
+<canvas id="scoreChart" style="max-width:300px;margin:20px auto;display:block;"></canvas>
+
+
+`;
+
+    // تحميل Chart.js تلقائياً إذا لم يكن موجود
     function loadChart(callback){
         if (window.Chart){
             callback();
@@ -414,45 +421,52 @@ function checkAnswers(){
         const s = document.createElement("script");
         s.src = "https://cdn.jsdelivr.net/npm/chart.js";
         s.onload = callback;
+        s.onerror = function(){ console.error('فشل تحميل Chart.js من CDN'); callback(); };
         document.body.appendChild(s);
     }
 
     loadChart(() => {
-        const ctx = document.getElementById("scoreChart");
+        const canvas = document.getElementById("scoreChart");
+        if (!canvas) return;
 
-        // حذف أي شارت قديم
+        // تدمير الشارت السابق إذا وجد
         if (window.quizChart){
             window.quizChart.destroy();
         }
 
-        // رسم الشارت
-        window.quizChart = new Chart(ctx, {
-            type: "pie",
+        // أنشئ الشارت (مرّر عنصر الكانفس مباشرة)
+        window.quizChart = new Chart(canvas, {
+            type: "doughnut",
             data: {
                 labels: ["صحيح", "خاطئ"],
                 datasets: [{
-                    data: [score, total - score],
-                    backgroundColor: ["#4CAF50", "#F44336"]
+                    data: [score, Math.max(0, total - score)],
+                    backgroundColor: ["#1A7F3C", "#C9A86A"],
+                    borderWidth: 2,
+                    hoverOffset: 10
                 }]
             },
             options: {
                 responsive: true,
+                 cutout: "65%", 
                 plugins: {
                     legend: { position: "bottom" }
                 }
-            }
-        });
+         
+              }
+        });
+        // إضافة أزرار المشاركة
+        const shareContainerId = "shareResultContainer";
+        let shareContainer = document.getElementById(shareContainerId);
+        if (!shareContainer){
+            shareContainer = document.createElement("div");
+            shareContainer.id = shareContainerId;
+            shareContainer.style.textAlign = "center";
+            shareContainer.style.marginTop = "15px";
+            document.getElementById('result').appendChild(shareContainer);
+        }
 
-//  إضافة أزرار المشاركة
-const shareContainerId = "shareResultContainer";
-let shareContainer = document.getElementById(shareContainerId);
-if (!shareContainer){
-    shareContainer = document.createElement("div");
-    shareContainer.id = shareContainerId;
-    shareContainer.style.textAlign = "center";
-    shareContainer.style.marginTop = "15px";
-    document.getElementById('result').appendChild(shareContainer);
-}
+        
 
 // الرابط والنص للمشاركة
 const shareText = `لقد سجلت  :${score} / ${total} (${percent}%): في الاختبار! جرب بنفسك ${window.location.href}`;
@@ -517,9 +531,9 @@ shareContainer.innerHTML = `
 
   document.addEventListener('DOMContentLoaded', () => {
     const startBtn = document.getElementById('startBtn');
-    if(startBtn) startBtn.addEventListener('click', (e) => { 
-      e.preventDefault(); 
-      startQuiz(); 
+    if(startBtn) startBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      startQuiz();
     });
 
     async function populateTypeFilter() {

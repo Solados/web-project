@@ -260,3 +260,75 @@ margin-top: 18px;
   0% { left: -120%; }
   100% { left: 150%; }
 }
+/* الصندوق */
+.score-box {
+  background: #fff;
+  padding: 20px;
+  margin: 20px auto;
+  width: 260px;
+  border-radius: 15px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+  font-family: "Poppins", sans-serif;
+  position: relative;
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.5s ease;
+}
+
+.score-box.animate {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* العنوان */
+.score-title {
+  margin: 0 0 10px;
+  font-size: 22px;
+  color: #444;
+  font-weight: 600;
+}
+
+/* الرقم */
+.score-main {
+  font-size: 32px;
+  font-weight: bold;
+  color: #333;
+}
+
+/* التولتيب */
+.tooltip {
+  position: absolute;
+  bottom: 110%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #333;
+  color: #fff;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  white-space: nowrap;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  opacity: 0;
+  pointer-events: none;
+  transition: 0.3s ease;
+}
+
+/* السهم */
+.tooltip::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 6px;
+  border-style: solid;
+  border-color: #333 transparent transparent transparent;
+}
+
+/* يظهر التولتيب عند مرور الماوس */
+.score-box:hover .tooltip {
+  opacity: 1;
+  bottom: 120%;
+}
