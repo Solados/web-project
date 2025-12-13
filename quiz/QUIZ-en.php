@@ -349,15 +349,43 @@ if (!$LOGGED_IN) {
       const box = document.createElement('div');
       box.className = 'feature-card';
 
-      // determine a short type label for the badge
-      const inferredType = (q.type && q.type.trim()) ? q.type.trim() : (Array.isArray(q.choices) && q.choices.length > 0 ? 'MCQ' : 'Open-ended');
+      // Prepare choices (copy if provided). We'll derive options from the answer
+      // when a question appears to be MCQ but has no explicit `choices`.
+      let choices = Array.isArray(q.choices) ? q.choices.slice() : [];
+      if (choices.length === 0) {
+        // Attempt to synthesize choices from the answer when possible
+        if (typeof q.answer === 'string' && q.answer.trim() !== '') {
+          const likelyMulti = isMultiple(q);
+          if (likelyMulti) {
+            choices = q.answer.split(/\s*\/\s*|\s*,\s*|\s+and\s+/i).map(s => s.trim()).filter(Boolean);
+          } else {
+            // for single-correct, if answer contains multiple candidates, use them as options
+            choices = q.answer.split(/\s*\/\s*|\s*,\s*/).map(s => s.trim()).filter(Boolean);
+          }
+        }
+      }
+
+      // Determine multiplicity now that we may have choices
       const multi = isMultiple(q);
-      const badgeText = multi ? 'MCQ (multiple correct)' : (inferredType === 'MCQ' ? 'MCQ (one correct)' : inferredType);
+
+      // If choices were synthesized but only one option resulted, treat as open-ended
+      if (choices.length < 2) choices = [];
+
+      // Decide badge text: prefer explicit type when sensible, otherwise infer
+      let badgeText = 'Open-ended';
+      const explicitType = (q.type && String(q.type).trim()) ? String(q.type).trim() : null;
+      if (choices.length > 1) {
+        badgeText = multi ? 'MCQ (multiple correct)' : 'MCQ (one correct)';
+      } else if (explicitType) {
+        // don't show MCQ badge if there are no choices
+        if (/mcq/i.test(explicitType) && choices.length < 2) badgeText = 'Open-ended';
+        else badgeText = explicitType;
+      }
+
       let html = `<h3 dir="ltr">${i+1}. ${q.question} <span class="q-badge" style="font-size:.7rem;padding:.15rem .4rem;margin-left:.6rem;border-radius:4px;background:#efefef;color:#333;border:1px solid #ddd">${badgeText}</span></h3>`;
 
-      // If the question has choices, render radios; otherwise render an open-answer textarea
-      if (Array.isArray(q.choices) && q.choices.length > 0) {
-        q.choices.forEach(choice => {
+      if (choices.length > 0) {
+        choices.forEach(choice => {
           if (multi) {
             html += `\n          <label style="display:block;margin:.25rem 0">\n            <input type="checkbox" name="q${i}" value="${choice}"> ${choice}\n          </label>`;
           } else {

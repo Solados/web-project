@@ -147,6 +147,8 @@ const builtin = [
       if (k in hmap) { typeIdx = hmap[k]; break; }
     }
 
+    // randomize row order so selecting "all" samples mixed types
+    shuffle(rows);
     for (const r of rows) {
       if (qIdx === undefined) break;
       if (!r[qIdx]) continue;
