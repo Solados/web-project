@@ -57,7 +57,7 @@ if (!$LOGGED_IN) {
 </style>
 
 </head>
-<body>
+<body class="rtl">
   <!-- Header -->
   <header class="site-header">
     <nav class="navbar" aria-label="Main navigation">
@@ -66,12 +66,19 @@ if (!$LOGGED_IN) {
       <ul id="nav-links" class="nav-links">
 
         <?php if ($LOGGED_IN): ?>
-          <li><a href="/dashboard.php">حسابي</a></li>
-          <li><a href="/sign/check_session.php?logout=true" onclick="return confirm('هل أنت متأكد أنك تريد تسجيل الخروج؟')">تسجيل الخروج</a></li>
-        <?php else: ?>
-          <li><a href="/sign/SignUp_LogIn_Form.html">تسجيل الدخول</a></li>
-        <?php endif; ?>
-
+    <li class="dropdown">
+            <a class="dropbtn">حسابي</a>
+            <!-- Profile dropdown list -->
+            <ul class="dropdown-content">
+              <li><a href="../dashboard.php">حسابي</a></li>
+              <li><a href="Favorites.php">المفضلة</a></li>
+              <li><a href="My_quizzes.php">اختباراتي</a></li>
+              <li><a href="sign/check_session.php?logout=true" onclick="return confirm('هل أنت متأكد أنك تريد تسجيل الخروج؟')">تسجيل خروج</a></li>
+            </ul>
+          </li>
+<?php else: ?>
+    <li><a href="/sign/SignUp_LogIn_Form.html">تسجيل الدخول</a></li>
+<?php endif; ?>
         <li><a href="QUIZ-ar.php">الاختبارات</a></li>
 
         <li class="dropdown">
@@ -125,9 +132,12 @@ if (!$LOGGED_IN) {
         <div class="select-wrapper">
           <select id="typeFilter" class="quiz-gold-select">
             <option value="all">كل الأنواع</option>
-            <option value="mcq">اختيار من متعدد</option>
-            <option value="fill">املأ الفراغ</option>
-            <option value="multi">اختيارات متعددة</option>
+            <option value="Location_Recognition_question">تعرّف على الموقع</option>
+            <option value="Cultural_Interpretation_question">التفسير الثقافي</option>
+            <option value="Contextual_Usage_question">الاستخدام السياقي</option>
+            <option value="Fill_in_Blank_question">املأ الفراغ (حقل تعبئة)</option>
+            <option value="True_False_question">صح أم خطأ</option>
+            <option value="Meaning_question">معنى الكلمة</option>
           </select>
         </div>
 
@@ -204,7 +214,11 @@ if (!$LOGGED_IN) {
     const mappedType = mapTypeFilter(type);
     const category = document.getElementById('categoryFilter') ? document.getElementById('categoryFilter').value : 'all';
 
-    if (typeof fetchQuestions === 'function'){
+    // Prefer server-side fetching for Arabic datasets when a specific filter is selected
+    const arabicDatasets = ['Words','Phrases','Proverbs'];
+    const preferServerForArabicFilter = arabicDatasets.includes(source) && mappedType && mappedType !== 'all';
+
+    if (!preferServerForArabicFilter && typeof fetchQuestions === 'function'){
       try{
           const clientQ = await fetchQuestions(source, count, lang, mappedType, category);
         if(Array.isArray(clientQ) && clientQ.length>0){
@@ -231,7 +245,16 @@ if (!$LOGGED_IN) {
     const timeout = setTimeout(() => controller.abort(), 6000);
 
     try {
-      const qs = new URLSearchParams({ source: source, count: String(count), type: mappedType === 'all' ? '' : mappedType, category: category || '' });
+      // Build query params; for Arabic datasets we may send `arabic_filter` for dialect/block filters
+      const qsObj = { source: source, count: String(count), type: mappedType === 'all' ? '' : mappedType, category: category || '' };
+      if (['Words','Phrases','Proverbs'].includes(source) && mappedType && mappedType !== 'all') {
+        const blockCols = ['Location_Recognition_question','Cultural_Interpretation_question','Contextual_Usage_question','Fill_in_Blank_question','True_False_question','Meaning_question'];
+        if (blockCols.includes(mappedType) || !['MCQ (one correct)','MCQ (multiple correct)','Open-ended'].includes(mappedType)) {
+          qsObj.arabic_filter = mappedType;
+          qsObj.type = '';
+        }
+      }
+      const qs = new URLSearchParams(qsObj);
       const resp = await fetch(`quiz.php?${qs.toString()}`, { signal: controller.signal });
       clearTimeout(timeout);
       if (resp.ok) {
@@ -441,23 +464,68 @@ if (!$LOGGED_IN) {
             document.getElementById('result').appendChild(shareContainer);
         }
 
-        const shareText = `لقد حصلت على ${score} / ${total} (${percent}%) في الاختبار! جرب بنفسك: `;
-        const encodedText = encodeURIComponent(shareText + " " + window.location.href);
-        const encodedURL = encodeURIComponent(window.location.href);
+        
 
-        shareContainer.innerHTML = `
-          <a href="https://x.com/intent/tweet?text=${encodedText}" target="_blank" style="margin:0 5px;">
-            <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/x.svg" width="32" height="32" alt="x" style="vertical-align:middle;" />
-          </a>
-          <a href="https://www.facebook.com/sharer/sharer.php?u=${encodedURL}" target="_blank" style="margin:0 5px;">
-            <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/facebook.svg" width="32" height="32" alt="Facebook" style="vertical-align:middle;" />
-          </a>
-          <a href="https://api.whatsapp.com/send?text=${encodedText}" target="_blank" style="margin:0 5px;">
-            <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/whatsapp.svg" width="32" height="32" alt="WhatsApp" style="vertical-align:middle;" />
-          </a>
-        `;
-    });
-  }
+// الرابط والنص للمشاركة
+const shareText = `لقد سجلت  :${score} / ${total} (${percent}%): في الاختبار! جرب بنفسك ${window.location.href}`;
+const encodedText = encodeURIComponent(shareText);
+const encodedURL = encodeURIComponent(window.location.href);
+
+// أزرار المشاركة HTML باللوقو الرسمي لكل منصة
+shareContainer.innerHTML = `
+  <a href="https://x.com/intent/tweet?text=${encodedText}" target="_blank" style="margin:0 5px;">
+    <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/x.svg" width="32" height="32" alt="x" style="vertical-align:middle; filter: invert(36%) sepia(97%) saturate(1595%) hue-rotate(176deg) brightness(93%) contrast(95%);" />
+  </a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=${encodedURL}" target="_blank" style="margin:0 5px;">
+    <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/facebook.svg" width="32" height="32" alt="Facebook" style="vertical-align:middle; filter: invert(29%) sepia(72%) saturate(900%) hue-rotate(182deg) brightness(90%) contrast(90%);" />
+  </a>
+
+  <a href="https://api.whatsapp.com/send?text=${encodedText}" target="_blank" style="margin:0 5px;">
+    <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/whatsapp.svg" width="32" height="32" alt="WhatsApp" style="vertical-align:middle; filter: invert(49%) sepia(92%) saturate(510%) hue-rotate(95deg) brightness(93%) contrast(95%);" />
+  </a>
+`;
+    });
+
+  // إرسال النتيجة إلى الخادم لحفظها في ملف الملف الشخصي
+  (async function sendResult() {
+    try {
+      const form = new URLSearchParams();
+      form.append('score', String(score));
+      form.append('total', String(total));
+      const regionEl = document.getElementById('regionFilter');
+      if (regionEl) form.append('source', regionEl.value || '');
+
+      const resp = await fetch('save_quiz_result.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: form.toString()
+      });
+      const data = await resp.json().catch(() => ({}));
+      if (resp.ok && data.success) {
+        // عرض إشعار بسيط
+        const t = document.getElementById('toast');
+        if (t){ t.textContent = 'تم حفظ النتيجة في ملفك الشخصي ✅'; t.style.display='block'; setTimeout(()=>{t.style.display='none'},3000); }
+      } else {
+        const t = document.getElementById('toast');
+        if (t){ t.textContent = 'تعذّر حفظ النتيجة'; t.style.background='#F44336'; t.style.display='block'; setTimeout(()=>{t.style.display='none'},3000); }
+      }
+    } catch (e) {
+      console.warn('save result failed', e);
+    }
+  })();
+
+}
+
+  // Human-friendly Arabic labels for the block question column names
+  const blockLabels = {
+    Location_Recognition_question: 'تعرّف على الموقع',
+    Cultural_Interpretation_question: 'التفسير الثقافي',
+    Contextual_Usage_question: 'الاستخدام السياقي',
+    Fill_in_Blank_question: 'املأ الفراغ',
+    True_False_question: 'صح أم خطأ',
+    Meaning_question: 'معنى الكلمة'
+  };
 
   document.addEventListener('DOMContentLoaded', () => {
     const startBtn = document.getElementById('startBtn');
@@ -471,41 +539,62 @@ if (!$LOGGED_IN) {
       const typeSelect = document.getElementById('typeFilter');
       if (!typeSelect || !regionSelect) return;
       const src = regionSelect.value || 'Words';
-      typeSelect.innerHTML = '';
-      const optAll = document.createElement('option'); optAll.value = 'all'; optAll.textContent = 'كل الأنواع';
-      typeSelect.appendChild(optAll);
-
-      const staticLabels = [
-        { v: 'mcq', t: 'اختيار من متعدد' },
-        { v: 'multi', t: 'اختيارات متعددة (اختَر أكثر من واحد)' },
-        { v: 'fill', t: 'املأ الفراغ' }
-      ];
-      for (const l of staticLabels) {
-        const o = document.createElement('option'); o.value = l.v; o.textContent = l.t; typeSelect.appendChild(o);
+      // Preserve any hardcoded options in the select and only append missing items
+      const existing = new Set(Array.from(typeSelect.options || []).map(o => String(o.value)));
+      if (!existing.has('all')) {
+        const optAll = document.createElement('option'); optAll.value = 'all'; optAll.textContent = 'كل الأنواع';
+        typeSelect.insertBefore(optAll, typeSelect.firstChild || null);
+        existing.add('all');
       }
+      // Do not auto-insert MCQ/multi/fill UI options here; preserve only hardcoded block types
 
-      let types = [];
-      if (typeof fetchQuestionTypes === 'function') {
-        try { types = await fetchQuestionTypes(src); } catch (e) { types = []; }
-      }
-      if ((!types || types.length === 0)) {
+      // If Arabic dataset, try to extract dialects and block-question columns
+      const arabicDatasets = ['Words','Phrases','Proverbs'];
+      if (arabicDatasets.includes(src)) {
         try {
-          const qs = new URLSearchParams({ action: 'types', source: src });
-          const resp = await fetch(`quiz.php?${qs.toString()}`);
+          const csvUrl = `../data/${src}.csv`;
+          const resp = await fetch(csvUrl);
           if (resp.ok) {
-            const data = await resp.json(); if (data && Array.isArray(data.types)) types = data.types;
-          }
-        } catch (e) { /* ignore */ }
-      }
+            const txt = await resp.text();
+            const lines = txt.split(/\r?\n/);
+            if (lines.length > 0) {
+              const header = lines[0].split(/,(?=(?:[^"]*"[^"]*")*[^"]*$)/).map(h => h.replace(/^\"|\"$/g,'').trim());
+              const dialectIdx = header.findIndex(h => h.toLowerCase() === 'dialect type' || h.toLowerCase() === 'dialect_type');
+              const blockCols = ['Location_Recognition_question','Cultural_Interpretation_question','Contextual_Usage_question','Fill_in_Blank_question','True_False_question','Meaning_question'];
 
-      if (types && types.length > 0) {
-        const existing = new Set(Array.from(typeSelect.options).map(o => String(o.value)));
-        for (const t of types) {
-          if (!existing.has(String(t))) {
-            const o = document.createElement('option'); o.value = t; o.textContent = t; typeSelect.appendChild(o);
-            existing.add(String(t));
+              // collect dialects set (only short, sensible values — avoid appending long question blocks)
+              if (dialectIdx >= 0) {
+                const set = new Set();
+                for (let i=1;i<lines.length;i++){
+                  if (!lines[i]) continue;
+                  const cols = lines[i].split(/,(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)/);
+                  let val = (cols[dialectIdx] || '').trim().replace(/^\"|\"$/g,'');
+                  if (!val) continue;
+                  // discard overly long values (likely question text) and values with punctuation
+                  if (val.length > 3) continue;
+                  // accept letters, digits, spaces, parentheses and hyphens
+                  if (!/^[\p{L}\d\-\s()]+$/u.test(val)) continue;
+                  set.add(val);
+                  if (set.size >= 20) break; // safety cap
+                }
+                for (const d of Array.from(set)) {
+                  if (!existing.has(d)) {
+                    const o = document.createElement('option'); o.value = d; o.textContent = d; typeSelect.appendChild(o);
+                    existing.add(d);
+                  }
+                }
+              }
+
+              for (const col of blockCols) {
+                const found = header.find(h => h && h.toLowerCase() === col.toLowerCase());
+                if (found && !existing.has(col)) {
+                  const o = document.createElement('option'); o.value = col; o.textContent = blockLabels[col] || col; typeSelect.appendChild(o);
+                  existing.add(col);
+                }
+              }
+            }
           }
-        }
+        } catch (e) { /* ignore CSV parse errors */ }
       }
     }
 

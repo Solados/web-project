@@ -33,13 +33,16 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
 	</style>
 </head>
 
-<body>
+<body class="rtl">
 
 <!-- Header -->
 <header class="site-header">
 	<nav class="navbar">
 
-		<a class="brand" href="#top">الثقافة السعودية</a>
+		<a class="brand" href="#top">
+                <img src="image/Hawiyah.png" alt="Logo" class="site-logo">
+
+    </a>
 
 		<button class="menu-toggle">☰</button>
 
@@ -48,8 +51,16 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
 			<!-- زر تغيير اللغة -->
 
 			<?php if ($LOGGED_IN): ?>
-    <li><a href="/dashboard.php">حسابي</a></li>
-    <li><a href="/sign/check_session.php?logout=true" onclick="return confirm('هل أنت متأكد أنك تريد تسجيل الخروج؟')">تسجيل الخروج</a></li>
+    <li class="dropdown">
+            <a class="dropbtn">حسابي</a>
+            <!-- Profile dropdown list -->
+            <ul class="dropdown-content">
+              <li><a href="dashboard.php">حسابي</a></li>
+              <li><a href="Favorites.php">المفضلة</a></li>
+              <li><a href="My_quizzes.php">اختباراتي</a></li>
+              <li><a href="sign/check_session.php?logout=true" onclick="return confirm('هل أنت متأكد أنك تريد تسجيل الخروج؟')">تسجيل خروج</a></li>
+            </ul>
+          </li>
 <?php else: ?>
     <li><a href="/sign/SignUp_LogIn_Form.html">تسجيل الدخول</a></li>
 <?php endif; ?>
@@ -107,7 +118,12 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
 				<div class="topic">جدة</div>
 				<div class="des">ثقافة بحرية وتنوع حضاري مميز.</div>
 			</div>
-		</div>
+		  	<!-- Link: Central -->
+					<div class="buttons">
+						<button type="button" onclick="location.href='Central.php'">Explore</button>
+					</div>
+				</div>
+			</div>
 
 		<div class="item">
 			<img src="image/South.jpeg" alt="المنطقة الجنوبية">

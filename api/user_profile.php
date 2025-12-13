@@ -53,11 +53,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action'])) {
             }
             
             if (isset($row[1]) && trim($row[1]) === $email) {
+                $quiz_records = json_decode($row[3] ?? '[]', true) ?: [];
+                $points_sum = 0;
+                if (is_array($quiz_records)) {
+                    foreach ($quiz_records as $rec) {
+                        if (is_array($rec) && isset($rec['score'])) $points_sum += intval($rec['score']);
+                        elseif (is_numeric($rec)) $points_sum += intval($rec);
+                    }
+                }
+
                 $profile_data = [
                     'name' => $row[0] ?? '',
                     'email' => $row[1] ?? '',
-                    'quizzes_completed' => isset($row[3]) ? count(json_decode($row[3], true) ?? []) : 0,
-                    'points_earned' => 0, // Can be calculated from quiz records
+                    'quizzes_completed' => is_array($quiz_records) ? count($quiz_records) : 0,
+                    'points_earned' => $points_sum,
                     'achievements' => 0
                 ];
                 break;
@@ -101,8 +110,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action'])) {
             }
             
             if (isset($row[1]) && trim($row[1]) === $email) {
-                $quiz_data = json_decode($row[3] ?? '[]', true);
-                $stats['quizzes_completed'] = count($quiz_data);
+                $quiz_data = json_decode($row[3] ?? '[]', true) ?: [];
+                $points_sum = 0;
+                if (is_array($quiz_data)) {
+                    foreach ($quiz_data as $rec) {
+                        if (is_array($rec) && isset($rec['score'])) $points_sum += intval($rec['score']);
+                        elseif (is_numeric($rec)) $points_sum += intval($rec);
+                    }
+                }
+                $stats['quizzes_completed'] = is_array($quiz_data) ? count($quiz_data) : 0;
+                $stats['points_earned'] = $points_sum;
                 break;
             }
         }

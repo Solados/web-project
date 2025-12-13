@@ -85,7 +85,7 @@ if (session_status() === PHP_SESSION_NONE) {
     <!-- Navigation -->
     <nav class="navbar" aria-label="Main navigation">
      <a class="brand" href="#top" aria-label="Back to top">
-                <img src="image/Hawiyah.jpg" alt="Logo" class="site-logo">
+          <img src="image/Hawiyah.png" alt="Logo" class="site-logo">
      </a>
     <button class="menu-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Toggle menu">☰</button>
       <!-- Nav list -->
@@ -95,12 +95,19 @@ if (session_status() === PHP_SESSION_NONE) {
      <?php include 'sign/check_login_status.php'; ?>
 
 <?php if ($LOGGED_IN): ?>
-    <li><a href="dashboard.php">My Profile</a></li>
-    <li><a href="sign/check_session.php?logout=true" onclick="return confirm('Are you sure you want to logout?')">Logout</a></li>
+    <li class="dropdown">
+            <a class="dropbtn">My profile</a>
+            <!-- Profile dropdown list -->
+            <ul class="dropdown-content">
+              <li><a href="dashboard.php">My profile</a></li>
+              <li><a href="Favorites.php">Favorites</a></li>
+              <li><a href="My_quizzes.php">My Quizzes</a></li>
+              <li><a href="sign/check_session.php?logout=true" onclick="return confirm('Are you sure you want to logout?')">Logout</a></li>
+            </ul>
+          </li>
+    
 <?php else: ?>
     <?php if ($LOGGED_IN): ?>
-    <li><a href="/dashboard.php">My Profile</a></li>
-    <li><a href="/sign/check_session.php?logout=true" onclick="return confirm('Are you sure you want to logout?')">Logout</a></li>
 <?php else: ?>
     <li><a href="/sign/SignUp_LogIn_Form.html">Login</a></li>
 <?php endif; ?>

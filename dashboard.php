@@ -297,34 +297,12 @@ $join_date = $login_time > 0 ? date('F j, Y', $login_time) : 'Unknown';
         <div class="number">0</div>
         <div class="label">Points Earned</div>
       </div>
-      <div class="stat-card">
-        <div class="icon">🏆</div>
-        <div class="number">0</div>
-        <div class="label">Achievements</div>
-      </div>
-      <div class="stat-card">
-        <div class="icon">🌍</div>
-        <div class="number">0</div>
-        <div class="label">Regions Explored</div>
-      </div>
     </div>
-
-    <!-- Activity -->
-    <h2 class="section-title">Recent Activity</h2>
-    <div class="activity-list">
-      <div class="activity-item">
-        <div class="activity-content">
-          <h4>Account Created</h4>
-          <p>Welcome to Saudi Culture! Start exploring the regions and taking quizzes.</p>
-        </div>
-        <div class="activity-badge">Today</div>
-      </div>
-    </div>
-
     <!-- Profile Settings -->
     <h2 class="section-title">Profile Settings</h2>
     <div class="profile-section">
       <h3 style="margin-top: 0; color: var(--green-700);">Account Information</h3>
+      
       <div class="form-group">
         <label>Username</label>
         <input type="text" value="<?php echo htmlspecialchars($username); ?>" disabled style="background: var(--sand-100); cursor: not-allowed;">
@@ -334,26 +312,11 @@ $join_date = $login_time > 0 ? date('F j, Y', $login_time) : 'Unknown';
         <input type="email" value="<?php echo htmlspecialchars($email); ?>" disabled style="background: var(--sand-100); cursor: not-allowed;">
       </div>
       <p style="color: var(--text-700); font-size: 0.9rem; margin-top: 1rem;">Click "Edit Profile" to update your information.</p>
+      <div class="profile-actions">
+          <button onclick="document.getElementById('editModal').style.display='flex'">Edit Profile</button>
+          <button class="logout" onclick="logout()">Logout</button>
+        </div>
     </div>
-
-    <!-- Preferences -->
-    <div class="profile-section">
-      <h3 style="margin-top: 0; color: var(--green-700);">Preferences</h3>
-      <div class="form-group">
-        <label>
-          <input type="checkbox" checked style="margin-right: 0.5rem; cursor: pointer;">
-          Receive quiz notifications
-        </label>
-      </div>
-      <div class="form-group">
-        <label>
-          <input type="checkbox" checked style="margin-right: 0.5rem; cursor: pointer;">
-          Receive achievement alerts
-        </label>
-      </div>
-      <button style="background: var(--gold-500); color: #1a1a1a; border: none; padding: 0.6rem 1rem; border-radius: 0.6rem; font-weight: 600; cursor: pointer;">Save Preferences</button>
-    </div>
-
     <!-- Quick Links -->
     <h2 class="section-title">Quick Links</h2>
     <div class="dashboard-grid">
@@ -363,7 +326,7 @@ $join_date = $login_time > 0 ? date('F j, Y', $login_time) : 'Unknown';
           <div class="label" style="font-size: 1rem; font-weight: 600;">Start a Quiz</div>
         </div>
       </a>
-      <a href="North.php" style="text-decoration: none;">
+      <a href="General.php" style="text-decoration: none;">
         <div class="stat-card" style="cursor: pointer; transition: transform 0.2s;">
           <div class="icon">🗺️</div>
           <div class="label" style="font-size: 1rem; font-weight: 600;">Explore Regions</div>

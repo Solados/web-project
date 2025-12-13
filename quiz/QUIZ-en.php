@@ -50,8 +50,16 @@ if (!$LOGGED_IN) {
       <ul id="nav-links" class="nav-links">
 
      <?php if ($LOGGED_IN): ?>
-    <li><a href="/dashboard.php">My Profile</a></li>
-    <li><a href="/sign/check_session.php?logout=true" onclick="return confirm('Are you sure you want to logout?')">Logout</a></li>
+   <li class="dropdown">
+            <a class="dropbtn">My profile</a>
+            <!-- Profile dropdown list -->
+            <ul class="dropdown-content">
+              <li><a href="../dashboard.php">My profile</a></li>
+              <li><a href="Favorites.php">Favorites</a></li>
+              <li><a href="My_quizzes.php">My Quizzes</a></li>
+              <li><a href="sign/check_session.php?logout=true" onclick="return confirm('Are you sure you want to logout?')">Logout</a></li>
+            </ul>
+          </li>
 <?php else: ?>
     <li><a href="../sign/SignUp_LogIn_Form.html">Login</a></li>
 <?php endif; ?>
@@ -583,6 +591,33 @@ Chart.register({
 });
 
     });
+
+      // Send result to server to attach to user profile
+      (async function sendResult() {
+        try {
+          const form = new URLSearchParams();
+          form.append('score', String(score));
+          form.append('total', String(total));
+          // attempt to include region/source if available
+          const regionEl = document.getElementById('regionFilter');
+          if (regionEl) form.append('source', regionEl.value || '');
+
+          const resp = await fetch('save_quiz_result.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: form.toString()
+          });
+          const data = await resp.json().catch(() => ({}));
+          if (resp.ok && data.success) {
+            showToast('Result saved to your profile ✅');
+          } else {
+            showToast('Could not save result to profile', '#F44336');
+          }
+        } catch (e) {
+          console.warn('save result failed', e);
+          showToast('Could not save result to profile', '#F44336');
+        }
+      })();
   }
 
   /*
