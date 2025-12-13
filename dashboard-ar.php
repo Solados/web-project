@@ -314,7 +314,7 @@ $join_date_ar = "$day $month $year";
         <li><a href="index-ar.php">الرئيسية</a></li>
 
         <!-- زر تبديل اللغة — يفتح الصفحة الإنجليزية المطابقة -->
-        <li><a href="East.php" style="font-weight:700">English</a></li>
+        <li><a href="dashboard.php" style="font-weight:700">English</a></li>
       </ul>
     </nav>
   </header>
