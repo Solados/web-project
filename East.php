@@ -51,7 +51,7 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
             <ul class="dropdown-content">
               <li><a href="dashboard.php">My profile</a></li>
               <li><a href="Favorites.php">Favorites</a></li>
-              <li><a href="My_quizzes.php">My Quizzes</a></li>
+              
               <li><a href="sign/check_session.php?logout=true" onclick="return confirm('Are you sure you want to logout?')">Logout</a></li>
             </ul>
           </li>
@@ -145,7 +145,7 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
         <img src="image/dharan1.jpg" alt="Dhahran">
         <div class="content" dir="ltr">
           <div class="topic">Dhahran</div>
-          <div class="description">Education and quiet city</div>
+          <div class="description">Quiet city</div>
         </div>
       </div>
       <!-- Thumb: Dammam -->
@@ -153,7 +153,7 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
         <img src="image/damam.jpg" alt="Dammam">
         <div class="content" dir="ltr">
           <div class="topic">Dammam</div>
-          <div class="description">Vibrant markets and beaches</div>
+          <div class="description">Beaches</div>
         </div>
       </div>
       <!-- Thumb: Jubail -->
@@ -161,7 +161,7 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
         <img src="image/Jubail.avif" alt="Jubail">
         <div class="content" dir="ltr">
           <div class="topic">Jubail</div>
-          <div class="description">Industry and calm coast</div>
+          <div class="description">Industry</div>
         </div>
       </div>
       <!-- Thumb: Al-Ahsa -->
@@ -169,7 +169,7 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
         <img src="image/East.jpeg" alt="Al-Ahsa">
         <div class="content" dir="ltr">
           <div class="topic">Al-Ahsa</div>
-          <div class="description">Historic oasis and palms</div>
+          <div class="description">Historic oasis</div>
         </div>
       </div>
       <!-- Thumb: Buqayq -->
@@ -177,7 +177,7 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
         <img src="image/bgig.jpg" alt="Buqayq">
         <div class="content" dir="ltr">
           <div class="topic">Buqayq</div>
-          <div class="description">Oil and quiet town</div>
+          <div class="description">Oil</div>
         </div>
       </div>
     </div>

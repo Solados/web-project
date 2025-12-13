@@ -50,7 +50,7 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
             <ul class="dropdown-content">
               <li><a href="dashboard.php">My profile</a></li>
               <li><a href="Favorites.php">Favorites</a></li>
-              <li><a href="My_quizzes.php">My Quizzes</a></li>
+              
               <li><a href="sign/check_session.php?logout=true" onclick="return confirm('Are you sure you want to logout?')">Logout</a></li>
             </ul>
           </li>
@@ -144,7 +144,7 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
         <img src="image/Hail.jpg" alt="Central Region">
         <div class="content" dir="ltr">
           <div class="topic">Hail</div>
-          <div class="description">Historic forts & rock art</div>
+          <div class="description">Historic forts</div>
         </div>
       </div>
       <!-- Thumb: Tabuk -->
@@ -152,7 +152,7 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
         <img src="image/Tabuk.jpg" alt="Northern Region">
         <div class="content" dir="ltr">
           <div class="topic">Tabuk</div>
-          <div class="description">Snowy peaks & ancient valleys</div>
+          <div class="description">Snowy peaks</div>
         </div>
       </div>
       <!-- Thumb: Sakaka -->
@@ -160,7 +160,7 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
         <img src="image/sakaka.jpg" alt="Western Region">
         <div class="content" dir="ltr">
           <div class="topic">Sakaka</div>
-          <div class="description">Olive groves & archaeology</div>
+          <div class="description">Olive groves</div>
         </div>
       </div>
       <!-- Thumb: Arar -->
@@ -168,14 +168,14 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
         <img src="image/Arar.jpg" alt="Southern Region">
         <div class="content" dir="ltr">
           <div class="topic">Arar</div>
-          <div class="description">Wadi Arar & desert markets</div>
+          <div class="description">Wadi Arar</div>
         </div>
       </div>
       <div class="item">
         <img src="image/Umluj.jpg" alt="Eastern Region">
         <div class="content" dir="ltr">
           <div class="topic">Umluj</div>
-          <div class="description">Red Sea islands & Umluj</div>
+          <div class="description">Islands</div>
         </div>
       </div>
     </div>
