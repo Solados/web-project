@@ -271,7 +271,7 @@ body { overflow-x: hidden; }
   right: 50%; 
   left: auto; 
   transform: translateX(50%); 
-  direction: rtl; 
+  direction: ltr; 
   text-align: right; 
   padding-right: 20px; 
   padding-left: 20px; 
@@ -388,11 +388,58 @@ body { overflow-x: hidden; }
   text-align: left;
 }
 
+/* Slider arrows container */
+.arrows {
+  position: absolute;
+  top: 80%;
+  right: 38%;
+  z-index: 100;
+
+  display: flex;
+  gap: 12px;
+}
+
+/* Arrow buttons */
+.arrows button {
+  width: 48px;
+  height: 48px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: rgba(0, 0, 0, 0.45); /* التظليل */
+  backdrop-filter: blur(6px);      /* زجاجي حديث */
+  -webkit-backdrop-filter: blur(6px);
+
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 50%;
+
+  color: #fff;
+  font-size: 22px;
+  font-weight: bold;
+
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+/* Hover effect */
+.arrows button:hover {
+  background: rgba(0, 0, 0, 0.65);
+  transform: scale(1.08);
+}
+
+/* Active (click) */
+.arrows button:active {
+  transform: scale(0.95);
+}
+
+
 /* Arrows */
 .arrows {
   position: absolute;
   top: 80%;
-  right: 52%;
+  right: 37%;
   z-index: 100;
   width: 300px;
   max-width: 30%;

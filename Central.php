@@ -51,7 +51,7 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
             <ul class="dropdown-content">
               <li><a href="dashboard.php">My profile</a></li>
               <li><a href="Favorites.php">Favorites</a></li>
-              <li><a href="My_quizzes.php">My Quizzes</a></li>
+              
               <li><a href="sign/check_session.php?logout=true" onclick="return confirm('Are you sure you want to logout?')">Logout</a></li>
             </ul>
           </li>
@@ -178,7 +178,7 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
         <img src="image/Al-Riyadh.jpg" alt="Central Region">
         <div class="content" dir="ltr">
           <div class="topic">Al-Riyadh</div>
-          <div class="description">Capital city & heritage</div>
+          <div class="description">Capital</div>
         </div>
       </div>
       <!-- Thumb: Al-Rass -->
@@ -186,7 +186,7 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
         <img src="image/Al-Rass.jpg" alt="Northern Region">
         <div class="content" dir="ltr">
           <div class="topic">Al-Rass</div>
-          <div class="description">Historic city & Najdi heritage</div>
+          <div class="description">Najdi heritage</div>
         </div>
       </div>
       <!-- Thumb: Unaizah -->
@@ -194,7 +194,7 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
         <img src="image/Qassim.jpg" alt="Western Region">
         <div class="content" dir="ltr">
           <div class="topic">Unaizah</div>
-          <div class="description">Agriculture & culture</div>
+          <div class="description">Agriculture</div>
         </div>
       </div>
       <!-- Thumb: Buraidah -->
@@ -202,14 +202,14 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
         <img src="image/Buraidah.jpg" alt="Southern Region">
         <div class="content" dir="ltr">
           <div class="topic">Buraidah</div>
-          <div class="description">Dates & heritage</div>
+          <div class="description">Dates</div>
         </div>
       </div>
     </div>
     <!-- next prev -->
     <div class="arrows">
-      <button id="prev">‹</button>
-      <button id="next">›</button>
+      <button id="prev"><</button>
+      <button id="next">></button>
     </div>
     <!-- time running -->
     <div class="time"></div>

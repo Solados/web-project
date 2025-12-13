@@ -110,7 +110,7 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
             <ul class="dropdown-content">
               <li><a href="dashboard.php">My profile</a></li>
               <li><a href="Favorites.php">Favorites</a></li>
-              <li><a href="My_quizzes.php">My Quizzes</a></li>
+              
               <li><a href="sign/check_session.php?logout=true" onclick="return confirm('Are you sure you want to logout?')">Logout</a></li>
             </ul>
           </li>
@@ -224,7 +224,7 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
 				<img src="image/Central.jpeg" alt="Central Region">
 				<div class="content" dir="ltr">
 					<div class="title">Central Region</div>
-					<div class="description">Riyadh, Qassim, Hail</div>
+					<div class="description">Riyadh</div>
 				</div>
 			</div>
 			<div class="item">
@@ -232,7 +232,7 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
 				<img src="image/North.jpg" alt="Northern Region">
 				<div class="content" dir="ltr">
 					<div class="title">Northern Region</div>
-					<div class="description">Hail, Tabuk, Umluj</div>
+					<div class="description">Tabuk</div>
 				</div>
 			</div>
 			<div class="item">
@@ -240,7 +240,7 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
 				<img src="image/West.jpeg" alt="Western Region">
 				<div class="content" dir="ltr">
 					<div class="title">Western Region</div>
-					<div class="description">Makkah, Madinah, Jeddah, Taif</div>
+					<div class="description">Makkah</div>
 				</div>
 			</div>
 			<div class="item">
@@ -248,7 +248,7 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
 				<img src="image/South.jpeg" alt="Southern Region">
 				<div class="content" dir="ltr">
 					<div class="title">Southern Region</div>
-					<div class="description">Asir, Jazan, Najran, Al-Baha</div>
+					<div class="description">Asir</div>
 				</div>
 			</div>
 			<div class="item">
@@ -256,7 +256,7 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
 				<img src="image/East.jpeg" alt="Eastern Region">
 				<div class="content" dir="ltr">
 					<div class="title">Eastern Region</div>
-					<div class="description">Dammam, Khobar, Qatif, Al-Ahsa</div>
+					<div class="description">Dammam</div>
 				</div>
 			</div>
 		</div>

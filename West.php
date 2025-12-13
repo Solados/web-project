@@ -51,7 +51,7 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
             <ul class="dropdown-content">
               <li><a href="dashboard.php">My profile</a></li>
               <li><a href="Favorites.php">Favorites</a></li>
-              <li><a href="My_quizzes.php">My Quizzes</a></li>
+              
               <li><a href="sign/check_session.php?logout=true" onclick="return confirm('Are you sure you want to logout?')">Logout</a></li>
             </ul>
           </li>
@@ -158,7 +158,7 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
         <img src="image/King-Fahd-Fountain-Saudi.jpg" alt="Northern Region">
         <div class="content" dir="ltr">
           <div class="topic">Jeddah</div>
-          <div class="description">beautiful Red Sea coastline</div>
+          <div class="description">Red Sea</div>
         </div>
       </div>
       <!-- Thumb: Taif -->
@@ -166,7 +166,7 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
         <img src="image/EwheUZDWYAQscSV.jpg" alt="Western Region">
         <div class="content" dir="ltr">
           <div class="topic">Taif</div>
-          <div class="description">known for its cool weather, mountains, and famous Taif roses</div>
+          <div class="description">Roses</div>
         </div>
       </div>
       <!-- Thumb: Madinah -->
@@ -174,7 +174,7 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
         <img src="image/photo-1591604129939-f1efa4d9f7fa.jpg" alt="Southern Region">
         <div class="content" dir="ltr">
           <div class="topic">Madinah</div>
-          <div class="description">is considered the second holiest city in Islam</div>
+          <div class="description">Al-Masjid an-Nabawi</div>
         </div>
       </div>
       <!-- Thumb: Yanbu -->
@@ -182,7 +182,7 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
         <img src="image/YIC-3-scaled-1.webp" alt="Eastern Region">
         <div class="content" dir="ltr">
           <div class="topic">Yanbu</div>
-          <div class="description">known for its beautiful beaches, modern industrial areas</div>
+          <div class="description">Beaches</div>
         </div>
       </div>
     </div>
