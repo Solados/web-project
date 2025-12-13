@@ -818,3 +818,94 @@ body { overflow-x: hidden; }
     direction: ltr !important;
     text-align: left !important;
 }
+
+/* ===== NAV SEARCH ===== */
+.nav-search{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+.search-toggle{
+  border: 1px solid rgba(0,0,0,.15);
+  background: rgba(255,255,255,.7);
+  border-radius: .6rem;
+  padding: .35rem .55rem;
+  cursor: pointer;
+}
+
+.nav-search-form{
+  display:none;
+  align-items:center;
+  gap:6px;
+}
+
+.nav-search-form.open{
+  display:flex;
+}
+
+.nav-search-form input[type="search"],
+.page-search input[type="search"]{
+  padding: .45rem .65rem;
+  border-radius: .6rem;
+  border: 1px solid #ccc;
+  min-width: 180px;
+}
+
+.nav-search-form button,
+.page-search button{
+  padding: .45rem .75rem;
+  border-radius: .6rem;
+  border: 1px solid transparent;
+  background: #0f6b3f;
+  color: #fff;
+  cursor: pointer;
+}
+
+/* Search bar داخل صفحة Search.php */
+.page-search{
+  display:flex;
+  gap:10px;
+  align-items:center;
+  margin-top: 10px;
+}
+
+/* ===== SEARCH RESULTS: stacked rectangles ===== */
+.search-page .features{
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+}
+
+.search-page .feature-card{
+  width:100%;
+  border-radius:14px;
+  padding:16px 18px;
+  border:1px solid rgba(0,0,0,.08);
+  background: rgba(255,255,255,.7);
+  box-shadow: 0 10px 25px rgba(0,0,0,.06);
+}
+
+.search-page .feature-card h3{
+  margin:0 0 10px;
+  font-size:1.05rem;
+  line-height:1.6;
+}
+
+.search-page .feature-card p{
+  margin:0;
+  line-height:1.8;
+  white-space: pre-wrap;
+}
+
+/* badge: question type */
+.search-page .q-meta{
+  display:inline-block;
+  width:fit-content;
+  margin-bottom:10px;
+  padding:6px 10px;
+  border-radius:999px;
+  font-size:.9rem;
+  border:1px solid rgba(0,0,0,.12);
+  background: rgba(255,255,255,.85);
+}

@@ -89,7 +89,15 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
     <button class="menu-toggle">☰</button>
 
     <ul class="nav-links">
-            
+
+          <li class="nav-search">
+            <button class="search-toggle" type="button" aria-label="Search" aria-expanded="false">🔍</button>
+            <form class="nav-search-form" action="Search-ar.php" method="get" role="search">
+              <input type="search" name="q" placeholder="اكتب كلمة..." autocomplete="off">
+              <button type="submit">بحث</button>
+            </form>
+          </li>
+
       <!-- زر تغيير اللغة -->
 
       <?php if ($LOGGED_IN): ?>
