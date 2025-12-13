@@ -37,19 +37,13 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
 
 <!-- Header -->
 <header class="site-header">
-	<nav class="navbar">
-
+	<nav class="navbar" aria-label="التنقل الرئيسي">
 		<a class="brand" href="#top">
                 <img src="image/Hawiyah.png" alt="Logo" class="site-logo">
-
     </a>
-
-		<button class="menu-toggle">☰</button>
-
-		<ul class="nav-links">
-            
+		<button class="menu-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="تبديل القائمة">☰</button>
+		<ul id="nav-links" class="nav-links">
 			<!-- زر تغيير اللغة -->
-
 			<?php if ($LOGGED_IN): ?>
     <li class="dropdown">
             <a class="dropbtn">حسابي</a>

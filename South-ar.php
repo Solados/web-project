@@ -9,6 +9,16 @@ $USER_NAME = $_SESSION['user_name'] ?? "";
 $USER_EMAIL = $_SESSION['user_email'] ?? "";
 ?>
 
+<?php
+if (session_status() === PHP_SESSION_NONE) {
+  session_start();
+}
+
+// جلب حالة المستخدم من الجلسة
+$LOGGED_IN = isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true;
+$USER_NAME = $_SESSION['user_name'] ?? "";
+$USER_EMAIL = $_SESSION['user_email'] ?? "";
+?>
 <!doctype html>
 <html lang="ar" dir="rtl">
 <!-- Head -->
