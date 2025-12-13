@@ -28,7 +28,7 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
    <!-- Navigation -->
     <nav class="navbar" aria-label="Main navigation">
      <a class="brand" href="#top" aria-label="Back to top">
-                <img src="image/Hawiyah.png" alt="Logo" class="site-logo">
+                <img src="image/Hawiyah-En.png" alt="Logo" class="site-logo">
 
      </a>
     <button class="menu-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Toggle menu">☰</button>
