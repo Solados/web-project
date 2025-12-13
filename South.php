@@ -34,6 +34,15 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
     <button class="menu-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Toggle menu">☰</button>
       <!-- Nav list -->
       <ul id="nav-links" class="nav-links">
+
+          <li class="nav-search">
+            <button class="search-toggle" type="button" aria-label="Search" aria-expanded="false">🔍</button>
+            <form class="nav-search-form" action="Search.php" method="get" role="search">
+              <input type="search" name="q" placeholder="Search a word..." autocomplete="off">
+              <button type="submit">Search</button>
+            </form>
+          </li>
+
      <?php if ($LOGGED_IN): ?>
     <li class="dropdown">
             <a class="dropbtn">My profile</a>
