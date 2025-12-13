@@ -94,6 +94,15 @@ if (session_status() === PHP_SESSION_NONE) {
 
      <?php include 'sign/check_login_status.php'; ?>
 
+          <li class="nav-search">
+            <button class="search-toggle" type="button" aria-label="Search" aria-expanded="false">🔍</button>
+
+            <form class="nav-search-form" action="Search.php" method="get" role="search">
+              <input type="search" name="q" placeholder="Search a word..." autocomplete="off">
+              <button type="submit">Search</button>
+            </form>
+          </li>
+
 <?php if ($LOGGED_IN): ?>
     <li class="dropdown">
             <a class="dropbtn">My profile</a>
