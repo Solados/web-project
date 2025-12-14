@@ -462,9 +462,13 @@ async function render(pageIndex = 0) {
   pageItems.forEach(q => {
     const card = document.createElement("article");
     card.className = "feature-card";
+    card.style.position = "relative";
 
     const h3 = document.createElement("h3");
     const p = document.createElement("p");
+
+    const textForShare = (q.lang === "arabic" ? "س: " : "Q: ") + q.question + '\n\n' + (q.lang === "arabic" ? "ج: " : "Answer: ") + q.answer;
+    const textForShareWithURL = textForShare + '\n' + window.location.href;
 
     if (q.lang === "arabic") {
       h3.textContent = "س: " + q.question;
@@ -479,6 +483,157 @@ async function render(pageIndex = 0) {
 
     card.appendChild(h3);
     card.appendChild(p);
+
+    // ===== Actions (Copy & Share) =====
+    const actions = document.createElement("div");
+    actions.className = "card-actions";
+    actions.style.position = "absolute";
+    actions.style.bottom = "10px";
+    actions.style.left = "10px";
+    actions.style.display = "flex";
+    actions.style.gap = "6px";
+
+    // Copy Button
+    const copyBtn = document.createElement("button");
+    copyBtn.title = "Copy";
+    copyBtn.innerHTML = " Copy 📄";
+    copyBtn.style.background = "var(--gold-500)";
+    copyBtn.style.color = "#1a1a1a";
+    copyBtn.style.boxShadow = "var(--shadow-md)";
+    copyBtn.style.fontWeight = "700";
+    copyBtn.style.padding = ".75rem 1.1rem";
+    copyBtn.style.borderRadius = ".8rem";
+    copyBtn.style.border = "1px solid transparent";
+    copyBtn.style.cursor = "pointer";
+    copyBtn.style.transition = "transform .15s ease, box-shadow .15s ease, background .2s ease";
+    copyBtn.style.fontFamily = "'Noto Kufi Arabic', sans-serif";
+    copyBtn.onmouseover = () => { copyBtn.style.transform = "translateY(-2px)"; copyBtn.style.boxShadow = "var(--shadow-gold-hover)"; };
+    copyBtn.onmouseout = () => { copyBtn.style.transform = "translateY(0)"; copyBtn.style.boxShadow = "var(--shadow-md)"; };
+
+    copyBtn.onclick = () => {
+      navigator.clipboard.writeText(textForShare);
+
+      const toast = document.createElement("div");
+      toast.textContent = " Copied! ";
+      toast.style.position = "fixed";
+      toast.style.bottom = "90px";
+      toast.style.right = "20px";
+      toast.style.background = "#4CAF50";
+      toast.style.color = "#fff";
+      toast.style.padding = "8px 14px";
+      toast.style.borderRadius = "6px";
+      toast.style.opacity = "0";
+      toast.style.transition = "0.3s";
+      document.body.appendChild(toast);
+
+      setTimeout(() => (toast.style.opacity = "1"), 10);
+      setTimeout(() => {
+        toast.style.opacity = "0";
+        setTimeout(() => toast.remove(), 300);
+      }, 2000);
+    };
+
+    // Share Button
+    const shareBtn = document.createElement('button');
+    shareBtn.textContent = "Share 🔗";
+    shareBtn.style.background = "var(--gold-500)";
+    shareBtn.style.color = "#1a1a1a";
+    shareBtn.style.boxShadow = "var(--shadow-md)";
+    shareBtn.style.fontWeight = "700";
+    shareBtn.style.padding = ".75rem 1.1rem";
+    shareBtn.style.borderRadius = ".8rem";
+    shareBtn.style.border = "1px solid transparent";
+    shareBtn.style.cursor = "pointer";
+    shareBtn.style.fontFamily = "'Noto Kufi Arabic', sans-serif";
+    shareBtn.style.transition = "transform .15s ease, box-shadow .15s ease, background .2s ease";
+    shareBtn.style.position = "relative";
+
+    shareBtn.onmouseover = () => { shareBtn.style.transform = "translateY(-2px)"; shareBtn.style.boxShadow = "var(--shadow-gold-hover)"; };
+    shareBtn.onmouseout = () => { shareBtn.style.transform = "translateY(0)"; shareBtn.style.boxShadow = "var(--shadow-md)"; };
+
+    // Share Menu
+    const shareMenu = document.createElement("div");
+    shareMenu.style.position = 'absolute';
+    shareMenu.style.bottom = '110%'; // show above the button
+    shareMenu.style.left = '50%';
+    shareMenu.style.transform = 'translateX(-50%)';
+    shareMenu.style.background = '#fff';
+    shareMenu.style.border = '1px solid #ddd';
+    shareMenu.style.borderRadius = '8px';
+    shareMenu.style.padding = '8px 12px';
+    shareMenu.style.display = 'none';
+    shareMenu.style.gap = '12px';
+    shareMenu.style.boxShadow = '0 4px 16px rgba(0,0,0,.18)';
+    shareMenu.style.flexDirection = 'row';
+    shareMenu.style.flexWrap = 'nowrap';
+    shareMenu.style.zIndex = '100';
+
+    shareBtn.onclick = (e) => {
+      e.stopPropagation();
+      shareMenu.style.display = shareMenu.style.display === 'none' ? 'flex' : 'none';
+    };
+
+    // Hide share menu if mouse leaves the menu or the button
+    let shareMenuHideTimeout;
+    function hideShareMenuSoon() {
+      shareMenuHideTimeout = setTimeout(() => {
+        shareMenu.style.display = 'none';
+      }, 120);
+    }
+    function cancelHideShareMenu() {
+      clearTimeout(shareMenuHideTimeout);
+    }
+    shareMenu.addEventListener('mouseleave', hideShareMenuSoon);
+    shareMenu.addEventListener('mouseenter', cancelHideShareMenu);
+    shareBtn.addEventListener('mouseleave', hideShareMenuSoon);
+    shareBtn.addEventListener('mouseenter', cancelHideShareMenu);
+
+    document.addEventListener('click', (e) => {
+      if (!shareBtn.contains(e.target) && !shareMenu.contains(e.target)) shareMenu.style.display = 'none';
+    });
+
+    // Share Platforms
+    const platforms = [
+      { name: 'X', icon: 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/x.svg', id: 'x' },
+      { name: 'Facebook', icon: 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/facebook.svg', id: 'facebook' },
+      { name: 'WhatsApp', icon: 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/whatsapp.svg', id: 'whatsapp' }
+    ];
+
+    platforms.forEach(p => {
+      const a = document.createElement('a');
+      a.href = '#';
+      a.title = p.name;
+      a.style.margin = '2px';
+      a.style.display = 'inline-block';
+
+      const img = document.createElement('img');
+      img.src = p.icon;
+      img.width = 26;
+      img.height = 26;
+      img.style.transition = 'transform 0.2s';
+      img.onmouseover = () => img.style.transform = 'scale(1.2)';
+      img.onmouseout = () => img.style.transform = 'scale(1)';
+
+      let href;
+      if (p.id === 'x') {
+        href = `https://x.com/intent/tweet?text=${encodeURIComponent(textForShareWithURL)}`;
+      } else if (p.id === 'whatsapp') {
+        href = `https://api.whatsapp.com/send?text=${encodeURIComponent(textForShareWithURL)}`;
+      } else if (p.id === 'facebook') {
+        href = `https://www.facebook.com/sharer/sharer.php?quote=${encodeURIComponent(textForShareWithURL)}`;
+      }
+
+      a.appendChild(img);
+      a.onclick = (e) => { e.preventDefault(); window.open(href, '_blank'); shareMenu.style.display = 'none'; };
+      shareMenu.appendChild(a);
+    });
+
+    shareBtn.appendChild(shareMenu);
+
+    actions.appendChild(copyBtn);
+    actions.appendChild(shareBtn);
+
+    card.appendChild(actions);
     container.appendChild(card);
   });
 
