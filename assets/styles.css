@@ -977,13 +977,14 @@ body { overflow-x: hidden; }
   position: absolute;
   bottom: 50px;
 
-  right: 8%;   /* نسبة وليس px */
-  left: auto;
+  inset-inline-end: 8%;
+  inset-inline-start: auto;
 
   display: flex;
   gap: 20px;
   z-index: 100;
 }
+
 
 
 
