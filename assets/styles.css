@@ -941,7 +941,7 @@ body { overflow-x: hidden; }
 
 /* correct slider size */
 .carousel {
-  height: 100vh;
+  height: 100%;
   padding-top: 80px;
 }
 
@@ -967,15 +967,22 @@ body { overflow-x: hidden; }
 
 
 .arrows {
-  right: 44%;
+  right: 42%;
   left: auto;
   transform: none;
 }
-
 
 .thumbnail {
-  right: 10%;
+  position: absolute;
+  bottom: 50px;
+
+  right: 200px;     /* تثبيت حقيقي */
   left: auto;
-  transform: none;
+
+  display: flex;
+  gap: 20px;
+
+  z-index: 100;
 }
+
 
