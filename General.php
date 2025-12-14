@@ -748,17 +748,17 @@ copyBtn.onmouseout = () => { copyBtn.style.transform = "translateY(0)"; copyBtn.
   /* ===== نافذة المشاركة ===== */
   const shareMenu = document.createElement("div");
   shareMenu.style.position = 'absolute';
-  shareMenu.style.top = '0';
-  shareMenu.style.bottom = 'auto';
-  shareMenu.style.left = '100%';
-  shareMenu.style.right = 'auto';
+  shareMenu.style.bottom = '110%'; // show above the button
+  shareMenu.style.left = '50%';
+  shareMenu.style.transform = 'translateX(-50%)';
   shareMenu.style.background = '#fff';
   shareMenu.style.border = '1px solid #ddd';
   shareMenu.style.borderRadius = '8px';
-  shareMenu.style.padding = '6px 10px';
+  shareMenu.style.padding = '8px 12px';
   shareMenu.style.display = 'none';
-  shareMenu.style.gap = '8px';
-  shareMenu.style.boxShadow = '0 4px 12px rgba(0,0,0,.15)';
+  shareMenu.style.gap = '12px';
+  shareMenu.style.boxShadow = '0 4px 16px rgba(0,0,0,.18)';
+  shareMenu.style.flexDirection = 'row';
   shareMenu.style.flexWrap = 'nowrap';
   shareMenu.style.zIndex = '100';
 
@@ -767,12 +767,23 @@ copyBtn.onmouseout = () => { copyBtn.style.transform = "translateY(0)"; copyBtn.
     shareMenu.style.display = shareMenu.style.display === 'none' ? 'flex' : 'none';
   };
 
-  shareMenu.addEventListener('mouseleave', () => {
-    shareMenu.style.display = 'none';
-  });
+  // Hide share menu if mouse leaves the menu or the button
+  let shareMenuHideTimeout;
+  function hideShareMenuSoon() {
+    shareMenuHideTimeout = setTimeout(() => {
+      shareMenu.style.display = 'none';
+    }, 120);
+  }
+  function cancelHideShareMenu() {
+    clearTimeout(shareMenuHideTimeout);
+  }
+  shareMenu.addEventListener('mouseleave', hideShareMenuSoon);
+  shareMenu.addEventListener('mouseenter', cancelHideShareMenu);
+  shareBtn.addEventListener('mouseleave', hideShareMenuSoon);
+  shareBtn.addEventListener('mouseenter', cancelHideShareMenu);
 
   document.addEventListener('click', (e) => {
-    if (!shareBtn.contains(e.target)) shareMenu.style.display = 'none';
+    if (!shareBtn.contains(e.target) && !shareMenu.contains(e.target)) shareMenu.style.display = 'none';
   });
 
   /* ===== أيقونات المشاركة ===== */

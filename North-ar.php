@@ -84,7 +84,7 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
             </ul>
           </li>
           <?php endif; ?>
-      <li><a href="index.php" style="font-weight:700">English</a></li>
+      <li><a href="North.php" style="font-weight:700">English</a></li>
 
     </ul>
 
