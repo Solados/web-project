@@ -388,7 +388,7 @@ body { overflow-x: hidden; }
 /* ===== FIXED SLIDER ARROWS ===== */
 .arrows {
   position: absolute;
-  bottom: 55px;          /* ثابت من الأسفل */
+  bottom: 100px;          /* ثابت من الأسفل */
   left: 40%;             /* منتصف السلايدر */
   transform: translateX(-50%);
   z-index: 200;
@@ -969,7 +969,7 @@ body { overflow-x: hidden; }
 
 
 .arrows {
-  right: 42%;
+  right: 65%;
   left: auto;
   transform: none;
 }
