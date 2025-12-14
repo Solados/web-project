@@ -33,7 +33,11 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
     .carousel .content { text-align: right; direction: rtl; }
     .thumbnail .content { text-align: right; direction: rtl; }
     /* حافظت على بعض عناصر الـ qs-pagination لعرض أرقام الصفحات بشكل منطقي */
-    [dir="rtl"] { direction: ltr; }
+    /* اعزل السلايدر فقط */
+.carousel {
+  direction: ltr;
+}
+
   </style>
 </head>
 <body class="rtl">
