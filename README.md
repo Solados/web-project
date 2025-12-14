@@ -1,4 +1,4 @@
-# Saudi Culture — Website
+# Hawiyyah — Website
 
 Professional, bilingual informational website showcasing Saudi culture, regions, and interactive quizzes.
 

@@ -15,7 +15,7 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
  <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Saudi Culture | East Page</title>
+  <title>Hawiyyah | East Page</title>
   <meta name="description" content="Discover customs, traditions, and regions of the Kingdom of Saudi Arabia.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -248,7 +248,7 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
   <footer class="site-footer" aria-label="footer">
    <div class="container footer-grid">
     <div>
-     <strong>Saudi Culture</strong>
+     <strong>Hawiyyah</strong>
      <p>© 2025 All rights reserved</p>
     </div>
     <ul class="footer-links">

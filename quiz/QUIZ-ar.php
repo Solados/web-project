@@ -176,7 +176,7 @@ if (!$LOGGED_IN) {
         <li><a href="#main">العودة إلى الأعلى</a></li>
       </ul>
       <div style="text-align:left">
-        <strong>ثقافة السعودية</strong>
+        <strong>هويّة</strong>
         <p>© 2025 جميع الحقوق محفوظة</p>
       </div>
     </div>

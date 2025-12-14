@@ -43,8 +43,8 @@ $join_date_ar = "$day $month $year";
  <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>ثقافة السعودية | ملفي</title>
-  <meta name="description" content="إدارة ملفك ومتابعة تقدمك على موقع ثقافة السعودية.">
+  <title>هويّة | ملفي</title>
+  <meta name="description" content="إدارة ملفك ومتابعة تقدمك على موقع هويّة.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@300;400;600;700&display=swap" rel="stylesheet">
@@ -428,7 +428,7 @@ $join_date_ar = "$day $month $year";
   <footer class="site-footer" aria-label="تذييل الصفحة">
    <div class="container footer-grid">
     <div>
-     <strong>ثقافة السعودية</strong>
+     <strong>هويّة</strong>
      <p>© 2025 جميع الحقوق محفوظة</p>
     </div>
     <ul class="footer-links">

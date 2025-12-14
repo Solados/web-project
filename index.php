@@ -11,7 +11,7 @@ if (session_status() === PHP_SESSION_NONE) {
  <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Saudi Culture | Home Page</title>
+  <title>Hawiyyah | Home Page</title>
     <meta name="description" content="Discover customs, traditions, and regions of the Kingdom of Saudi Arabia.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -163,7 +163,7 @@ if (session_status() === PHP_SESSION_NONE) {
       <div class="container">
         <div class="overview-card sr-hidden">
           <h2>About the platform</h2>
-          <p>Saudi Culture provides thousands of authentic questions and interactive quizzes to help learners explore Saudi traditions, language, and regions.</p>
+          <p>Hawiyyah provides thousands of authentic questions and interactive quizzes to help learners explore Saudi traditions, language, and regions.</p>
         </div>
       </div>
     </section>
@@ -269,7 +269,7 @@ if (session_status() === PHP_SESSION_NONE) {
   <footer class="site-footer" aria-label="footer">
    <div class="container footer-grid">
     <div>
-     <strong>Saudi Culture</strong>
+     <strong>Hawiyyah</strong>
      <p>© 2025 All rights reserved</p>
     </div>
     <ul class="footer-links">

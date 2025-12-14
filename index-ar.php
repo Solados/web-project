@@ -13,7 +13,7 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>الثقافة السعودية | الصفحة الرئيسية</title>
+    <title>الهويّة | الصفحة الرئيسية</title>
     <meta name="description" content="اكتشف العادات والتقاليد ومناطق المملكة العربية السعودية.">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -178,12 +178,12 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
           <article class="feature-card sr-hidden">
             <div class="icon-box"><div class="icon">📚</div></div>
             <h3>آلاف الأسئلة</h3>
-            <p>قاعدة أسئلة واسعة تغطي اللغة والعادات والحقائق الإقليمية.</p>
+            <p>قاعدة أسئلة واسعة تغطي اللغة واللهجات والعادات والتقاليد.</p>
           </article>
           <article class="feature-card sr-hidden">
             <div class="icon-box"><div class="icon">🧩</div></div>
             <h3>اختبارات تفاعلية</h3>
-            <p>اختبارات مرنة بعدد أسئلة قابل للاختيار وبدرجات صعوبة متفاوتة.</p>
+            <p>اختبارات مرنة بعدد أسئلة قابل للاختيار وتحديد نوع وفئة الاسئلة.</p>
           </article>
           <article class="feature-card sr-hidden">
             <div class="icon-box"><div class="icon">📊</div></div>
@@ -272,7 +272,7 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
   <footer class="site-footer" aria-label="footer">
    <div class="container footer-grid">
     <div>
-     <strong>الثقافة السعودية </strong>
+     <strong>الهويّة </strong>
      <p>© 2025 جميع الحقوق محفوظة</p>
     </div>
     <ul class="footer-links">

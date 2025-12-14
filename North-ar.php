@@ -13,7 +13,7 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>ثقافة السعودية | المنطقة الشمالية</title>
+  <title>هويّة | المنطقة الشمالية</title>
   <meta name="description" content="اكتشف عادات وتقاليد ومواقع المنطقة الشمالية في المملكة.">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -259,7 +259,7 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
   <footer class="site-footer" aria-label="تذييل الصفحة">
     <div class="container footer-grid">
       <div>
-        <strong>الثقافة السعودية</strong>
+        <strong>هويّة</strong>
         <p>© 2025 جميع الحقوق محفوظة</p>
       </div>
       <ul class="footer-links">
