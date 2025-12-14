@@ -389,29 +389,65 @@ body { overflow-x: hidden; }
 }
 
 /* Arrows */
+/* تأكيد أن السلايدر هو المرجع */
+.carousel {
+  position: relative;
+}
+
+/* ===== FIXED SLIDER ARROWS ===== */
 .arrows {
   position: absolute;
-  top: 80%;
-  right: 52%;
-  z-index: 100;
-  width: 300px;
-  max-width: 30%;
+  bottom: 55px;          /* ثابت من الأسفل */
+  left: 47%;             /* منتصف السلايدر */
+  transform: translateX(-50%);
+  z-index: 200;
+
   display: flex;
-  gap: 10px;
+  gap: 14px;
   align-items: center;
 }
 
+/* Arrow buttons */
 .arrows button {
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: rgba(235, 235, 235, 0.45);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+
+  border: 1px solid rgba(255, 255, 255, 0.35);
   border-radius: 50%;
-  background-color: #eee4;
-  border: none;
+
   color: #fff;
-  font-family: monospace;
+  font-size: 22px;
   font-weight: bold;
-  transition: 0.5s;
+
+  cursor: pointer;
+  transition: all 0.25s ease;
 }
+
+/* Hover */
+.arrows button:hover {
+  background: rgba(0, 0, 0, 0.7);
+  transform: scale(1.08);
+}
+
+/* Active */
+.arrows button:active {
+  transform: scale(0.95);
+}
+
+/* Disable during animation */
+.carousel.next .arrows button,
+.carousel.prev .arrows button {
+  pointer-events: none;
+}
+
 
 /* Questions slider: arrange 20 cards per slide as 4 columns x 5 rows */
 /* Make the slider span the full viewport width even when inside a constrained container */
@@ -462,10 +498,7 @@ body { overflow-x: hidden; }
 /* Make controls span full width and appear above the slider (they are appended above in DOM) */
 .qs-controls { width: 100%; max-width: 1100px; margin: 0 auto; padding: .5rem 0; box-sizing: border-box; display:flex; justify-content:center; }
 
-.arrows button:hover {
-  background-color: #fff;
-  color: #000;
-}
+
 
 /* Animation */
 .carousel .list .item:nth-child(1) {
@@ -604,10 +637,7 @@ body { overflow-x: hidden; }
   animation: showThumbnail 0.5s linear 1 forwards;
 }
 
-.carousel.next .arrows button,
-.carousel.prev .arrows button {
-  pointer-events: none;
-}
+
 
 .carousel.prev .list .item:nth-child(2) .content .author,
 .carousel.prev .list .item:nth-child(2) .content .title,
