@@ -185,8 +185,8 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
 
     <!-- next prev -->
     <div class="arrows">
-      <button id="prev">‹</button>
-      <button id="next">›</button>
+      <button id="prev"><</button>
+      <button id="next">></button>
     </div>
     <div class="time"></div>
   </div>
