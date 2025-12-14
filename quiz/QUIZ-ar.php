@@ -220,7 +220,7 @@ if (!$LOGGED_IN) {
 
     // Prefer server-side fetching for Arabic datasets when a specific filter is selected
     const arabicDatasets = ['Words','Phrases','Proverbs'];
-    const preferServerForArabicFilter = arabicDatasets.includes(source) && mappedType && mappedType !== 'all';
+    const preferServerForArabicFilter = arabicDatasets.includes(source);
 
     if (!preferServerForArabicFilter && typeof fetchQuestions === 'function'){
       try{
@@ -266,11 +266,13 @@ if (!$LOGGED_IN) {
         const data = await resp.json();
         if (data && Array.isArray(data.questions) && data.questions.length > 0) {
           selectedQuestions = data.questions.map(q => ({
-            question: q.question,
-            choices: Array.isArray(q.choices) ? q.choices.slice() : [],
-            answer: q.answer || null,
-            type: q.type || ''
-          }));
+          question: q.question,
+          choices: Array.isArray(q.choices) ? q.choices.slice() : [],
+          answer: q.answer || null,
+          type: q.type || '',
+          arabic_type: q.arabic_type || ''   // ✅ أضف هذا
+        }));
+
           shuffle(selectedQuestions); // Always shuffle, even for 'all'
           selectedQuestions.forEach(q => shuffle(q.choices));
           displayQuestions();
@@ -308,6 +310,16 @@ if (!$LOGGED_IN) {
     window.location.hash = '#quiz';
   }
 
+  function getBlockLabel(key){
+  const k = String(key || '').trim();
+  if (!k) return '';
+  // تطابق مباشر
+  if (blockLabels[k]) return blockLabels[k];
+  // تطابق بدون حساسية لحالة الأحرف (لأن السيرفر يرسل lower-case)
+  const found = Object.keys(blockLabels).find(x => x.toLowerCase() === k.toLowerCase());
+  return found ? blockLabels[found] : k;
+}
+
   function displayQuestions(){
     const container = document.getElementById('quizContainer');
     container.innerHTML = '';
@@ -316,9 +328,17 @@ if (!$LOGGED_IN) {
       const box = document.createElement('div');
       box.className = 'feature-card';
 
-      const inferredType = (q.type && q.type.trim()) ? q.type.trim() : (Array.isArray(q.choices) && q.choices.length > 0 ? 'MCQ' : 'Open-ended');
+      const inferredType = (q.type && q.type.trim())
+        ? q.type.trim()
+        : (Array.isArray(q.choices) && q.choices.length > 0 ? 'MCQ' : 'Open-ended');
 
-      let html = `<h3 dir="ltr">${i+1}. ${q.question} <span class="q-badge" style="font-size:.7rem;padding:.15rem .4rem;margin-left:.6rem;border-radius:4px;background:#efefef;color:#333;border:1px solid #ddd">${inferredType}</span></h3>`;
+      const badgeText = q.arabic_type ? getBlockLabel(q.arabic_type) : inferredType;
+
+      let html = `<h3 dir="rtl">${i+1}. ${q.question}
+        <span class="q-badge" style="font-size:.7rem;padding:.15rem .4rem;margin-left:.6rem;border-radius:4px;background:#efefef;color:#333;border:1px solid #ddd">
+          ${badgeText}
+        </span>
+      </h3>`;
 
       if (Array.isArray(q.choices) && q.choices.length > 0) {
         q.choices.forEach(choice => {
