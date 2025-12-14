@@ -24,6 +24,7 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
   .feature-card {
   position: relative;
   padding-bottom: 52px; /* مساحة محفوظة للأزرار */
+  min-height: 180px;
 }
 
 /* حاوية الأزرار */
@@ -578,10 +579,8 @@ pageItems.forEach(q => {
   const h3 = document.createElement("h3");
   const p = document.createElement("p");
 
-  const textForShare =
-    q.lang === "arabic"
-      ? `س: ${q.question}\nج: ${q.answer}`
-      : `Q: ${q.question}\nAnswer: ${q.answer}`;
+  const textForShare = (q.lang === "arabic" ? "س: " : "Q: ") + q.question + '\n\n' + (q.lang === "arabic" ? "ج: " : "Answer: ") + q.answer;
+  const textForShareWithURL = textForShare + '\n' + window.location.href;
 
   if (q.lang === "arabic") {
     h3.textContent = "س: " + q.question;
@@ -611,21 +610,19 @@ pageItems.forEach(q => {
   /* ===== زر النسخ ===== */
 const copyBtn = document.createElement("button");
 copyBtn.title = "Copy";
-
-copyBtn.innerHTML = `
-<svg width="18" height="18" viewBox="0 0 24 24" fill="none"
-     xmlns="http://www.w3.org/2000/svg">
-  <rect x="9" y="9" width="13" height="13" rx="2"
-        stroke="currentColor" stroke-width="2"/>
-  <rect x="3" y="3" width="13" height="13" rx="2"
-        stroke="currentColor" stroke-width="2"/>
-</svg>
-`;
-
-copyBtn.style.background = "transparent";
-copyBtn.style.border = "none";
+copyBtn.innerHTML = " Copy 📄";
+copyBtn.style.background = "var(--gold-500)";
+copyBtn.style.color = "#1a1a1a";
+copyBtn.style.boxShadow = "var(--shadow-md)";
+copyBtn.style.fontWeight = "700";
+copyBtn.style.padding = ".75rem 1.1rem";
+copyBtn.style.borderRadius = ".8rem";
+copyBtn.style.border = "1px solid transparent";
 copyBtn.style.cursor = "pointer";
-copyBtn.style.padding = "4px";
+copyBtn.style.transition = "transform .15s ease, box-shadow .15s ease, background .2s ease";
+copyBtn.style.fontFamily = "'Noto Kufi Arabic', sans-serif";
+copyBtn.onmouseover = () => { copyBtn.style.transform = "translateY(-2px)"; copyBtn.style.boxShadow = "var(--shadow-gold-hover)"; };
+copyBtn.onmouseout = () => { copyBtn.style.transform = "translateY(0)"; copyBtn.style.boxShadow = "var(--shadow-md)"; };
 
   copyBtn.onclick = () => {
     navigator.clipboard.writeText(textForShare);
@@ -651,64 +648,106 @@ copyBtn.style.padding = "4px";
   };
 
   /* ===== زر المشاركة ===== */
-  const shareBtn = document.createElement("button");
-  shareBtn.textContent = "🔗";
-  shareBtn.title = "Share";
+  const shareBtn = document.createElement('button');
+  shareBtn.textContent = "Share 🔗";
+  shareBtn.style.background = "var(--gold-500)";
+  shareBtn.style.color = "#1a1a1a";
+  shareBtn.style.boxShadow = "var(--shadow-md)";
+  shareBtn.style.fontWeight = "700";
+  shareBtn.style.padding = ".75rem 1.1rem";
+  shareBtn.style.borderRadius = ".8rem";
+  shareBtn.style.border = "1px solid transparent";
+  shareBtn.style.cursor = "pointer";
+  shareBtn.style.fontFamily = "'Noto Kufi Arabic', sans-serif";
+  shareBtn.style.transition = "transform .15s ease, box-shadow .15s ease, background .2s ease";
+  shareBtn.style.position = "relative";
+
+  shareBtn.onmouseover = () => { shareBtn.style.transform = "translateY(-2px)"; shareBtn.style.boxShadow = "var(--shadow-gold-hover)"; };
+  shareBtn.onmouseout = () => { shareBtn.style.transform = "translateY(0)"; shareBtn.style.boxShadow = "var(--shadow-md)"; };
 
   /* ===== نافذة المشاركة ===== */
   const shareMenu = document.createElement("div");
-  shareMenu.style.position = "absolute";
-  shareMenu.style.bottom = "40px";
-  shareMenu.style.left = "0";
-  shareMenu.style.background = "#fff";
-  shareMenu.style.borderRadius = "10px";
-  shareMenu.style.padding = "6px";
-  shareMenu.style.display = "none";
-  shareMenu.style.gap = "8px";
-  shareMenu.style.boxShadow = "0 4px 12px rgba(0,0,0,0.15)";
-  shareMenu.style.display = "flex";
+  shareMenu.style.position = 'absolute';
+  shareMenu.style.top = '0';
+  shareMenu.style.bottom = 'auto';
+  shareMenu.style.left = '100%';
+  shareMenu.style.right = 'auto';
+  shareMenu.style.background = '#fff';
+  shareMenu.style.border = '1px solid #ddd';
+  shareMenu.style.borderRadius = '8px';
+  shareMenu.style.padding = '6px 10px';
+  shareMenu.style.display = 'none';
+  shareMenu.style.gap = '8px';
+  shareMenu.style.boxShadow = '0 4px 12px rgba(0,0,0,.15)';
+  shareMenu.style.flexWrap = 'nowrap';
+  shareMenu.style.zIndex = '100';
 
-  /* إخفاء مبدئي */
-  shareMenu.style.visibility = "hidden";
-
-  shareBtn.onclick = () => {
-    shareMenu.style.visibility =
-      shareMenu.style.visibility === "hidden" ? "visible" : "hidden";
+  shareBtn.onclick = (e) => {
+    e.stopPropagation();
+    shareMenu.style.display = shareMenu.style.display === 'none' ? 'flex' : 'none';
   };
+
+  shareMenu.addEventListener('mouseleave', () => {
+    shareMenu.style.display = 'none';
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!shareBtn.contains(e.target)) shareMenu.style.display = 'none';
+  });
 
   /* ===== أيقونات المشاركة ===== */
-  const createIcon = (href, img) => {
-    const a = document.createElement("a");
-    a.href = href;
-    a.target = "_blank";
-    a.innerHTML = `<img src="${img}" style="width:22px;height:22px">`;
-    return a;
+  const platforms = [
+    { name: 'X', icon: 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/x.svg', id: 'x' },
+    { name: 'Facebook', icon: 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/facebook.svg', id: 'facebook' },
+    { name: 'WhatsApp', icon: 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/whatsapp.svg', id: 'whatsapp' }
+  ];
+
+  platforms.forEach(p => {
+    const a = document.createElement('a');
+    a.href = '#';
+    a.title = p.name;
+    a.style.margin = '2px';
+    a.style.display = 'inline-block';
+
+    const img = document.createElement('img');
+    img.src = p.icon;
+    img.width = 26;
+    img.height = 26;
+    img.style.transition = 'transform 0.2s';
+    img.onmouseover = () => img.style.transform = 'scale(1.2)';
+    img.onmouseout = () => img.style.transform = 'scale(1)';
+
+    let href;
+    if (p.id === 'x') {
+      href = `https://x.com/intent/tweet?text=${encodeURIComponent(textForShareWithURL)}`;
+    } else if (p.id === 'whatsapp') {
+      href = `https://api.whatsapp.com/send?text=${encodeURIComponent(textForShareWithURL)}`;
+    } else if (p.id === 'facebook') {
+      href = `https://www.facebook.com/sharer/sharer.php?quote=${encodeURIComponent(textForShareWithURL)}`;
+    }
+
+    a.appendChild(img);
+    a.onclick = (e) => { e.preventDefault(); window.open(href, '_blank'); shareMenu.style.display = 'none'; };
+    shareMenu.appendChild(a);
+  });
+
+  shareBtn.appendChild(shareMenu);
+
+  shareBtn.onclick = (e) => {
+    e.stopPropagation();
+    shareMenu.style.display = shareMenu.style.display === 'none' ? 'flex' : 'none';
   };
 
-  shareMenu.appendChild(
-    createIcon(
-      `https://x.com/intent/tweet?text=${encodeURIComponent(textForShare)}`,
-      "image/X_logo.jpg.webp"
-    )
-  );
+  shareMenu.addEventListener('mouseleave', () => {
+    shareMenu.style.display = 'none';
+  });
 
-  shareMenu.appendChild(
-    createIcon(
-      `https://api.whatsapp.com/send?text=${encodeURIComponent(textForShare)}`,
-      "https://cdn-icons-png.flaticon.com/512/733/733585.png"
-    )
-  );
-
-  shareMenu.appendChild(
-    createIcon(
-      `https://www.facebook.com/sharer/sharer.php?quote=${encodeURIComponent(textForShare)}`,
-      "https://cdn-icons-png.flaticon.com/512/733/733547.png"
-    )
-  );
+  document.addEventListener('click', (e) => {
+    if (!shareBtn.contains(e.target)) shareMenu.style.display = 'none';
+  });
 
   actions.appendChild(copyBtn);
   actions.appendChild(shareBtn);
-  actions.appendChild(shareMenu);
 
   card.appendChild(actions);
   container.appendChild(card);
