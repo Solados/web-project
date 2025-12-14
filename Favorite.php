@@ -33,7 +33,7 @@ if (!$LOGGED_IN) {
 <body>
 <header class="site-header">
   <nav class="navbar" aria-label="Main navigation">
-    <a class="brand" href="#top" aria-label="Back to top">
+    <a class="brand" href="index.php" aria-label="Back to top">
       <img src="image/Hawiyah-En.png" alt="Logo" class="site-logo">
     </a>
     <button class="menu-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Toggle menu">☰</button>

@@ -28,7 +28,7 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
   <header class="site-header">
    <!-- Navigation -->
     <nav class="navbar" aria-label="Main navigation">
-     <a class="brand" href="#top" aria-label="Back to top">
+     <a class="brand" href="index.php" aria-label="Back to top">
       <img src="image/Hawiyah-En.png" alt="Logo" class="site-logo">
 
      </a>
