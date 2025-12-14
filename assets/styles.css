@@ -416,11 +416,11 @@ body { overflow-x: hidden; }
   align-items: center;
   justify-content: center;
 
-  background: rgba(199, 199, 199, 0.45);
+  background: rgba(226, 222, 222, 0.45);
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
 
-  border: 1px solid rgba(255, 255, 255, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.288);
   border-radius: 50%;
 
   color: #fffafa;
