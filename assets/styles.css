@@ -976,13 +976,14 @@ body { overflow-x: hidden; }
   position: absolute;
   bottom: 50px;
 
-  right: 200px;     /* تثبيت حقيقي */
+  right: 8%;   /* نسبة وليس px */
   left: auto;
 
   display: flex;
   gap: 20px;
-
   z-index: 100;
 }
+
+
 
 
