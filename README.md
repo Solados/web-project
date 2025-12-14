@@ -1,84 +1,93 @@
-# Hawiyyah — Website
+﻿# Hawiyyah  Cultural Regions & Quizzes
 
-Professional, bilingual informational website showcasing Saudi culture, regions, and interactive quizzes.
+## English
 
-This repository contains the front-end pages and a light PHP-based profile/dashboard system used for user sign-up, login, and progress tracking.
+Hawiyyah is a bilingual (Arabic / English) informational website focused on Saudi regional culture and interactive quizzes. It combines static region pages with a lightweight PHP profile/dashboard system for user sign-up, authentication, and basic progress tracking. This README presents both English and Arabic content in the same file.
 
-## Key Features
+### Key Features
 
-- Clean, responsive design using a sand & green palette, optimized for Arabic and English content.
-- Region pages (North, South, East, West, Central) with imagery and descriptions.
-- Interactive quiz system and quiz pages.
-- User profile dashboard with session-based authentication, persistent cookies, and a profile API.
-- Lightweight CSV-backed user store (for small deployments / prototypes).
+- Clean, responsive design with support for RTL (Arabic) and LTR (English) layouts.
+- Region pages (North, South, East, West, Central) with imagery and descriptive content.
+- Interactive quizzes with client-side parsing and result tracking.
+- Lightweight user profile and dashboard backed by CSV storage (suitable for demos and prototypes).
 
-## Project Structure (important files)
+### Project structure (select files)
 
-- `index.php` — Home page
-- `index-ar.php` — Home page (Arabic)
-- `*.html` — Regional pages (North, South, East, West, Central)
-- `dashboard.php` — User profile dashboard (requires login)
-- `sign/` — Authentication handlers and forms
-  - `sign/save_signup.php` — Signup handler (creates user and starts session)
-  - `sign/login_check.php` — Login handler (verifies credentials, sets session + cookies)
-  - `sign/check_session.php` — Session validator and logout handler
-- `api/user_profile.php` — Minimal profile API (get profile, get stats, update profile)
-- `data/user_data.csv` — CSV-backed user store (Full Name, Email, Password Hash, Quiz Record, Quiz Answered)
-- `assets/` — CSS and JavaScript assets (`styles.css`, `script.js`, `quiz-parser.js`, etc.)
-- `image/` — Image assets used across pages
+- `index.php`  Home page
+- `index-ar.php`  Home page (Arabic)
+- `dashboard.php`  User profile dashboard (requires login)
+- `sign/`  Authentication handlers and forms (signup, login, session checks)
+- `api/`  Minimal API endpoints (profile and quiz-related actions)
+- `assets/`  CSS and JavaScript (`styles.css`, `script.js`, `quiz-parser.js`)
+- `data/`  CSV data files (includes `user_data.csv` for the prototype store)
+- `image/`  Image assets used across the site
 
-## Quick Start (local)
+### Usage notes
 
-1. Clone or copy the repository to your machine.
-2. Start a simple PHP-capable server or use built-in PHP server for local testing:
+- This repository is intended as a prototype/demo. The included PHP handlers and CSV-backed storage are convenient for local testing and demos but are not production-grade.
+- To evaluate PHP-backed features (signup, login, dashboard), run a PHP-capable web server and point your browser to the site root. (Server instructions are intentionally omitted from this document.)
 
-```powershell
-# from repository root
-php -S localhost:8000
-```
+### Authentication & profile system
 
-3. Open the site in a browser:
+- Session-based authentication with persistent cookies for convenience during demos.
+- Passwords are stored using PHP's `password_hash()`.
+- The dashboard and protected pages include session validation via the scripts under `sign/`.
 
-```text
-http://localhost:8000/index.php
-```
+### Developer notes
 
-4. To test signup/login and the dashboard, use the form at `sign/Signup_Login_Form.html`.
+- Styling and theme variables are in `assets/styles.css`.
+- Quiz parsing and client logic live in `assets/quiz-parser.js` and `assets/script.js`.
+- `api/user_profile.php` exposes minimal JSON endpoints used by the dashboard.
+- Helper files: `debug_profile.php` and `test_profile_system.html` aid local debugging and testing.
 
-Notes: If you prefer a static-only preview (no PHP features), open `index.php` directly in your browser, but PHP pages (dashboard, signup/login handlers) will not work.
+### Attribution
 
-## Authentication & Profile System
-
-This project includes a simple session-based authentication flow implemented with PHP and CSV storage (good for demos/prototypes).
-
-- Sessions are configured with persistent cookies (30-day lifetime) to keep users logged in across browser restarts.
-- Passwords are stored as hashes using PHP's `password_hash()`.
-- The dashboard (`dashboard.php`) includes `sign/check_session.php` to protect pages and supports logout via `?logout=true`.
-- For production, migrate the user store to a database, enable HTTPS (`'secure' => true` for cookies), and consider additional protections (CSRF tokens, rate limiting, email verification).
-
-## Developer Notes
-
-- Styling and theme: `assets/styles.css` (variables for green/gold/sand palette).
-- Main JavaScript: `assets/script.js` and `assets/quiz-parser.js`.
-- API entrypoint for profile operations: `api/user_profile.php` — returns JSON for AJAX use in the dashboard.
-- Test/debug helpers included:
-  - `debug_profile.php` — view session and cookie state
-  - `test_profile_system.html` — interactive test suite
-
-## Security Considerations
-
-This project is a prototype.
-
-## License & Attribution
-
-This project contains images sourced from public URLs (Unsplash) and uses the `Noto Kufi Arabic` font from Google Fonts. Replace assets with licensed or self-hosted alternatives before production.
-
-If you'd like, I can also:
-
-- Add a short Getting Started script to run the PHP server and open the site in the browser.
-- Generate a small SQL schema and migration script to replace the CSV store.
-- Harden authentication (CSRF tokens, email verification, password reset).
+Images and some fonts were obtained from public sources (for example, Unsplash and Google Fonts). Replace or re-license assets before deploying to production.
 
 ---
 
-Maintainer: Solados — December 2025
+## العربية
+
+حوية هو موقع ثنائي اللغة (العربية / الإنجليزية) يقدم معلومات عن المناطق السعودية مع اختبارات تفاعلية. يجمع المشروع صفحات ثابتة لكل منطقة مع نظام ملف شخصي/لوحة تحكم بسيط مبني على PHP لتسجيل المستخدمين والمصادقة وتتبع نتائج الاختبارات الأساسية.
+
+### الميزات الرئيسية
+
+- تصميم مستجيب ونظيف يدعم اتجاهات الكتابة RTL (العربية) وLTR (الإنجليزية).
+- صفحات المناطق (الشمال الجنوب الشرق الغرب الوسط) مع صور ومحتوى وصفي.
+- اختبارات تفاعلية مع معالجة على جهة العميل وتتبع النتائج.
+- نظام ملف شخصي ولوحة تحكم خفيف يعتمد على ملفات CSV (مناسب للعروض والاختبارات التجريبية).
+
+### بنية المشروع (ملفات مختارة)
+
+- `index.php`  الصفحة الرئيسية
+- `index-ar.php`  الصفحة الرئيسية (بالعربية)
+- `dashboard.php`  لوحة الملف الشخصي (تتطلب تسجيل دخول)
+- `sign/`  معالجات ونماذج المصادقة (تسجيل دخول فحص الجلسة)
+- `api/`  نقاط نهاية API بسيطة (عمليات الملف الشخصي والاختبارات)
+- `assets/`  ملفات CSS وJavaScript (`styles.css`, `script.js`, `quiz-parser.js`)
+- `data/`  ملفات CSV (بما في ذلك `user_data.csv` لمخزن الاختبارات)
+- `image/`  ملفات الصور المستخدمة في الموقع
+
+### ملاحظات الاستخدام
+
+- هذا المستودع مخصص كنموذج تجريبي/عرض توضيحي. معالجات PHP ومخزن CSV المضمن ملائمة للاختبار المحلي والعروض وليس للإنتاج.
+- لتجربة ميزات PHP (تسجيل دخول لوحة التحكم) شغل خادما يدعم PHP ووجه المتصفح إلى جذر المشروع. (تم حذف تعليمات تشغيل الخادم من هذا المستند عمدا.)
+
+### نظام المصادقة والملف الشخصي
+
+- مصادقة قائمة على الجلسات مع ملفات تعريف ارتباط دائمة لتسهيل الاختبارات.
+- كلمات المرور مخزنة باستخدام `password_hash()` في PHP.
+- تشمل صفحات لوحة التحكم وحمايتها على فحص الجلسة عبر سكربتات داخل `sign/`.
+
+### ملاحظات للمطورين
+
+- أنماط التصميم والمتغيرات في `assets/styles.css`.
+- منطق الاختبارات وجافاسكربت في `assets/quiz-parser.js` و`assets/script.js`.
+- يوفر `api/user_profile.php` نقاط نهاية JSON بسيطة للوحة التحكم.
+- ملفات المساعدة: `debug_profile.php` و`test_profile_system.html` لتسهيل التصحيح والاختبار المحلي.
+
+### حقوق المصدر
+
+الصور وبعض الخطوط مأخوذة من مصادر عامة (مثل Unsplash وGoogle Fonts). استبدل أو أعد ترخيص العناصر قبل النشر في بيئة إنتاج.
+
+---
