@@ -68,7 +68,7 @@ body { overflow-x: hidden; }
   text-decoration: none;
 }
 .site-logo {
-    height: 60px ;
+    height: 60px;
     width: auto;
     display: block;
 }
@@ -271,7 +271,7 @@ body { overflow-x: hidden; }
   right: 50%; 
   left: auto; 
   transform: translateX(50%); 
-  direction: ltr; 
+  direction: rtl; 
   text-align: right; 
   padding-right: 20px; 
   padding-left: 20px; 
@@ -388,66 +388,30 @@ body { overflow-x: hidden; }
   text-align: left;
 }
 
-/* Slider arrows container */
-/* تأكيد أن السلايدر هو المرجع */
-.carousel {
-  position: relative;
-}
-
-/* ===== FIXED SLIDER ARROWS ===== */
+/* Arrows */
 .arrows {
   position: absolute;
-  bottom: 55px;          /* ثابت من الأسفل */
-  left: 47%;             /* منتصف السلايدر */
-  transform: translateX(-50%);
-  z-index: 200;
-
+  top: 80%;
+  right: 52%;
+  z-index: 100;
+  width: 300px;
+  max-width: 30%;
   display: flex;
-  gap: 14px;
+  gap: 10px;
   align-items: center;
 }
 
-/* Arrow buttons */
 .arrows button {
-  width: 42px;
-  height: 44px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  background: rgba(226, 222, 222, 0.45);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-
-  border: 1px solid rgba(255, 255, 255, 0.288);
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
-
-  color: #fffafa;
-  font-size: 22px;
+  background-color: #eee4;
+  border: none;
+  color: #fff;
+  font-family: monospace;
   font-weight: bold;
-
-  cursor: pointer;
-  transition: all 0.25s ease;
+  transition: 0.5s;
 }
-
-/* Hover */
-.arrows button:hover {
-  background: rgba(255, 255, 255, 0.7);
-  transform: scale(1.08);
-}
-
-/* Active */
-.arrows button:active {
-  transform: scale(0.95);
-}
-
-/* Disable during animation */
-.carousel.next .arrows button,
-.carousel.prev .arrows button {
-  pointer-events: none;
-}
-
 
 /* Questions slider: arrange 20 cards per slide as 4 columns x 5 rows */
 /* Make the slider span the full viewport width even when inside a constrained container */
@@ -498,7 +462,10 @@ body { overflow-x: hidden; }
 /* Make controls span full width and appear above the slider (they are appended above in DOM) */
 .qs-controls { width: 100%; max-width: 1100px; margin: 0 auto; padding: .5rem 0; box-sizing: border-box; display:flex; justify-content:center; }
 
-
+.arrows button:hover {
+  background-color: #fff;
+  color: #000;
+}
 
 /* Animation */
 .carousel .list .item:nth-child(1) {
@@ -637,7 +604,10 @@ body { overflow-x: hidden; }
   animation: showThumbnail 0.5s linear 1 forwards;
 }
 
-
+.carousel.next .arrows button,
+.carousel.prev .arrows button {
+  pointer-events: none;
+}
 
 .carousel.prev .list .item:nth-child(2) .content .author,
 .carousel.prev .list .item:nth-child(2) .content .title,
@@ -847,95 +817,4 @@ body { overflow-x: hidden; }
 .feature-card.en p {
     direction: ltr !important;
     text-align: left !important;
-}
-
-/* ===== NAV SEARCH ===== */
-.nav-search{
-  display:flex;
-  align-items:center;
-  gap:8px;
-}
-
-.search-toggle{
-  border: 1px solid rgba(0,0,0,.15);
-  background: rgba(255,255,255,.7);
-  border-radius: .6rem;
-  padding: .35rem .55rem;
-  cursor: pointer;
-}
-
-.nav-search-form{
-  display:none;
-  align-items:center;
-  gap:6px;
-}
-
-.nav-search-form.open{
-  display:flex;
-}
-
-.nav-search-form input[type="search"],
-.page-search input[type="search"]{
-  padding: .45rem .65rem;
-  border-radius: .6rem;
-  border: 1px solid #ccc;
-  min-width: 180px;
-}
-
-.nav-search-form button,
-.page-search button{
-  padding: .45rem .75rem;
-  border-radius: .6rem;
-  border: 1px solid transparent;
-  background: #0f6b3f;
-  color: #fff;
-  cursor: pointer;
-}
-
-/* Search bar داخل صفحة Search.php */
-.page-search{
-  display:flex;
-  gap:10px;
-  align-items:center;
-  margin-top: 10px;
-}
-
-/* ===== SEARCH RESULTS: stacked rectangles ===== */
-.search-page .features{
-  display:flex;
-  flex-direction:column;
-  gap:14px;
-}
-
-.search-page .feature-card{
-  width:100%;
-  border-radius:14px;
-  padding:16px 18px;
-  border:1px solid rgba(0,0,0,.08);
-  background: rgba(255,255,255,.7);
-  box-shadow: 0 10px 25px rgba(0,0,0,.06);
-}
-
-.search-page .feature-card h3{
-  margin:0 0 10px;
-  font-size:1.05rem;
-  line-height:1.6;
-}
-
-.search-page .feature-card p{
-  margin:0;
-  line-height:1.8;
-  white-space: pre-wrap;
-}
-
-/* badge: question type */
-.search-page .q-meta{
-  display:inline-block;
-  width:fit-content;
-  margin-bottom:10px;
-  padding:6px 10px;
-  border-radius:999px;
-  font-size:.9rem;
-  border:1px solid rgba(0,0,0,.12);
-  background: rgba(255,255,255,.85);
 }
