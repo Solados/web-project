@@ -153,7 +153,8 @@ if (isset($_GET['source'])) {
                 $entry = ['question'=>$qText,'answer'=>$aText,'lang'=>'arabic','arabic_type'=>strtolower($col)];
                 // Treat Fill_in_Blank_question as Open-ended regardless of detected choices
                 if (strcasecmp($col, 'Fill_in_Blank_question') === 0) {
-                    $entry['type'] = 'Open-ended';
+                    $entry['type'] = 'MCQ';
+                     $entry['choices'] = !empty($choices) ? $choices : [];
                 } else {
                     if (!empty($choices)) { $entry['choices'] = $choices; $entry['type'] = 'MCQ'; }
                 }
@@ -171,7 +172,8 @@ if (isset($_GET['source'])) {
                     $entry = ['question'=>$qText,'answer'=>$aText,'lang'=>'arabic','arabic_type'=>strtolower($col),'dialect'=>$dialect];
                     // Fill-in-blank should be open-ended
                     if (strcasecmp($col, 'Fill_in_Blank_question') === 0) {
-                        $entry['type'] = 'Open-ended';
+                        $entry['type'] = 'MCQ';
+                         $entry['choices'] = !empty($choices) ? $choices : [];
                     } else {
                         if (!empty($choices)) { $entry['choices'] = $choices; $entry['type'] = 'MCQ'; }
                     }
@@ -482,7 +484,7 @@ function __region_loadEnglishQuestions($dataDir, $files) {
         }));
     }
 
-    if ($lang === 'all') shuffle($questions);
+    if (count($questions) > 1) shuffle($questions);
     if ($lang !== 'all') {
         $questions = array_values(array_filter($questions, function($q) use ($lang) { return isset($q['lang']) && $q['lang'] === $lang; }));
     }

@@ -232,6 +232,7 @@ if (!$LOGGED_IN) {
             answer: q.answer || null,
             type: q.type || ''
           }));
+          shuffle(selectedQuestions); // Always shuffle, even for 'all'
           selectedQuestions.forEach(q => shuffle(q.choices));
           displayQuestions();
           resultEl.innerHTML = '';
@@ -270,6 +271,7 @@ if (!$LOGGED_IN) {
             answer: q.answer || null,
             type: q.type || ''
           }));
+          shuffle(selectedQuestions); // Always shuffle, even for 'all'
           selectedQuestions.forEach(q => shuffle(q.choices));
           displayQuestions();
           resultEl.innerHTML = '';
