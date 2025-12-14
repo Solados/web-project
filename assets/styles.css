@@ -237,7 +237,7 @@ body { overflow-x: hidden; }
 /* Carousel Slider Styles - Original Version */
 .carousel {
 
-  width: 100vw;
+  width: 100%;
   overflow: hidden;
   position: relative;
 }
@@ -569,7 +569,8 @@ body { overflow-x: hidden; }
 }
 
 .carousel.next .thumbnail {
-  animation: effectNext 0.5s linear 1 forwards;
+  animation: none !important;
+  transform: none !important;
 }
 
 @keyframes effectNext {
