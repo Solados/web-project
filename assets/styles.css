@@ -389,33 +389,41 @@ body { overflow-x: hidden; }
 }
 
 /* Slider arrows container */
+/* تأكيد أن السلايدر هو المرجع */
+.carousel {
+  position: relative;
+}
+
+/* ===== FIXED SLIDER ARROWS ===== */
 .arrows {
   position: absolute;
-  top: 80%;
-  right: 38%;
-  z-index: 100;
+  bottom: 55px;          /* ثابت من الأسفل */
+  left: 47%;             /* منتصف السلايدر */
+  transform: translateX(-50%);
+  z-index: 200;
 
   display: flex;
-  gap: 12px;
+  gap: 14px;
+  align-items: center;
 }
 
 /* Arrow buttons */
 .arrows button {
-  width: 48px;
-  height: 48px;
+  width: 42px;
+  height: 44px;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  background: rgba(0, 0, 0, 0.45); /* التظليل */
-  backdrop-filter: blur(6px);      /* زجاجي حديث */
+  background: rgba(199, 199, 199, 0.45);
+  backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
 
   border: 1px solid rgba(255, 255, 255, 0.35);
   border-radius: 50%;
 
-  color: #fff;
+  color: #fffafa;
   font-size: 22px;
   font-weight: bold;
 
@@ -423,42 +431,23 @@ body { overflow-x: hidden; }
   transition: all 0.25s ease;
 }
 
-/* Hover effect */
+/* Hover */
 .arrows button:hover {
-  background: rgba(0, 0, 0, 0.65);
+  background: rgba(255, 255, 255, 0.7);
   transform: scale(1.08);
 }
 
-/* Active (click) */
+/* Active */
 .arrows button:active {
   transform: scale(0.95);
 }
 
-
-/* Arrows */
-.arrows {
-  position: absolute;
-  top: 80%;
-  right: 37%;
-  z-index: 100;
-  width: 300px;
-  max-width: 30%;
-  display: flex;
-  gap: 10px;
-  align-items: center;
+/* Disable during animation */
+.carousel.next .arrows button,
+.carousel.prev .arrows button {
+  pointer-events: none;
 }
 
-.arrows button {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background-color: #eee4;
-  border: none;
-  color: #fff;
-  font-family: monospace;
-  font-weight: bold;
-  transition: 0.5s;
-}
 
 /* Questions slider: arrange 20 cards per slide as 4 columns x 5 rows */
 /* Make the slider span the full viewport width even when inside a constrained container */
@@ -509,10 +498,7 @@ body { overflow-x: hidden; }
 /* Make controls span full width and appear above the slider (they are appended above in DOM) */
 .qs-controls { width: 100%; max-width: 1100px; margin: 0 auto; padding: .5rem 0; box-sizing: border-box; display:flex; justify-content:center; }
 
-.arrows button:hover {
-  background-color: #fff;
-  color: #000;
-}
+
 
 /* Animation */
 .carousel .list .item:nth-child(1) {
@@ -651,10 +637,7 @@ body { overflow-x: hidden; }
   animation: showThumbnail 0.5s linear 1 forwards;
 }
 
-.carousel.next .arrows button,
-.carousel.prev .arrows button {
-  pointer-events: none;
-}
+
 
 .carousel.prev .list .item:nth-child(2) .content .author,
 .carousel.prev .list .item:nth-child(2) .content .title,
