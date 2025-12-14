@@ -140,7 +140,7 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
             <!-- Profile dropdown list -->
             <ul class="dropdown-content">
               <li><a href="dashboard.php">My profile</a></li>
-              <li><a href="Favorites.php">Favorites</a></li>
+              <li><a href="Favorite.php">Favorites</a></li>
               
               <li><a href="sign/check_session.php?logout=true" onclick="return confirm('Are you sure you want to logout?')">Logout</a></li>
             </ul>
