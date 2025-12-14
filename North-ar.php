@@ -248,7 +248,7 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
       <div class="container cta">
         <h2>تعرّف على ثقافة وشواهد المنطقة الشمالية</h2>
         <p>استكشف المواقع الأثرية، الفعاليات التقليدية، والأسواق المحلية.</p>
-        <a class="btn btn-primary" href="quiz/QUIZ-ar.php">ابدأ الاختبار</a>
+        <a class="btn btn-primary" href="quiz/QUIZ-ar.php">ابدأ الآن</a>
       </div>
     </section>
 
