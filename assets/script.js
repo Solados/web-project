@@ -33,22 +33,26 @@ let nextDom = document.getElementById('next');
 let prevDom = document.getElementById('prev');
 
 let carouselDom = document.querySelector('.carousel');
+let isRTL = document.documentElement.dir === 'rtl';
+
 if (carouselDom) {
     let SliderDom = carouselDom.querySelector('.carousel .list');
     let thumbnailBorderDom = document.querySelector('.carousel .thumbnail');
     let thumbnailItemsDom = thumbnailBorderDom.querySelectorAll('.item');
-    let timeDom = document.querySelector('.carousel .time');
 
+    // حافظ على السلوك الحالي
     thumbnailBorderDom.appendChild(thumbnailItemsDom[0]);
-    let timeRunning = 3000;
-    let timeAutoNext = 15000;
 
+    let timeRunning = 500;
+    
+
+    
     nextDom.onclick = function(){
-        showSlider('next');    
+        showSlider('next');
     }
 
     prevDom.onclick = function(){
-        showSlider('prev');    
+        showSlider('prev');
     }
 
     let runTimeOut;
@@ -57,19 +61,22 @@ if (carouselDom) {
     }, timeAutoNext);
 
     function showSlider(type){
+
+      const dir = isRTL ? (type === 'next' ? 'prev' : 'next') : type;
+
         let SliderItemsDom = SliderDom.querySelectorAll('.carousel .list .item');
         let thumbnailItemsDom = document.querySelectorAll('.carousel .thumbnail .item');
-        
-        if(type === 'next'){
+
+        if(dir === 'next'){
             SliderDom.appendChild(SliderItemsDom[0]);
             thumbnailBorderDom.appendChild(thumbnailItemsDom[0]);
             carouselDom.classList.add('next');
-        }else{
+        } else {
             SliderDom.prepend(SliderItemsDom[SliderItemsDom.length - 1]);
             thumbnailBorderDom.prepend(thumbnailItemsDom[thumbnailItemsDom.length - 1]);
             carouselDom.classList.add('prev');
         }
-        
+
         clearTimeout(runTimeOut);
         runTimeOut = setTimeout(() => {
             carouselDom.classList.remove('next');
@@ -82,6 +89,8 @@ if (carouselDom) {
         }, timeAutoNext);
     }
 }
+
+
 
 
 // القائمة المنسدلة للمناطق
