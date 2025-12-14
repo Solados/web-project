@@ -147,6 +147,8 @@ const builtin = [
       if (k in hmap) { typeIdx = hmap[k]; break; }
     }
 
+    // randomize row order so selecting "all" samples mixed types
+    shuffle(rows);
     for (const r of rows) {
       if (qIdx === undefined) break;
       if (!r[qIdx]) continue;
@@ -374,34 +376,47 @@ const builtin = [
       }
 
       // apply category filter
-      if (type && String(type).toLowerCase() !== 'all') {
-        const typeKeys = ['type', 'question_type', 'qtype', 'questiontype'];
-        const found = findHeaderKey(typeKeys);
-        if (found !== null) {
-          const idx = hmap[found];
-          filteredRows = filteredRows.filter(r => {
-            const val = (r[idx] || '') + '';
-            return val.toLowerCase().indexOf(String(type).toLowerCase()) !== -1;
-          });
-        }
-        else {
-          // Fallback heuristic when no explicit Question Type header exists:
-          // use presence/absence of the Choices column to determine MCQ vs Open-ended rows.
-          const choicesKeys = ['choices', 'choice', 'options'];
-          const choicesKey = findHeaderKey(choicesKeys);
-          if (choicesKey !== null) {
-            const cidx = hmap[choicesKey];
-            const tl = String(type).toLowerCase();
-            if (tl.indexOf('mcq') !== -1 || tl.indexOf('multiple') !== -1 || tl.indexOf('one correct') !== -1) {
-              // keep rows that have explicit choices (not the '–' placeholder)
-              filteredRows = filteredRows.filter(r => r[cidx] && String(r[cidx]).trim() !== '' && String(r[cidx]).trim() !== '–');
-            } else if (tl.indexOf('open') !== -1 || tl.indexOf('fill') !== -1) {
-              // keep rows without explicit choices
-              filteredRows = filteredRows.filter(r => !r[cidx] || String(r[cidx]).trim() === '' || String(r[cidx]).trim() === '–');
-            }
-          }
-        }
+      // apply TYPE filter (Question Type)
+if (type && String(type).toLowerCase() !== 'all') {
+
+  // نحول النوع إلى شكل موحد (عشان ما يصير تداخل)
+  function canonType(s) {
+    const t = String(s || '').toLowerCase().trim();
+    if (t.includes('multiple')) return 'multi';
+    if (t.includes('one')) return 'one';
+    if (t.includes('open')) return 'open';
+    // بعض الملفات قد تكتبها بشكل مختلف
+    if (t.includes('fill')) return 'open';
+    return t;
+  }
+
+  const requested = canonType(type);
+
+  // أهم شيء: ندعم "Question Type" (يصير مفتاحه 'question type')
+  const typeKeys = ['question type', 'type', 'question_type', 'questiontype', 'qtype', 'question-type'];
+  const found = findHeaderKey(typeKeys);
+
+  if (found !== null) {
+    // فلترة صارمة من العمود نفسه
+    const idx = hmap[found];
+    filteredRows = filteredRows.filter(r => canonType(r[idx]) === requested);
+  } else {
+    // fallback heuristic فقط إذا ما فيه عمود نوع
+    const choicesKeys = ['choices', 'choice', 'options'];
+    const choicesKey = findHeaderKey(choicesKeys);
+    if (choicesKey !== null) {
+      const cidx = hmap[choicesKey];
+
+      if (requested === 'open') {
+        filteredRows = filteredRows.filter(r => !r[cidx] || String(r[cidx]).trim() === '' || String(r[cidx]).trim() === '–');
+      } else {
+        // one أو multi: لازم تكون choices موجودة
+        filteredRows = filteredRows.filter(r => r[cidx] && String(r[cidx]).trim() !== '' && String(r[cidx]).trim() !== '–');
       }
+    }
+  }
+}
+
 
       if (category && String(category).toLowerCase() !== 'all') {
         const catKeys = ['category', 'categories', 'topic', 'tag', 'tags', 'category_name'];
@@ -520,8 +535,51 @@ const builtin = [
     }
   }
 
+  // fetchCategories(source) -> Promise<string[]>
+  // Reads Category column and returns distinct categories for the given CSV file.
+  async function fetchCategories(source) {
+    const _pathname = (window.location && window.location.pathname) ? window.location.pathname : '';
+    const dataPrefix = (_pathname.split && _pathname.split('/').indexOf('quiz') !== -1) ? '../data/' : 'data/';
+
+    let file = dataPrefix + 'Words.csv';
+    if (source && source !== 'Words') file = `${dataPrefix}${source}.csv`;
+
+    try {
+      const txt = await fetchText(file);
+      const parsed = parseCSV(txt);
+      if (!parsed.header || parsed.header.length === 0) return [];
+
+      const hmap = headerMap(parsed.header);
+
+      // Because your column name is "Category", headerMap will map it to 'category'
+      if (!('category' in hmap)) return [];
+
+      const idx = hmap['category'];
+
+      const seen = new Map(); // key lower => original
+      for (const r of parsed.rows) {
+        const raw = String(r[idx] || '').trim();
+        if (!raw) continue;
+
+        // لو في خلية فيها أكثر من تصنيف مفصول بفواصل/؛/|
+        raw.split(/[,;|/]+/).forEach(part => {
+          const v = String(part || '').trim();
+          if (!v) return;
+          const key = v.toLowerCase();
+          if (!seen.has(key)) seen.set(key, v);
+        });
+      }
+
+      return Array.from(seen.values()).sort((a, b) => a.localeCompare(b));
+    } catch (e) {
+      console.warn('fetchCategories error:', e);
+      return [];
+    }
+  }
+
   window.fetchQuestions = fetchQuestions;
   window.fetchQuestionTypes = fetchQuestionTypes;
+  window.fetchCategories = fetchCategories;
   window.allQuestions = builtin.slice();
 
 })(window);

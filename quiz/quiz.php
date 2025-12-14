@@ -153,7 +153,8 @@ if (isset($_GET['source'])) {
                 $entry = ['question'=>$qText,'answer'=>$aText,'lang'=>'arabic','arabic_type'=>strtolower($col)];
                 // Treat Fill_in_Blank_question as Open-ended regardless of detected choices
                 if (strcasecmp($col, 'Fill_in_Blank_question') === 0) {
-                    $entry['type'] = 'Open-ended';
+                    $entry['type'] = 'MCQ';
+                     $entry['choices'] = !empty($choices) ? $choices : [];
                 } else {
                     if (!empty($choices)) { $entry['choices'] = $choices; $entry['type'] = 'MCQ'; }
                 }
@@ -171,7 +172,8 @@ if (isset($_GET['source'])) {
                     $entry = ['question'=>$qText,'answer'=>$aText,'lang'=>'arabic','arabic_type'=>strtolower($col),'dialect'=>$dialect];
                     // Fill-in-blank should be open-ended
                     if (strcasecmp($col, 'Fill_in_Blank_question') === 0) {
-                        $entry['type'] = 'Open-ended';
+                        $entry['type'] = 'MCQ';
+                         $entry['choices'] = !empty($choices) ? $choices : [];
                     } else {
                         if (!empty($choices)) { $entry['choices'] = $choices; $entry['type'] = 'MCQ'; }
                     }
@@ -280,47 +282,125 @@ if (isset($_GET['file'])) {
         return "";
     }
 
-    function __region_parseChoices($choicesText) {
-        $choices = [];
-        if (!$choicesText) return $choices;
-        preg_match_all('/([A-Z])\.\s*(.*?)(?=\s+[A-Z]\\.|$)/', $choicesText, $matches, PREG_SET_ORDER);
-        foreach ($matches as $m) $choices[trim($m[1])] = trim($m[2]);
-        return $choices;
+    // ========= ENGLISH QUIZ HELPERS (NEW) =========
+
+function __en_normalizeType($t) {
+    $t = strtolower(trim((string)$t));
+    if ($t === '') return 'open';
+    if (strpos($t, 'multiple correct') !== false) return 'multi';
+    if (strpos($t, 'one correct') !== false) return 'one';
+    if (strpos($t, 'open-ended') !== false || strpos($t, 'open ended') !== false) return 'open';
+    // UI shorthands (just in case)
+    if ($t === 'mcq') return 'one';
+    if ($t === 'multi' || $t === 'multiple') return 'multi';
+    if ($t === 'fill' || $t === 'open') return 'open';
+    return 'open';
+}
+
+function __region_parseChoices($choicesText) {
+    // يحافظ على النص كما هو (حتى لو فيه / داخل الخيار) ولا يقسمه
+    $choices = [];
+    $choicesText = trim((string)$choicesText);
+    if ($choicesText === '' || $choicesText === '–' || $choicesText === '-') return $choices;
+
+    // يلتقط A. .... B. .... C. .... D. ....
+    preg_match_all('/\b([A-D])\.\s*(.*?)(?=\s+[A-D]\.|$)/s', $choicesText, $matches, PREG_SET_ORDER);
+    foreach ($matches as $m) {
+        $key = trim($m[1]);
+        $val = trim(preg_replace('/\s+/', ' ', $m[2]));
+        if ($key !== '' && $val !== '') $choices[$key] = $val;
+    }
+    return $choices;
+}
+
+function __en_extractCorrectLetters($answerRaw, $typeNorm) {
+    $answerRaw = trim((string)$answerRaw);
+    if ($typeNorm === 'open') return [];
+
+    // نلتقط فقط A-D حتى لا نلتقط حروف من كلمات مثل Tag
+    preg_match_all('/\b([A-D])\b/', $answerRaw, $m1);
+    $letters = $m1[1] ?? [];
+
+    // احتياط: لو كانت "B." أو "A & B" ما اشتغلت لأي سبب
+    if (empty($letters)) {
+        preg_match_all('/([A-D])/', $answerRaw, $m2);
+        $letters = $m2[1] ?? [];
     }
 
-    function __region_extractEnglishAnswerTextByType($answerLetters, $choicesText, $questionType) {
-        if (!$answerLetters || !$choicesText) return "";
-        $choices = __region_parseChoices($choicesText);
-        preg_match_all('/[A-Z]/', $answerLetters, $matches);
-        $letters = $matches[0];
-        if (stripos($questionType, 'one correct') !== false) $letters = array_slice($letters, 0, 1);
-        $answers = [];
-        foreach ($letters as $l) if (isset($choices[$l])) $answers[] = $choices[$l];
-        return implode(' / ', $answers);
+    // تنظيف + إزالة تكرار
+    $uniq = [];
+    foreach ($letters as $L) {
+        $L = strtoupper(trim($L));
+        if ($L < 'A' || $L > 'D') continue;
+        $uniq[$L] = true;
     }
+    $letters = array_keys($uniq);
 
-    function __region_loadEnglishQuestions($dataDir, $files) {
-        $output = [];
-        foreach ($files as $name) {
-            $path = rtrim($dataDir, '/\\') . DIRECTORY_SEPARATOR . $name;
-            $rows = __region_loadCsvAssoc($path);
-            foreach ($rows as $r) {
-                $q = trim($r['Question'] ?? '');
-                $a = trim($r['Answer'] ?? '');
-                $choicesText = trim($r['Choices'] ?? '');
-                if ($q === '' || $a === '') continue;
-                $finalAnswer = $a;
-                $questionType = strtolower(trim($r['Question Type'] ?? ""));
-                if (!empty($choicesText) && $questionType !== "") {
-                    $extracted = __region_extractEnglishAnswerTextByType($a, $choicesText, $questionType);
-                    if ($extracted !== "") $finalAnswer = $extracted;
+    // one correct: أول حرف فقط
+    if ($typeNorm === 'one') $letters = array_slice($letters, 0, 1);
+
+    return $letters;
+}
+
+function __region_loadEnglishQuestions($dataDir, $files) {
+    $output = [];
+
+    foreach ($files as $name) {
+        $path = rtrim($dataDir, '/\\') . DIRECTORY_SEPARATOR . $name;
+        $rows = __region_loadCsvAssoc($path);
+
+        foreach ($rows as $r) {
+            $q = trim((string)($r['Question'] ?? ''));
+            $aRaw = trim((string)($r['Answer'] ?? ''));
+            $choicesText = trim((string)($r['Choices'] ?? ''));
+            $typeRaw = trim((string)($r['Question Type'] ?? ''));
+            $catRaw  = trim((string)($r['Category'] ?? ''));
+
+            if ($q === '' || $aRaw === '') continue;
+
+            $typeNorm = __en_normalizeType($typeRaw);
+            $choiceMap = __region_parseChoices($choicesText);
+
+            // choices as array of "A. ...." (يحافظ على الشكل + الحرف)
+            $choicesArr = [];
+            foreach ($choiceMap as $k => $v) $choicesArr[] = $k . '. ' . $v;
+
+            $correctLetters = __en_extractCorrectLetters($aRaw, $typeNorm);
+
+            // open-ended: نخزن النص كإجابة
+            $answerText = ($typeNorm === 'open') ? $aRaw : '';
+
+            // (اختياري) نص الإجابة الصحيحة للـ MCQ (للإظهار فقط لو احتجته)
+            $correctTexts = [];
+            if ($typeNorm !== 'open' && !empty($choiceMap) && !empty($correctLetters)) {
+                foreach ($correctLetters as $L) {
+                    if (isset($choiceMap[$L])) $correctTexts[] = $L . '. ' . $choiceMap[$L];
                 }
-                $output[] = ['question'=>$q,'answer'=>$finalAnswer,'lang'=>'english','english_type'=>strtolower($r['Question Type'] ?? ''),'english_category'=>strtolower($r['Category'] ?? '')];
             }
+
+            $entry = [
+                'question' => $q,
+                'lang' => 'english',
+                'english_type' => ($typeRaw !== '' ? $typeRaw : ''),
+                'english_type_norm' => $typeNorm,
+                'english_category' => ($catRaw !== '' ? $catRaw : ''),
+                'choices' => $choicesArr,                 // للعرض
+                'correct_letters' => $correctLetters,     // للتصحيح
+                'answer_text' => $answerText,             // open-ended فقط
+                'correct_texts' => $correctTexts          // اختياري
+            ];
+
+            // لو Open-ended (Choices = –) بنخلي choices فاضية فعلاً
+            if ($typeNorm === 'open') $entry['choices'] = [];
+
+            $output[] = $entry;
         }
-        return $output;
     }
 
+    return $output;
+}
+
+    
     function __region_loadArabicQuestions($dataDir, $dialectsLower) {
         $result = [];
         $arabicFiles = ['Words.csv','Phrases.csv','Proverbs.csv'];
@@ -368,55 +448,43 @@ if (isset($_GET['file'])) {
         $isBlockFilter = false;
     }
 
-    $english = __region_loadEnglishQuestions($dataDirPath, $config['englishFiles']);
-    $arabic = __region_loadArabicQuestions($dataDirPath, $dialectsLower);
+    $english = [];
+    $arabic  = [];
 
-    // If filter requested a specific block column name, keep only arabic questions of that type
-    if (!empty($requestedArabicFilter) && !empty($isBlockFilter) && $isBlockFilter === true) {
-        $arabic = array_values(array_filter($arabic, function($q) use ($filterLower) {
-            return isset($q['arabic_type']) && mb_strtolower($q['arabic_type']) === $filterLower;
-        }));
+    if ($lang === 'english') {
+        $english = __region_loadEnglishQuestions($dataDirPath, $config['englishFiles']);
+    } elseif ($lang === 'arabic') {
+        $arabic = __region_loadArabicQuestions($dataDirPath, $dialectsLower);
+    } else {
+        $english = __region_loadEnglishQuestions($dataDirPath, $config['englishFiles']);
+        $arabic  = __region_loadArabicQuestions($dataDirPath, $dialectsLower);
     }
+
     $questions = array_merge($english, $arabic);
 
-    // Apply optional type filter from GET parameter (e.g., "MCQ (multiple correct)")
+
+    // ----- English type filter (reliable) -----
     $requestedType = isset($_GET['type']) ? trim($_GET['type']) : '';
     if ($requestedType !== '') {
-        $tlow = mb_strtolower($requestedType);
-        // If requesting multiple-correct MCQs, keep questions that are labeled multiple
-        if (mb_strpos($tlow, 'multiple') !== false || mb_strpos($tlow, 'multiple correct') !== false || mb_strpos($tlow, 'multiple answers') !== false) {
-            $questions = array_values(array_filter($questions, function($q) {
-                $etype = isset($q['english_type']) ? mb_strtolower($q['english_type']) : '';
-                $ans = isset($q['answer']) ? (string)$q['answer'] : '';
-                // accept if explicit english_type mentions multiple
-                if ($etype !== '' && mb_strpos($etype, 'multiple') !== false) return true;
-                // accept if answer appears to contain multiple values (slashes, commas, or ' and ')
-                if (strpos($ans, '/') !== false) return true;
-                if (strpos($ans, ',') !== false) return true;
-                if (preg_match('/\band\b/i', $ans)) return true;
-                // also accept if answer is short letters sequence like 'AB' or 'A B'
-                if (preg_match('/^[A-Za-z]{2,}$/', preg_replace('/\s+/', '', $ans))) return true;
-                return false;
-            }));
-        } elseif (mb_strpos($tlow, 'one correct') !== false || mb_strpos($tlow, 'mcq (one') !== false) {
-            // keep only single-correct MCQs
-            $questions = array_values(array_filter($questions, function($q) {
-                $etype = isset($q['english_type']) ? mb_strtolower($q['english_type']) : '';
-                $ans = isset($q['answer']) ? (string)$q['answer'] : '';
-                if ($etype !== '' && (mb_strpos($etype, 'one') !== false || mb_strpos($etype, 'one correct') !== false)) return true;
-                // heuristics: not multi
-                if (strpos($ans, '/') === false && strpos($ans, ',') === false && !preg_match('/\band\b/i', $ans)) return true;
-                return false;
-            }));
-        } elseif (mb_strpos($tlow, 'open') !== false || mb_strpos($tlow, 'fill') !== false) {
-            // keep open-ended (no choices)
-            $questions = array_values(array_filter($questions, function($q) {
-                return empty($q['choices']);
-            }));
-        }
+        $reqNorm = __en_normalizeType($requestedType);
+        $questions = array_values(array_filter($questions, function($q) use ($reqNorm) {
+            if (($q['lang'] ?? '') !== 'english') return false;
+            return (($q['english_type_norm'] ?? '') === $reqNorm);
+        }));
     }
 
-    if ($lang === 'all') shuffle($questions);
+    // ----- Category filter (English) -----
+    $requestedCategory = isset($_GET['category']) ? trim($_GET['category']) : '';
+    if ($requestedCategory !== '' && strtolower($requestedCategory) !== 'all') {
+        $catLow = mb_strtolower($requestedCategory);
+        $questions = array_values(array_filter($questions, function($q) use ($catLow) {
+            if (($q['lang'] ?? '') !== 'english') return false;
+            $qc = mb_strtolower(trim((string)($q['english_category'] ?? '')));
+            return ($qc !== '' && $qc === $catLow);
+        }));
+    }
+
+    if (count($questions) > 1) shuffle($questions);
     if ($lang !== 'all') {
         $questions = array_values(array_filter($questions, function($q) use ($lang) { return isset($q['lang']) && $q['lang'] === $lang; }));
     }

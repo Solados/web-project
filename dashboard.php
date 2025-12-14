@@ -17,8 +17,8 @@ $join_date = $login_time > 0 ? date('F j, Y', $login_time) : 'Unknown';
  <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Saudi Culture | My Profile</title>
-  <meta name="description" content="Manage your profile and track your progress on Saudi Culture.">
+  <title>Hawiyyah | My Profile</title>
+  <meta name="description" content="Manage your profile and track your progress on Hawiyyah.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@300;400;600;700&display=swap" rel="stylesheet">
@@ -242,8 +242,8 @@ $join_date = $login_time > 0 ? date('F j, Y', $login_time) : 'Unknown';
     <!-- Header -->
     <!-- Navigation -->
     <nav class="navbar" aria-label="Main navigation">
-    <a class="brand" href="#top" aria-label="Back to top">
-      <img src="image/Hawiyah.png" alt="Logo" class="site-logo">
+    <a class="brand" href="index.php" aria-label="Back to top">
+      <img src="image/Hawiyah-En.png" alt="Logo" class="site-logo">
      </a>
     <button class="menu-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Toggle menu">☰</button>
       <!-- Nav list -->
@@ -258,8 +258,8 @@ $join_date = $login_time > 0 ? date('F j, Y', $login_time) : 'Unknown';
             <!-- Profile dropdown list -->
             <ul class="dropdown-content">
               <li><a href="dashboard.php">My profile</a></li>
-              <li><a href="Favorites.php">Favorites</a></li>
-              <li><a href="My_quizzes.php">My Quizzes</a></li>
+              <li><a href="Favorite.php">Favorites</a></li>
+              
               <li><a href="sign/check_session.php?logout=true" onclick="return confirm('Are you sure you want to logout?')">Logout</a></li>
             </ul>
           </li>
@@ -397,7 +397,7 @@ $join_date = $login_time > 0 ? date('F j, Y', $login_time) : 'Unknown';
   <footer class="site-footer" aria-label="footer">
    <div class="container footer-grid">
     <div>
-     <strong>Saudi Culture</strong>
+     <strong>Hawiyyah</strong>
      <p>© 2025 All rights reserved</p>
     </div>
     <ul class="footer-links">

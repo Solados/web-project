@@ -43,17 +43,17 @@ $join_date_ar = "$day $month $year";
  <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>ثقافة السعودية | ملفي</title>
-  <meta name="description" content="إدارة ملفك ومتابعة تقدمك على موقع ثقافة السعودية.">
+  <title>هويّة | ملفي</title>
+  <meta name="description" content="إدارة ملفك ومتابعة تقدمك على موقع هويّة.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/styles.css">
   <style>
     /* RTL overrides for Arabic layout */
-    html, body { direction: rtl; text-align: right; }
-    .navbar { flex-direction: row-reverse; }
-    .nav-links { flex-direction: row-reverse; }
+    html, body { direction: rtl; }
+  .navbar { direction: rtl;}
+  .nav-links { direction: rtl; }
     .dropdown-content { right: 0; left: auto; text-align: right; }
 
     .profile-hero {
@@ -273,7 +273,7 @@ $join_date_ar = "$day $month $year";
     <!-- Header -->
     <!-- Navigation -->
     <nav class="navbar" aria-label="التنقل الرئيسي">
-     <a class="brand" href="#top" aria-label="Back to top">
+     <a class="brand" href="index-ar.php" aria-label="Back to top">
       <img src="image/Hawiyah.png" alt="Logo" class="site-logo">
      </a>
     <button class="menu-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Toggle menu">☰</button>
@@ -283,43 +283,44 @@ $join_date_ar = "$day $month $year";
 
      <?php include 'sign/check_login_status.php'; ?>
 
-<?php if ($LOGGED_IN): ?>
+
+       <?php if (!$LOGGED_IN): ?>
+    <li><a href="/sign/SignUp_LogIn_Form.html">تسجيل الدخول</a></li>
+<?php endif; ?>
+
+      <li><a href="quiz/QUIZ-ar.php">الاختبارات</a></li>
+
+      <li class="dropdown">
+        <a class="dropbtn">الأسئلة</a>
+        <ul class="dropdown-content">
+          <li><a href="General-ar.php">أسئلة عامة</a></li>
+          <li><a href="North-ar.php">أسئلة المنطقة الشمالية</a></li>
+          <li><a href="South-ar.php">أسئلة المنطقة الجنوبية</a></li>
+          <li><a href="West-ar.php">أسئلة المنطقة الغربية</a></li>
+          <li><a href="East-ar.php">أسئلة المنطقة الشرقية</a></li>
+          <li><a href="Central-ar.php">أسئلة المنطقة الوسطى</a></li>
+        </ul>
+      </li>
+
+      <li><a href="index-ar.php">الرئيسية</a></li>
+      <?php if ($LOGGED_IN): ?>
     <li class="dropdown">
             <a class="dropbtn">ملفي الشخصي</a>
             <!-- Profile dropdown list -->
             <ul class="dropdown-content">
               <li><a href="dashboard-ar.php">ملفي الشخصي</a></li>
-              <li><a href="Favorites.php">المفضلة</a></li>
-              <li><a href="My_quizzes.php">اختباراتي</a></li>
-              <li><a href="sign/check_session.php?logout=true" onclick="return confirm('هل أنت متأكد أنك تريد تسجيل الخروج؟')">تسجيل الخروج</a></li>
+              <li><a href="Favorite-ar.php">المفضلة</a></li>
+              
+              <li><a href="sign/check_session.php?logout=true" onclick="return confirm('هل أنت متأكد أنك تريد تسجيل الخروج؟')">تسجيل خروج</a></li>
             </ul>
           </li>
-    
-<?php else: ?>
-    <li><a href="/sign/SignUp_LogIn_Form.html">تسجيل الدخول</a></li>
-<?php endif; ?>
+          <?php endif; ?>
+      <li><a href="dashboard.php" style="font-weight:700">English</a></li>
 
-<li><a href="quiz/QUIZ-ar.php">الاختبارات</a></li>
+    </ul>
 
-       <li class="dropdown">
-                    <a class="dropbtn">الأسئلة</a>
-                    <ul class="dropdown-content" role="menu">
-                        <li><a href="../General-ar.php">أسئلة عامة</a></li>
-                        <li><a href="../North-ar.php">أسئلة المنطقة الشمالية</a></li>
-                        <li><a href="../South-ar.php">أسئلة المنطقة الجنوبية</a></li>
-                        <li><a href="../West-ar.php">أسئلة المنطقة الغربية</a></li>
-                        <li><a href="../East-ar.php">أسئلة المنطقة الشرقية</a></li>
-                        <li><a href="../Central-ar.php">أسئلة المنطقة الوسطى</a></li>
-                    </ul>
-                </li>
-
-        <li><a href="index-ar.php">الرئيسية</a></li>
-
-        <!-- زر تبديل اللغة — يفتح الصفحة الإنجليزية المطابقة -->
-        <li><a href="dashboard.php" style="font-weight:700">English</a></li>
-      </ul>
-    </nav>
-  </header>
+  </nav>
+</header>
 
   <!-- Profile Hero -->
   <div class="profile-hero">
@@ -377,19 +378,19 @@ $join_date_ar = "$day $month $year";
     <!-- Quick Links -->
     <h2 class="section-title">روابط سريعة</h2>
     <div class="dashboard-grid">
-      <a href="quiz/QUIZ-en.php" style="text-decoration: none;">
+      <a href="quiz/QUIZ-ar.php" style="text-decoration: none;">
         <div class="stat-card" style="cursor: pointer; transition: transform 0.2s;">
           <div class="icon">📝</div>
           <div class="label" style="font-size: 1rem; font-weight: 600;">ابدأ اختبارًا</div>
         </div>
       </a>
-      <a href="General.php" style="text-decoration: none;">
+      <a href="General-ar.php" style="text-decoration: none;">
         <div class="stat-card" style="cursor: pointer; transition: transform 0.2s;">
           <div class="icon">🗺️</div>
           <div class="label" style="font-size: 1rem; font-weight: 600;">استكشف المناطق</div>
         </div>
       </a>
-      <a href="index.php" style="text-decoration: none;">
+      <a href="index-ar.php" style="text-decoration: none;">
         <div class="stat-card" style="cursor: pointer; transition: transform 0.2s;">
           <div class="icon">🏠</div>
           <div class="label" style="font-size: 1rem; font-weight: 600;">العودة للرئيسية</div>
@@ -427,7 +428,7 @@ $join_date_ar = "$day $month $year";
   <footer class="site-footer" aria-label="تذييل الصفحة">
    <div class="container footer-grid">
     <div>
-     <strong>ثقافة السعودية</strong>
+     <strong>هويّة</strong>
      <p>© 2025 جميع الحقوق محفوظة</p>
     </div>
     <ul class="footer-links">

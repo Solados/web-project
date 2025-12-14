@@ -16,7 +16,7 @@ $q = isset($_GET['q']) ? trim($_GET['q']) : '';
  <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Saudi Culture | North Page</title>
+  <title>Hawiyyah | Search Page</title>
   <meta name="description" content="Discover customs, traditions, and regions of the Kingdom of Saudi Arabia.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -29,7 +29,7 @@ $q = isset($_GET['q']) ? trim($_GET['q']) : '';
   <header class="site-header">
    <!-- Navigation -->
     <nav class="navbar" aria-label="Main navigation">
-     <a class="brand" href="#top" aria-label="Back to top">
+     <a class="brand" href="index.php" aria-label="Back to top">
                 <img src="image/Hawiyah.png" alt="Logo" class="site-logo">
 
      </a>
@@ -51,8 +51,8 @@ $q = isset($_GET['q']) ? trim($_GET['q']) : '';
             <!-- Profile dropdown list -->
             <ul class="dropdown-content">
               <li><a href="dashboard.php">My profile</a></li>
-              <li><a href="Favorites.php">Favorites</a></li>
-              <li><a href="My_quizzes.php">My Quizzes</a></li>
+              <li><a href="Favorite.php">Favorites</a></li>
+              
               <li><a href="sign/check_session.php?logout=true" onclick="return confirm('Are you sure you want to logout?')">Logout</a></li>
             </ul>
           </li>

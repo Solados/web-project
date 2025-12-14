@@ -50,14 +50,7 @@ body { overflow-x: hidden; }
 }
 
 /* Header / Nav */
-.site-header {
-  position: sticky;
-  top: 0;
-  z-index: 50;
-  background: rgba(255,255,255,0.1);
-  backdrop-filter: none ;
-  border-bottom: 1px solid var(--sand-200);
-}
+
 .navbar {
   display: flex;
   align-items: center;
@@ -68,7 +61,7 @@ body { overflow-x: hidden; }
   text-decoration: none;
 }
 .site-logo {
-    height: 60px ;
+    height: 60px;
     width: auto;
     display: block;
 }
@@ -159,7 +152,8 @@ body { overflow-x: hidden; }
   background: #fff;
   border: 1px solid var(--sand-200);
   border-radius: 1rem;
-  padding: 1.25rem;
+  padding: 2.2rem 1.5rem 3.5rem 1.5rem; /* more padding, especially bottom */
+  min-height: 220px; /* make card taller */
   box-shadow: var(--shadow-md);
   transition: transform .2s ease;
 }
@@ -243,9 +237,8 @@ body { overflow-x: hidden; }
 
 /* Carousel Slider Styles - Original Version */
 .carousel {
-  height: 120vh;
-  margin-top: -50px;
-  width: 100vw;
+
+  width: 100%;
   overflow: hidden;
   position: relative;
 }
@@ -268,9 +261,7 @@ body { overflow-x: hidden; }
   top: 20%;
   width: 1140px;
   max-width: 80%;
-  right: 50%; 
-  left: auto; 
-  transform: translateX(50%); 
+
   direction: rtl; 
   text-align: right; 
   padding-right: 20px; 
@@ -283,7 +274,7 @@ body { overflow-x: hidden; }
 /* LTR support for English content */
 .carousel .list .item .content[dir="ltr"] {
   text-align: left;
-  padding-right: 30%;
+  
   padding-left: 0;
 }
 
@@ -346,7 +337,7 @@ body { overflow-x: hidden; }
 .thumbnail {
   position: absolute;
   bottom: 50px;
-  left: 50%;
+ 
   width: max-content;
   z-index: 100;
   display: flex;
@@ -389,29 +380,65 @@ body { overflow-x: hidden; }
 }
 
 /* Arrows */
+/* تأكيد أن السلايدر هو المرجع */
+.carousel {
+  position: relative;
+}
+
+/* ===== FIXED SLIDER ARROWS ===== */
 .arrows {
   position: absolute;
-  top: 80%;
-  right: 52%;
-  z-index: 100;
-  width: 300px;
-  max-width: 30%;
+  bottom: 100px;          /* ثابت من الأسفل */
+  left: 40%;             /* منتصف السلايدر */
+  transform: translateX(-50%);
+  z-index: 200;
+
   display: flex;
-  gap: 10px;
+  gap: 14px;
   align-items: center;
 }
 
+/* Arrow buttons */
 .arrows button {
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: rgba(235, 235, 235, 0.45);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+
+  border: 1px solid rgba(255, 255, 255, 0.35);
   border-radius: 50%;
-  background-color: #eee4;
-  border: none;
+
   color: #fff;
-  font-family: monospace;
+  font-size: 22px;
   font-weight: bold;
-  transition: 0.5s;
+
+  cursor: pointer;
+  transition: all 0.25s ease;
 }
+
+/* Hover */
+.arrows button:hover {
+  background: rgba(0, 0, 0, 0.7);
+  transform: scale(1.08);
+}
+
+/* Active */
+.arrows button:active {
+  transform: scale(0.95);
+}
+
+/* Disable during animation */
+.carousel.next .arrows button,
+.carousel.prev .arrows button {
+  pointer-events: none;
+}
+
 
 /* Questions slider: arrange 20 cards per slide as 4 columns x 5 rows */
 /* Make the slider span the full viewport width even when inside a constrained container */
@@ -462,10 +489,7 @@ body { overflow-x: hidden; }
 /* Make controls span full width and appear above the slider (they are appended above in DOM) */
 .qs-controls { width: 100%; max-width: 1100px; margin: 0 auto; padding: .5rem 0; box-sizing: border-box; display:flex; justify-content:center; }
 
-.arrows button:hover {
-  background-color: #fff;
-  color: #000;
-}
+
 
 /* Animation */
 .carousel .list .item:nth-child(1) {
@@ -546,7 +570,8 @@ body { overflow-x: hidden; }
 }
 
 .carousel.next .thumbnail {
-  animation: effectNext 0.5s linear 1 forwards;
+  animation: none !important;
+  transform: none !important;
 }
 
 @keyframes effectNext {
@@ -604,10 +629,7 @@ body { overflow-x: hidden; }
   animation: showThumbnail 0.5s linear 1 forwards;
 }
 
-.carousel.next .arrows button,
-.carousel.prev .arrows button {
-  pointer-events: none;
-}
+
 
 .carousel.prev .list .item:nth-child(2) .content .author,
 .carousel.prev .list .item:nth-child(2) .content .title,
@@ -909,3 +931,98 @@ body { overflow-x: hidden; }
   border:1px solid rgba(0,0,0,.12);
   background: rgba(255,255,255,.85);
 }
+/* ========================= */
+/*   SLIDER RTL/LTR FIX      */
+/* ========================= */
+
+/* isolate slider from RTL */
+.carousel,
+.carousel * {
+  direction: ltr;
+}
+
+/* correct slider size */
+.carousel {
+  height: 100%;
+  padding-top: 80px;
+}
+
+/* correct content position - RIGHT side */
+.carousel .list .item .content {
+  right: 8%;
+  left: auto;
+  transform: none;
+
+  direction: rtl;
+  text-align: right;
+  max-width: 520px;
+}
+
+
+.carousel .list .item .content[dir="ltr"] {
+  left: 8%;
+  right: auto;
+
+  direction: ltr;
+  text-align: left;
+}
+
+
+.arrows {
+  right: 65%;
+  left: auto;
+  transform: none;
+}
+
+.thumbnail {
+  position: absolute;
+  bottom: 50px;
+
+  inset-inline-end: 2%;
+  inset-inline-start: auto;
+
+  display: flex;
+  gap: 20px;
+  z-index: 100;
+}
+.carousel .list .item .content {
+  background: linear-gradient(
+    to left,
+    rgba(0,0,0,0.55),
+    rgba(0,0,0,0.23),
+    rgba(0,0,0,0)
+  );
+ 
+  padding: 24px 28px;
+  border-radius: 16px;
+  backdrop-filter: blur(2px);
+}
+.carousel .list .item .content .title,
+.carousel .list .item .content .topic {
+  text-shadow:
+    0 4px 10px rgba(0,0,0,0.9),
+    0 10px 28px rgba(0,0,0,0.8);
+}
+
+.carousel .list .item .content[dir="ltr"] {
+  background: linear-gradient(
+    to right,
+    rgba(0,0,0,0.55),
+    rgba(0,0,0,0.23),
+    rgba(0,0,0,0)
+  );
+}
+
+.carousel .list .item .content[dir="ltr"] .title,
+.carousel .list .item .content[dir="ltr"] .topic {
+  text-shadow:
+    0 4px 10px rgba(0,0,0,0.9),
+    0 10px 28px rgba(0,0,0,0.8);
+}
+.carousel .list .item .content[dir="ltr"] {
+  padding-left: 36px;   /* زِد أو قلّل حسب الذوق */
+  padding-right: 24px;  /* توازن مع الطرف الآخر */
+}
+
+
+

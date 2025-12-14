@@ -41,10 +41,9 @@ $q = isset($_GET['q']) ? trim($_GET['q']) : '';
 <header class="site-header">
 	<nav class="navbar">
 
-		<a class="brand" href="#top">
-                <img src="image/Hawiyah.png" alt="Logo" class="site-logo">
-
-    </a>
+		<a class="brand" href="index-ar.php" aria-label="العودة للرئيسية"> 
+        <img src="image/Hawiyah.png" alt="Logo" class="site-logo">
+      </a>
 
 		<button class="menu-toggle">☰</button>
 
@@ -58,43 +57,42 @@ $q = isset($_GET['q']) ? trim($_GET['q']) : '';
             </form>
           </li>
 
-			<!-- زر تغيير اللغة -->
+       <?php if (!$LOGGED_IN): ?>
+    <li><a href="/sign/SignUp_LogIn_Form.html">تسجيل الدخول</a></li>
+<?php endif; ?>
 
-			<?php if ($LOGGED_IN): ?>
+      <li><a href="quiz/QUIZ-ar.php">الاختبارات</a></li>
+
+      <li class="dropdown">
+        <a class="dropbtn">الأسئلة</a>
+        <ul class="dropdown-content">
+          <li><a href="General-ar.php">أسئلة عامة</a></li>
+          <li><a href="North-ar.php">أسئلة المنطقة الشمالية</a></li>
+          <li><a href="South-ar.php">أسئلة المنطقة الجنوبية</a></li>
+          <li><a href="West-ar.php">أسئلة المنطقة الغربية</a></li>
+          <li><a href="East-ar.php">أسئلة المنطقة الشرقية</a></li>
+          <li><a href="Central-ar.php">أسئلة المنطقة الوسطى</a></li>
+        </ul>
+      </li>
+
+      <li><a href="index-ar.php">الرئيسية</a></li>
+      <?php if ($LOGGED_IN): ?>
     <li class="dropdown">
             <a class="dropbtn">ملفي الشخصي</a>
             <!-- Profile dropdown list -->
             <ul class="dropdown-content">
               <li><a href="dashboard-ar.php">ملفي الشخصي</a></li>
-              <li><a href="Favorites.php">المفضلة</a></li>
-              <li><a href="My_quizzes.php">اختباراتي</a></li>
+              <li><a href="Favorite-ar.php">المفضلة</a></li>
+              
               <li><a href="sign/check_session.php?logout=true" onclick="return confirm('هل أنت متأكد أنك تريد تسجيل الخروج؟')">تسجيل خروج</a></li>
             </ul>
           </li>
-<?php else: ?>
-    <li><a href="/sign/SignUp_LogIn_Form.html">تسجيل الدخول</a></li>
-<?php endif; ?>
+          <?php endif; ?>
+      <li><a href="index.php" style="font-weight:700">English</a></li>
 
-			<li><a href="quiz/QUIZ-ar.php">الاختبارات</a></li>
+    </ul>
 
-			<li class="dropdown">
-				<a class="dropbtn">الأسئلة</a>
-				<ul class="dropdown-content">
-					<li><a href="General-ar.php">أسئلة عامة</a></li>
-					<li><a href="North-ar.php">أسئلة المنطقة الشمالية</a></li>
-					<li><a href="South-ar.php">أسئلة المنطقة الجنوبية</a></li>
-					<li><a href="West-ar.php">أسئلة المنطقة الغربية</a></li>
-					<li><a href="East-ar.php">أسئلة المنطقة الشرقية</a></li>
-					<li><a href="Central-ar.php">أسئلة المنطقة الوسطى</a></li>
-				</ul>
-			</li>
-
-			<li><a href="index-ar.php">الرئيسية</a></li>
-					<li><a href="Search.php" style="font-weight:700">English</a></li>
-
-		</ul>
-
-	</nav>
+  </nav>
 </header>
 
 <main id="main" style="padding-top: 90px;">

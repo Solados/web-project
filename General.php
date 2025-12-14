@@ -20,7 +20,38 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@300;400;600;700&display=swap" rel="stylesheet">
 	<link rel="stylesheet" href="assets/styles.css">
-	<style>		
+	<style>	
+  .feature-card {
+  position: relative;
+  padding-bottom: 52px; /* مساحة محفوظة للأزرار */
+  min-height: 180px;
+}
+
+/* حاوية الأزرار */
+.card-actions {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;   /* يسار أسفل */
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+/* أيقونات الأزرار */
+.card-actions img,
+.card-actions svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* زر النسخ */
+.card-actions button {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+}
+	
 		.icon-btn {
   width: 20px;
   height: 20px;
@@ -86,8 +117,8 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
 		<!-- Header -->
 		<!-- Navigation -->
 		<nav class="navbar" aria-label="Main navigation">
-		 <a class="brand" href="#top" aria-label="Back to top">
-			          <img src="image/Hawiyah.png" alt="Logo" class="site-logo">
+		 <a class="brand" href="index.php" aria-label="Back to top">
+			          <img src="image/Hawiyah-En.png" alt="Logo" class="site-logo">
 
 		 </a>
 		<button class="menu-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Toggle menu">☰</button>
@@ -109,8 +140,8 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
             <!-- Profile dropdown list -->
             <ul class="dropdown-content">
               <li><a href="dashboard.php">My profile</a></li>
-              <li><a href="Favorites.php">Favorites</a></li>
-              <li><a href="My_quizzes.php">My Quizzes</a></li>
+              <li><a href="Favorite.php">Favorites</a></li>
+              
               <li><a href="sign/check_session.php?logout=true" onclick="return confirm('Are you sure you want to logout?')">Logout</a></li>
             </ul>
           </li>
@@ -224,7 +255,7 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
 				<img src="image/Central.jpeg" alt="Central Region">
 				<div class="content" dir="ltr">
 					<div class="title">Central Region</div>
-					<div class="description">Riyadh, Qassim, Hail</div>
+					<div class="description">Riyadh</div>
 				</div>
 			</div>
 			<div class="item">
@@ -232,7 +263,7 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
 				<img src="image/North.jpg" alt="Northern Region">
 				<div class="content" dir="ltr">
 					<div class="title">Northern Region</div>
-					<div class="description">Hail, Tabuk, Umluj</div>
+					<div class="description">Tabuk</div>
 				</div>
 			</div>
 			<div class="item">
@@ -240,7 +271,7 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
 				<img src="image/West.jpeg" alt="Western Region">
 				<div class="content" dir="ltr">
 					<div class="title">Western Region</div>
-					<div class="description">Makkah, Madinah, Jeddah, Taif</div>
+					<div class="description">Makkah</div>
 				</div>
 			</div>
 			<div class="item">
@@ -248,7 +279,7 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
 				<img src="image/South.jpeg" alt="Southern Region">
 				<div class="content" dir="ltr">
 					<div class="title">Southern Region</div>
-					<div class="description">Asir, Jazan, Najran, Al-Baha</div>
+					<div class="description">Asir</div>
 				</div>
 			</div>
 			<div class="item">
@@ -256,7 +287,7 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
 				<img src="image/East.jpeg" alt="Eastern Region">
 				<div class="content" dir="ltr">
 					<div class="title">Eastern Region</div>
-					<div class="description">Dammam, Khobar, Qatif, Al-Ahsa</div>
+					<div class="description">Dammam</div>
 				</div>
 			</div>
 		</div>
@@ -327,7 +358,7 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
 	<footer class="site-footer" aria-label="footer">
 	 <div class="container footer-grid">
 		<div>
-		 <strong>Saudi Culture</strong>
+		 <strong>Hawiyyah</strong>
 		 <p>© 2025 All rights reserved</p>
 		</div>
 		<ul class="footer-links">
@@ -349,6 +380,7 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
 const REGION_FILE = "GENERAL";   // which data file to load
 let currentFilter = "all";       // all | english | arabic
 let ALL_QUESTIONS = [];
+const IS_LOGGED_IN = <?php echo $LOGGED_IN ? 'true' : 'false'; ?>;
 
 // fetch data from backend
 async function loadAllQuestions() {
@@ -540,13 +572,17 @@ async function render(pageIndex = 0) {
 
   container.innerHTML = "";
 
-  // render cards
 pageItems.forEach(q => {
   const card = document.createElement("article");
   card.className = "feature-card " + (q.lang === "english" ? "en" : "ar");
+  card.style.position = "relative";
+  card.style.paddingBottom = "80px";
 
   const h3 = document.createElement("h3");
   const p = document.createElement("p");
+
+  const textForShare = (q.lang === "arabic" ? "س: " : "Q: ") + q.question + '\n\n' + (q.lang === "arabic" ? "ج: " : "Answer: ") + q.answer;
+  const textForShareWithURL = textForShare + '\n' + window.location.href;
 
   if (q.lang === "arabic") {
     h3.textContent = "س: " + q.question;
@@ -562,74 +598,253 @@ pageItems.forEach(q => {
   card.appendChild(h3);
   card.appendChild(p);
 
-  // Container للأزرار
+  /* ======================
+     أزرار أسفل يسار
+  ====================== */
   const actions = document.createElement("div");
   actions.className = "card-actions";
-  actions.style.marginTop = "8px";
+  actions.style.position = "absolute";
+  actions.style.bottom = "10px";
+  actions.style.left = "50%";
+  actions.style.transform = "translateX(-50%)";
+  actions.style.display = "flex";
+  actions.style.gap = "4px";
+  actions.style.justifyContent = "center";
+  actions.style.flexWrap = "nowrap";
+  actions.style.maxWidth = "calc(100% - 20px)";
+  actions.style.overflow = "visible";
 
-  // --- زر النسخ مع toast ---
-  const copyBtn = document.createElement("button");
-  copyBtn.textContent = "copy 📋";
-  copyBtn.style.marginRight = "5px";
+  /* ===== زر النسخ ===== */
+const copyBtn = document.createElement("button");
+copyBtn.title = "Copy";
+copyBtn.innerHTML = " Copy 📄";
+copyBtn.style.background = "var(--gold-500)";
+copyBtn.style.color = "#1a1a1a";
+copyBtn.style.boxShadow = "var(--shadow-md)";
+copyBtn.style.fontWeight = "700";
+copyBtn.style.fontSize = ".85rem";
+copyBtn.style.lineHeight = "1.2";
+copyBtn.style.padding = ".5rem .75rem";
+copyBtn.style.borderRadius = ".8rem";
+copyBtn.style.border = "1px solid transparent";
+copyBtn.style.cursor = "pointer";
+copyBtn.style.transition = "transform .15s ease, box-shadow .15s ease, background .2s ease";
+copyBtn.style.fontFamily = "'Noto Kufi Arabic', sans-serif";
+copyBtn.onmouseover = () => { copyBtn.style.transform = "translateY(-2px)"; copyBtn.style.boxShadow = "var(--shadow-gold-hover)"; };
+copyBtn.onmouseout = () => { copyBtn.style.transform = "translateY(0)"; copyBtn.style.boxShadow = "var(--shadow-md)"; };
+
   copyBtn.onclick = () => {
-    // تحديد النص مع س / Q و ج / Answer
-    let textToCopy = q.lang === "arabic" ? `س: ${q.question}\nج: ${q.answer}` : `Q: ${q.question}\nAnswer: ${q.answer}`;
-    navigator.clipboard.writeText(textToCopy);
+    navigator.clipboard.writeText(textForShare);
 
-    // toast
     const toast = document.createElement("div");
-    toast.textContent = "تم النسخ 📋";
+    toast.textContent = " Copyed! ";
     toast.style.position = "fixed";
-    toast.style.bottom = "20px";
+    toast.style.bottom = "90px";
     toast.style.right = "20px";
-    toast.style.backgroundColor = "#4CAF50";
+    toast.style.background = "#4CAF50";
     toast.style.color = "#fff";
-    toast.style.padding = "10px 15px";
+    toast.style.padding = "8px 14px";
     toast.style.borderRadius = "6px";
-    toast.style.boxShadow = "0 4px 12px rgba(0,0,0,0.2)";
-    toast.style.fontWeight = "600";
     toast.style.opacity = "0";
-    toast.style.transition = "opacity 0.4s ease, transform 0.4s ease";
-    toast.style.transform = "translateY(20px)";
+    toast.style.transition = "0.3s";
     document.body.appendChild(toast);
 
-    setTimeout(() => {
-      toast.style.opacity = "1";
-      toast.style.transform = "translateY(0)";
-    }, 10);
-
+    setTimeout(() => (toast.style.opacity = "1"), 10);
     setTimeout(() => {
       toast.style.opacity = "0";
-      toast.style.transform = "translateY(20px)";
-      setTimeout(() => toast.remove(), 400);
+      setTimeout(() => toast.remove(), 300);
     }, 2000);
   };
+
+  // Favorite Button
+  const favBtn = document.createElement("button");
+  favBtn.title = "Favorite";
+  favBtn.innerHTML = " Favorite ⭐";
+  favBtn.style.background = "var(--gold-500)";
+  favBtn.style.color = "#1a1a1a";
+  favBtn.style.boxShadow = "var(--shadow-md)";
+  favBtn.style.fontWeight = "700";
+  favBtn.style.fontSize = ".85rem";
+  favBtn.style.lineHeight = "1.2";
+  favBtn.style.padding = ".5rem .75rem";
+  favBtn.style.borderRadius = ".8rem";
+  favBtn.style.border = "1px solid transparent";
+  favBtn.style.cursor = "pointer";
+  favBtn.style.transition = "transform .15s ease, box-shadow .15s ease, background .2s ease";
+  favBtn.style.fontFamily = "'Noto Kufi Arabic', sans-serif";
+  favBtn.onmouseover = () => { favBtn.style.transform = "translateY(-2px)"; favBtn.style.boxShadow = "var(--shadow-gold-hover)"; };
+  favBtn.onmouseout = () => { favBtn.style.transform = "translateY(0)"; favBtn.style.boxShadow = "var(--shadow-md)"; };
+  favBtn.onclick = async () => {
+    if (!IS_LOGGED_IN) {
+      window.location.href = "/sign/SignUp_LogIn_Form.html";
+      return;
+    }
+
+      const showToast = (message, bg = "#4CAF50") => {
+        const toast = document.createElement("div");
+        toast.textContent = message;
+        toast.style.position = "fixed";
+        toast.style.bottom = "90px";
+        toast.style.right = "20px";
+        toast.style.background = bg;
+        toast.style.color = "#fff";
+        toast.style.padding = "8px 14px";
+        toast.style.borderRadius = "6px";
+        toast.style.opacity = "0";
+        toast.style.transition = "0.3s";
+        toast.style.zIndex = "9999";
+        document.body.appendChild(toast);
+
+        setTimeout(() => (toast.style.opacity = "1"), 10);
+        setTimeout(() => {
+          toast.style.opacity = "0";
+          setTimeout(() => toast.remove(), 300);
+        }, 2000);
+      };
+
+    try {
+        const resp = await fetch("api/favorite_questions.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "same-origin",
+        body: JSON.stringify({
+          action: "add",
+          region: REGION_FILE,
+          lang: q.lang,
+          question: q.question,
+          answer: q.answer,
+          url: window.location.href
+        })
+      });
+        if (!resp.ok) throw new Error("Request failed");
+        const data = await resp.json().catch(() => ({}));
+        if (data && data.ok === false) throw new Error(data.error || "Failed");
+        showToast("Added to Favorites!");
+      } catch (e) {
+        showToast("Could not add to Favorites", "#e53935");
+      }
+  };
+
+  /* ===== زر المشاركة ===== */
+  const shareBtn = document.createElement('button');
+  shareBtn.textContent = "Share 🔗";
+  shareBtn.style.background = "var(--gold-500)";
+  shareBtn.style.color = "#1a1a1a";
+  shareBtn.style.boxShadow = "var(--shadow-md)";
+  shareBtn.style.fontWeight = "700";
+  shareBtn.style.fontSize = ".85rem";
+  shareBtn.style.lineHeight = "1.2";
+  shareBtn.style.padding = ".5rem .75rem";
+  shareBtn.style.borderRadius = ".8rem";
+  shareBtn.style.border = "1px solid transparent";
+  shareBtn.style.cursor = "pointer";
+  shareBtn.style.fontFamily = "'Noto Kufi Arabic', sans-serif";
+  shareBtn.style.transition = "transform .15s ease, box-shadow .15s ease, background .2s ease";
+  shareBtn.style.position = "relative";
+
+  shareBtn.onmouseover = () => { shareBtn.style.transform = "translateY(-2px)"; shareBtn.style.boxShadow = "var(--shadow-gold-hover)"; };
+  shareBtn.onmouseout = () => { shareBtn.style.transform = "translateY(0)"; shareBtn.style.boxShadow = "var(--shadow-md)"; };
+
+  /* ===== نافذة المشاركة ===== */
+  const shareMenu = document.createElement("div");
+  shareMenu.style.position = 'absolute';
+  shareMenu.style.bottom = '110%'; // show above the button
+  shareMenu.style.left = '50%';
+  shareMenu.style.transform = 'translateX(-50%)';
+  shareMenu.style.background = '#fff';
+  shareMenu.style.border = '1px solid #ddd';
+  shareMenu.style.borderRadius = '8px';
+  shareMenu.style.padding = '8px 12px';
+  shareMenu.style.display = 'none';
+  shareMenu.style.gap = '12px';
+  shareMenu.style.boxShadow = '0 4px 16px rgba(0,0,0,.18)';
+  shareMenu.style.flexDirection = 'row';
+  shareMenu.style.flexWrap = 'nowrap';
+  shareMenu.style.zIndex = '100';
+
+  shareBtn.onclick = (e) => {
+    e.stopPropagation();
+    shareMenu.style.display = shareMenu.style.display === 'none' ? 'flex' : 'none';
+  };
+
+  // Hide share menu if mouse leaves the menu or the button
+  let shareMenuHideTimeout;
+  function hideShareMenuSoon() {
+    shareMenuHideTimeout = setTimeout(() => {
+      shareMenu.style.display = 'none';
+    }, 120);
+  }
+  function cancelHideShareMenu() {
+    clearTimeout(shareMenuHideTimeout);
+  }
+  shareMenu.addEventListener('mouseleave', hideShareMenuSoon);
+  shareMenu.addEventListener('mouseenter', cancelHideShareMenu);
+  shareBtn.addEventListener('mouseleave', hideShareMenuSoon);
+  shareBtn.addEventListener('mouseenter', cancelHideShareMenu);
+
+  document.addEventListener('click', (e) => {
+    if (!shareBtn.contains(e.target) && !shareMenu.contains(e.target)) shareMenu.style.display = 'none';
+  });
+
+  /* ===== أيقونات المشاركة ===== */
+  const platforms = [
+    { name: 'X', icon: 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/x.svg', id: 'x' },
+    { name: 'Facebook', icon: 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/facebook.svg', id: 'facebook' },
+    { name: 'WhatsApp', icon: 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/whatsapp.svg', id: 'whatsapp' }
+  ];
+
+  platforms.forEach(p => {
+    const a = document.createElement('a');
+    a.href = '#';
+    a.title = p.name;
+    a.style.margin = '2px';
+    a.style.display = 'inline-block';
+
+    const img = document.createElement('img');
+    img.src = p.icon;
+    img.width = 26;
+    img.height = 26;
+    img.style.transition = 'transform 0.2s';
+    img.onmouseover = () => img.style.transform = 'scale(1.2)';
+    img.onmouseout = () => img.style.transform = 'scale(1)';
+
+    let href;
+    if (p.id === 'x') {
+      href = `https://x.com/intent/tweet?text=${encodeURIComponent(textForShareWithURL)}`;
+    } else if (p.id === 'whatsapp') {
+      href = `https://api.whatsapp.com/send?text=${encodeURIComponent(textForShareWithURL)}`;
+    } else if (p.id === 'facebook') {
+      href = `https://www.facebook.com/sharer/sharer.php?quote=${encodeURIComponent(textForShareWithURL)}`;
+    }
+
+    a.appendChild(img);
+    a.onclick = (e) => { e.preventDefault(); window.open(href, '_blank'); shareMenu.style.display = 'none'; };
+    shareMenu.appendChild(a);
+  });
+
+  shareBtn.appendChild(shareMenu);
+
+  shareBtn.onclick = (e) => {
+    e.stopPropagation();
+    shareMenu.style.display = shareMenu.style.display === 'none' ? 'flex' : 'none';
+  };
+
+  shareMenu.addEventListener('mouseleave', () => {
+    shareMenu.style.display = 'none';
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!shareBtn.contains(e.target)) shareMenu.style.display = 'none';
+  });
+
   actions.appendChild(copyBtn);
-
-  // --- زر X ---
-  const xBtn = document.createElement("a");
-  xBtn.href = `https://x.com/intent/tweet?text=${encodeURIComponent(q.lang === "arabic" ? `س: ${q.question}\nج: ${q.answer}` : `Q: ${q.question}\nAnswer: ${q.answer}`)}`;
-  xBtn.target = "_blank";
-  xBtn.innerHTML = `<img src="image/X_logo.jpg.webp" class="icon-btn" alt="X Logo">`;
-  actions.appendChild(xBtn);
-
-  // --- زر WhatsApp ---
-  const waBtn = document.createElement("a");
-  waBtn.href = `https://api.whatsapp.com/send?text=${encodeURIComponent(q.lang === "arabic" ? `س: ${q.question}\nج: ${q.answer}` : `Q: ${q.question}\nAnswer: ${q.answer}`)}`;
-  waBtn.target = "_blank";
-  waBtn.innerHTML = `<img src="https://cdn-icons-png.flaticon.com/512/733/733585.png" class="icon-btn" alt="WhatsApp">`;
-  actions.appendChild(waBtn);
-
-  // --- زر Facebook ---
-  const fbBtn = document.createElement("a");
-  fbBtn.href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}&quote=${encodeURIComponent(q.lang === "arabic" ? `س: ${q.question}\nج: ${q.answer}` : `Q: ${q.question}\nAnswer: ${q.answer}`)}`;
-  fbBtn.target = "_blank";
-  fbBtn.innerHTML = `<img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" class="icon-btn" alt="Facebook">`;
-  actions.appendChild(fbBtn);
+  actions.appendChild(favBtn);
+  actions.appendChild(shareBtn);
 
   card.appendChild(actions);
   container.appendChild(card);
 });
+
 
 
 

@@ -13,7 +13,7 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>الثقافة السعودية | الصفحة الرئيسية</title>
+    <title>الهويّة | الصفحة الرئيسية</title>
     <meta name="description" content="اكتشف العادات والتقاليد ومناطق المملكة العربية السعودية.">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -24,9 +24,9 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
 
     <style>
   /* RTL overrides */
-  body { direction: rtl; text-align: right; }
-  .navbar { flex-direction: row-reverse; }
-  .nav-links { flex-direction: row-reverse; }
+  html, body { direction: rtl; }
+  .navbar { direction: rtl;}
+  .nav-links { direction: rtl; }
   .dropdown-content { text-align: right; right: 0; left: auto; }
 
   /* Hero video and overlays (shared with English page) */
@@ -100,18 +100,8 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
 
       <!-- زر تغيير اللغة -->
 
-      <?php if ($LOGGED_IN): ?>
-    <li class="dropdown">
-            <a class="dropbtn">ملفي الشخصي</a>
-            <!-- Profile dropdown list -->
-            <ul class="dropdown-content">
-              <li><a href="dashboard-ar.php">ملفي الشخصي</a></li>
-              <li><a href="Favorites.php">المفضلة</a></li>
-              <li><a href="My_quizzes.php">اختباراتي</a></li>
-              <li><a href="sign/check_session.php?logout=true" onclick="return confirm('هل أنت متأكد أنك تريد تسجيل الخروج؟')">تسجيل خروج</a></li>
-            </ul>
-          </li>
-<?php else: ?>
+    
+<?php if (!$LOGGED_IN): ?>
     <li><a href="/sign/SignUp_LogIn_Form.html">تسجيل الدخول</a></li>
 <?php endif; ?>
 
@@ -130,6 +120,18 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
       </li>
 
       <li><a href="index-ar.php">الرئيسية</a></li>
+      <?php if ($LOGGED_IN): ?>
+    <li class="dropdown">
+            <a class="dropbtn">ملفي الشخصي</a>
+            <!-- Profile dropdown list -->
+            <ul class="dropdown-content">
+              <li><a href="dashboard-ar.php">ملفي الشخصي</a></li>
+              <li><a href="Favorites.php">المفضلة</a></li>
+              
+              <li><a href="sign/check_session.php?logout=true" onclick="return confirm('هل أنت متأكد أنك تريد تسجيل الخروج؟')">تسجيل خروج</a></li>
+            </ul>
+          </li>
+          <?php endif; ?>
       <li><a href="index.php" style="font-weight:700">English</a></li>
 
     </ul>
@@ -176,12 +178,12 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
           <article class="feature-card sr-hidden">
             <div class="icon-box"><div class="icon">📚</div></div>
             <h3>آلاف الأسئلة</h3>
-            <p>قاعدة أسئلة واسعة تغطي اللغة والعادات والحقائق الإقليمية.</p>
+            <p>قاعدة أسئلة واسعة تغطي اللغة واللهجات والعادات والتقاليد.</p>
           </article>
           <article class="feature-card sr-hidden">
             <div class="icon-box"><div class="icon">🧩</div></div>
             <h3>اختبارات تفاعلية</h3>
-            <p>اختبارات مرنة بعدد أسئلة قابل للاختيار وبدرجات صعوبة متفاوتة.</p>
+            <p>اختبارات مرنة بعدد أسئلة قابل للاختيار وتحديد نوع وفئة الاسئلة.</p>
           </article>
           <article class="feature-card sr-hidden">
             <div class="icon-box"><div class="icon">📊</div></div>
@@ -270,7 +272,7 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
   <footer class="site-footer" aria-label="footer">
    <div class="container footer-grid">
     <div>
-     <strong>الثقافة السعودية </strong>
+     <strong>الهويّة </strong>
      <p>© 2025 جميع الحقوق محفوظة</p>
     </div>
     <ul class="footer-links">
@@ -341,6 +343,10 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
 })();
 </script>
 
+<script>
+(function(){if(!window.chatbase||window.chatbase("getState")!=="initialized"){window.chatbase=(...arguments)=>{if(!window.chatbase.q){window.chatbase.q=[]}window.chatbase.q.push(arguments)};window.chatbase=new Proxy(window.chatbase,{get(target,prop){if(prop==="q"){return target.q}return(...args)=>target(prop,...args)}})}const onLoad=function(){const script=document.createElement("script");script.src="https://www.chatbase.co/embed.min.js";script.id="PkSRl6nFY3Csgenh8koIS";script.domain="www.chatbase.co";document.body.appendChild(script)};if(document.readyState==="complete"){onLoad()}else{window.addEventListener("load",onLoad)}})();
+</script>
 
- </body>
- </html>
+
+    </body>
+</html>

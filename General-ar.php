@@ -11,41 +11,40 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
 <!doctype html>
 <html lang="ar" dir="rtl">
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>أسئلة عامة</title>
-	<meta name="description" content="اكتشف العادات والتقاليد ومناطق المملكة العربية السعودية.">
-    
-	<link rel="preconnect" href="https://fonts.googleapis.com">
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>هويّة | المنطقة الشمالية</title>
+  <meta name="description" content="اكتشف عادات وتقاليد ومواقع المنطقة الشمالية في المملكة.">
 
-	<link rel="stylesheet" href="assets/styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@300;400;600;700&display=swap" rel="stylesheet">
 
-	<style>
-		body { direction: rtl; text-align: right; }
-		.navbar { flex-direction: row-reverse; }
-		.nav-links { flex-direction: row-reverse; }
-		.dropdown-content { text-align: right; right: 0; left: auto; }
-		.carousel .content { direction: rtl !important; text-align: right; }
-		.question-filter { direction: rtl; }
-		[dir="rtl"] { direction: rtl; }
-	</style>
+  <link rel="stylesheet" href="assets/styles.css">
+
+  <style>
+    /* محلي: تعديلات RTL لضمان توافق العناصر */
+    html, body { direction: rtl; }
+  .navbar { direction: rtl;}
+  .nav-links { direction: rtl; }
+    .dropdown-content { right: 0; left: auto; text-align: right; }
+    .carousel .content { text-align: right; direction: rtl; }
+    .thumbnail .content { text-align: right; direction: rtl; }
+    /* حافظت على بعض عناصر الـ qs-pagination لعرض أرقام الصفحات بشكل منطقي */
+    .qs-pagination { direction: ltr; }
+  </style>
 </head>
-
 <body class="rtl">
+  <!-- Header -->
+  <header class="site-header">
+    <nav class="navbar" aria-label="التنقل الرئيسي">
+      <a class="brand" href="index-ar.php" aria-label="العودة للرئيسية"> 
+        <img src="image/Hawiyah.png" alt="Logo" class="site-logo">
+      </a>
+      <button class="menu-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="قائمة">☰</button>
 
-<!-- Header -->
-<header class="site-header">
-	<nav class="navbar" aria-label="التنقل الرئيسي">
-		<a class="brand" href="#top">
-                <img src="image/Hawiyah.png" alt="Logo" class="site-logo">
-    </a>
+      <ul id="nav-links" class="nav-links">
 
-		<button class="menu-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="قائمة">☰</button>
-
-		<ul id="nav-links" class="nav-links">
-            
           <li class="nav-search">
             <button class="search-toggle" type="button" aria-label="Search" aria-expanded="false">🔍</button>
             <form class="nav-search-form" action="Search-ar.php" method="get" role="search">
@@ -54,225 +53,226 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
             </form>
           </li>
 
-			<!-- زر تغيير اللغة -->
-			<?php if ($LOGGED_IN): ?>
+       
+       <?php if (!$LOGGED_IN): ?>
+    <li><a href="/sign/SignUp_LogIn_Form.html">تسجيل الدخول</a></li>
+<?php endif; ?>
+
+      <li><a href="quiz/QUIZ-ar.php">الاختبارات</a></li>
+
+      <li class="dropdown">
+        <a class="dropbtn">الأسئلة</a>
+        <ul class="dropdown-content">
+          <li><a href="General-ar.php">أسئلة عامة</a></li>
+          <li><a href="North-ar.php">أسئلة المنطقة الشمالية</a></li>
+          <li><a href="South-ar.php">أسئلة المنطقة الجنوبية</a></li>
+          <li><a href="West-ar.php">أسئلة المنطقة الغربية</a></li>
+          <li><a href="East-ar.php">أسئلة المنطقة الشرقية</a></li>
+          <li><a href="Central-ar.php">أسئلة المنطقة الوسطى</a></li>
+        </ul>
+      </li>
+
+      <li><a href="index-ar.php">الرئيسية</a></li>
+      <?php if ($LOGGED_IN): ?>
     <li class="dropdown">
             <a class="dropbtn">ملفي الشخصي</a>
             <!-- Profile dropdown list -->
             <ul class="dropdown-content">
               <li><a href="dashboard-ar.php">ملفي الشخصي</a></li>
-              <li><a href="Favorites.php">المفضلة</a></li>
-              <li><a href="My_quizzes.php">اختباراتي</a></li>
+              <li><a href="Favorite-ar.php">المفضلة</a></li>
+              
               <li><a href="sign/check_session.php?logout=true" onclick="return confirm('هل أنت متأكد أنك تريد تسجيل الخروج؟')">تسجيل خروج</a></li>
             </ul>
           </li>
-<?php else: ?>
-    <li><a href="/sign/SignUp_LogIn_Form.html">تسجيل الدخول</a></li>
-<?php endif; ?>
+          <?php endif; ?>
+      <li><a href="General.php" style="font-weight:700">English</a></li>
 
-			<li><a href="quiz/QUIZ-ar.php">الاختبارات</a></li>
+    </ul>
 
-			<li class="dropdown">
-				<a class="dropbtn">الأسئلة</a>
-				<ul class="dropdown-content">
-					<li><a href="General-ar.php">أسئلة عامة</a></li>
-					<li><a href="North-ar.php">أسئلة المنطقة الشمالية</a></li>
-					<li><a href="South-ar.php">أسئلة المنطقة الجنوبية</a></li>
-					<li><a href="West-ar.php">أسئلة المنطقة الغربية</a></li>
-					<li><a href="East-ar.php">أسئلة المنطقة الشرقية</a></li>
-					<li><a href="Central-ar.php">أسئلة المنطقة الوسطى</a></li>
-				</ul>
-			</li>
-
-			<li><a href="index-ar.php">الرئيسية</a></li>
-					<li><a href="General.php" style="font-weight:700">English</a></li>
-
-		</ul>
-
-	</nav>
+  </nav>
 </header>
-
-
-<!-- Slider -->
+  <!-- Slider (مبني كما في الصفحة الأصلية، مع ترجمة الوصف) -->
+  <!-- Slider -->
+  <!-- Slider -->
 <div id="top" class="carousel">
 
-	<div class="list">
+  <div class="list">
 
-		<div class="item">
-			<img src="image/Central.jpeg" alt="المنطقة الوسطى">
-			<div class="content">
-				<div class="author">المنطقة الوسطى</div>
-				<div class="topic">الرياض</div>
-				<div class="des">تجمع المنطقة الوسطى بين التراث العريق والتطور الحضري السريع.</div>
-			</div>
-		</div>
+    <div class="item">
+      <img src="image/Central.jpeg" alt="المنطقة الوسطى">
+      <div class="content">
+        <div class="author">المملكة العربية السعودية</div>
+        <div class="topic">المنطقة الوسطى</div>
+        <div class="des">
+          تتمركز المنطقة الوسطى حول الرياض والقصيم، حيث تمزج بين الحياة الحضرية العصرية والواحات الخصبة والمواقع التاريخية. يجد الزوار متاحف وأسواقاً وحرفاً تقليدية ومهرجانات تُبرز الثقافة والمطبخ السعودي وكرم الضيافة، إلى جانب وسائل الراحة الحديثة والمعالم الثقافية المتنامية.
+        </div>
+      </div>
+    </div>
 
-		<div class="item">
-			<img src="image/North.jpg" alt="المنطقة الشمالية">
-			<div class="content">
-				<div class="author">المنطقة الشمالية</div>
-				<div class="topic">تبوك</div>
-				<div class="des">وجهة مميزة بتاريخ طويل وطبيعة خلابة.</div>
-			</div>
-		</div>
+    <div class="item">
+      <img src="image/North.jpg" alt="المنطقة الشمالية">
+      <div class="content">
+        <div class="author">المملكة العربية السعودية</div>
+        <div class="topic">المنطقة الشمالية</div>
+        <div class="des">
+         تضم المنطقة الشمالية تبوك والجوف ومساحات صحراوية شاسعة تزخر بالمواقع الأثرية وبساتين الزيتون. يكتشف المسافرون آثاراً قديمة، وفنوناً صخرية، وودياناً طبيعية، وجولات سياحية بصحبة مرشدين تُعرّفهم على المأكولات والحرف اليدوية المحلية، والمناظر الطبيعية الموسمية، وكرم الضيافة الريفية الأصيلة.
+        </div>
+      </div>
+    </div>
 
-		<div class="item">
-			<img src="image/West.jpeg" alt="المنطقة الغربية">
-			<div class="content">
-				<div class="author">المنطقة الغربية</div>
-				<div class="topic">جدة</div>
-				<div class="des">ثقافة بحرية وتنوع حضاري مميز.</div>
-			</div>
-		  	<!-- Link: Central -->
-					<div class="buttons">
-						<button type="button" onclick="location.href='Central.php'">Explore</button>
-					</div>
-				</div>
-			</div>
+    <div class="item">
+      <img src="image/West.jpeg" alt="المنطقة الغربية">
+      <div class="content">
+        <div class="author">المملكة العربية السعودية</div>
+        <div class="topic">المنطقة الغربية</div>
+        <div class="des">
+          تتميز المنطقة الغربية بمكة والمدينة وجدة والطائف، حيث تجمع بين المواقع المقدسة والأحياء التاريخية وسواحل البحر الأحمر والمنتجعات الجبلية. يختبر الزوار خدمات الحج، والممرات الساحلية، والتراث الثقافي، وحدائق الورود، والمهرجانات والأسواق على مدار السنة.
+        </div>
+      </div>
+    </div>
 
-		<div class="item">
-			<img src="image/South.jpeg" alt="المنطقة الجنوبية">
-			<div class="content">
-				<div class="author">المنطقة الجنوبية</div>
-				<div class="topic">أبها</div>
-				<div class="des">طبيعة خضراء وتراث غني.</div>
-			</div>
-		</div>
+    <div class="item">
+      <img src="image/South.jpeg" alt="المنطقة الجنوبية">
+      <div class="content">
+        <div class="author">المملكة العربية السعودية</div>
+        <div class="topic">المنطقة الجنوبية</div>
+        <div class="des">
+          تضم المنطقة الجنوبية أبها وجازان وعسير والباحة، وتشتهر بمناظرها الطبيعية الخضراء، وجبالها الضبابية، وقرى التراث الثقافي. يستمتع الزوار بالمهرجانات الموسمية، والأسواق التقليدية، والمأكولات المحلية، والحرف اليدوية، والضيافة الدافئة في هذه المنطقة الغنية بالتنوع الطبيعي والثقافي.
+        </div>
+      </div>
+    </div>
 
-		<div class="item">
-			<img src="image/East.jpeg" alt="المنطقة الشرقية">
-			<div class="content">
-				<div class="author">المنطقة الشرقية</div>
-				<div class="topic">الدمام</div>
-				<div class="des">صناعة وطاقة وبحر.</div>
-			</div>
-		</div>
-	</div>
+    <div class="item">
+      <img src="image/East.jpeg" alt="المنطقة الشرقية">
+      <div class="content">
+        <div class="author">المملكة العربية السعودية</div>
+        <div class="topic">المنطقة الشرقية</div>
+        <div class="des">
+          تضم المنطقة الشرقية الدمام والخبر والقطيف والأحساء، وتشتهر بصناعاتها النفطية والطاقة، بالإضافة إلى سواحلها البحرية الجميلة على الخليج العربي. يستمتع الزوار بالشواطئ، والمناطق الطبيعية، والأسواق التقليدية، والمأكولات البحرية الطازجة، والضيافة الأصيلة في هذه المنطقة الحيوية.
+        </div>
+      </div>
+    </div>
 
-	<!-- Thumbnails -->
-	<div class="thumbnail">
+  </div>
 
-		<div class="item">
-			<img src="image/Central.jpeg">
-			<div class="content">
-				<div class="title">المنطقة الوسطى</div>
-				<div class="description">الرياض – القصيم – حائل</div>
-			</div>
-		</div>
+  <!-- Thumbnails -->
+  <div class="thumbnail">
 
-		<div class="item">
-			<img src="image/North.jpg">
-			<div class="content">
-				<div class="title">المنطقة الشمالية</div>
-				<div class="description">تبوك – الجوف – الحدود الشمالية</div>
-			</div>
-		</div>
+    <div class="item">
+      <img src="image/Central.jpeg">
+      <div class="content">
+        <div class="title">المنطقة الوسطى</div>
+        <div class="description">الرياض – القصيم – حائل</div>
+      </div>
+    </div>
 
-		<div class="item">
-			<img src="image/West.jpeg">
-			<div class="content">
-				<div class="title">المنطقة الغربية</div>
-				<div class="description">مكة – المدينة – جدة – الطائف</div>
-			</div>
-		</div>
+    <div class="item">
+      <img src="image/North.jpg">
+      <div class="content">
+        <div class="title">المنطقة الشمالية</div>
+        <div class="description">تبوك – الجوف – الحدود الشمالية</div>
+      </div>
+    </div>
 
-		<div class="item">
-			<img src="image/South.jpeg">
-			<div class="content">
-				<div class="title">المنطقة الجنوبية</div>
-				<div class="description">عسير – جازان – نجران – الباحة</div>
-			</div>
-		</div>
+    <div class="item">
+      <img src="image/West.jpeg">
+      <div class="content">
+        <div class="title">المنطقة الغربية</div>
+        <div class="description">مكة – المدينة – جدة – الطائف</div>
+      </div>
+    </div>
 
-		<div class="item">
-			<img src="image/East.jpeg">
-			<div class="content">
-				<div class="title">المنطقة الشرقية</div>
-				<div class="description">الدمام – الخبر – القطيف – الأحساء</div>
-			</div>
-		</div>
-	</div>
+    <div class="item">
+      <img src="image/South.jpeg">
+      <div class="content">
+        <div class="title">المنطقة الجنوبية</div>
+        <div class="description">عسير – جازان – نجران – الباحة</div>
+      </div>
+    </div>
 
-	<!-- Arrows -->
-	<div class="arrows">
-		<button id="next">‹</button>
-		<button id="prev">›</button>
-	</div>
+    <div class="item">
+      <img src="image/East.jpeg">
+      <div class="content">
+        <div class="title">المنطقة الشرقية</div>
+        <div class="description">الدمام – الخبر – القطيف – الأحساء</div>
+      </div>
+    </div>
 
-	<div class="time"></div>
+  </div>
 
+  <!-- Arrows -->
+  <div class="arrows">
+    <button id="prev"><</button>
+    <button id="next">></button>
+  </div>
+
+  <div class="time"></div>
 </div>
 
+  <!-- Main -->
+  <main id="main">
 
-<!-- Main -->
-<main id="main">
+    <!-- Overview / نظرة عامة -->
+    <section id="overview" class="section section-intro">
+      <div class="container">
+       			<h2>نظرة عامة عن المملكة العربية السعودية</h2>
 
-	<!-- Overview -->
-	<section id="overview" class="section section-intro">
-		<div class="container">
-
-			<h2>نظرة عامة عن المملكة العربية السعودية</h2>
-
-			<p>
-				المملكة العربية السعودية هي دولة ذات تاريخ عريق وتطور حديث، تجمع بين الأصالة والمعاصرة، 
-				وهي مهد الإسلام وموطن الحرمين الشريفين.
+       			<p>
+				المملكة العربية السعودية هي دولة ذات تاريخ عريق وتطور حديث، تجمع بين الأصالة والمعاصرة،	وهي مهد الإسلام وموطن الحرمين الشريفين.
 			</p>
 
-			<!-- فلتر اللغة -->
-			<div class="question-filter">
-			<label>اللغة:</label>
-			<select id="langFilter">
-				<option value="all">الكل</option>
-				<option value="arabic">عربي</option>
-				<option value="english">إنجليزي</option>
-			</select>
-			</div>
+        <!-- فلتر اللغة -->
+            <div class="question-filter">
+            <label>اللغة:</label>
+            <select id="langFilter">
+                <option value="all">الكل</option>
+                <option value="arabic">عربي</option>
+                <option value="english">إنجليزي</option>
+            </select>
+            </div>
 
-			<!-- فلتر نوع السؤال العربي -->
-			<div id="arabicFilter" style="display:none; margin-top:10px;" class="question-filter">
-				<label>نوع السؤال:</label>
-				<select id="arabicType">
-					<option value="all">الكل</option>
-				</select>
-			</div>
+            <!-- فلتر نوع السؤال العربي -->
+            <div id="arabicFilter" style="display:none; margin-top:10px;" class="question-filter">
+                <label>نوع السؤال:</label>
+                <select id="arabicType">
+                    <option value="all">الكل</option>
+                </select>
+            </div>
 
-			<!-- فلاتر الأسئلة الإنجليزية -->
-			<div id="englishFilters" style="display:none; margin-top:10px;" class="question-filter">
+            <!-- فلاتر الأسئلة الإنجليزية -->
+            <div id="englishFilters" style="display:none; margin-top:10px;" class="question-filter">
 
-				<label>نوع السؤال:</label>
-				<select id="englishType">
-					<option value="all">الكل</option>
-				</select>
+                <label>نوع السؤال:</label>
+                <select id="englishType">
+                    <option value="all">الكل</option>
+                </select>
 
-				<label style="margin-left:15px;">الفئة:</label>
-				<select id="englishCategory">
-					<option value="all">الكل</option>
-				</select>
-			</div>
+                <label style="margin-left:15px;">الفئة:</label>
+                <select id="englishCategory">
+                    <option value="all">الكل</option>
+                </select>
+            </div>
 
-			<div class="features"></div>
+        <div class="features"></div>
+      </div>
+    </section>
 
-		</div>
-	</section>
+    <!-- CTA -->
+    <section id="visit" class="section section-cta">
+      <div class="container cta">
+       			<h2>اختبر معرفتك بالثقافة السعودية</h2>
+        		<p>ابدأ اختبارًا ممتعًا لمعرفة مدى معرفتك بالموروث السعودي.</p>
+        <a class="btn btn-primary" href="quiz/QUIZ-ar.php">ابدأ الآن</a>
+      </div>
+    </section>
 
+  </main>
 
-	<!-- CTA -->
-	<section id="visit" class="section section-cta">
-		<div class="container cta">
-			<h2>اختبر معرفتك بالثقافة السعودية</h2>
-			<p>ابدأ اختبارًا ممتعًا لمعرفة مدى معرفتك بالموروث السعودي.</p>
-			<a class="btn btn-primary" href="quiz/QUIZ-ar.php">ابدأ الآن</a>
-		</div>
-	</section>
-
-</main>
-
-
-<!-- Footer -->
+  <!-- Footer -->
   <footer class="site-footer" aria-label="تذييل الصفحة">
     <div class="container footer-grid">
       <div>
-        <strong>الثقافة السعودية</strong>
+        <strong>الهويّة</strong>
         <p>© 2025 جميع الحقوق محفوظة</p>
       </div>
       <ul class="footer-links">
@@ -317,6 +317,7 @@ const TRANSLATIONS = {
 const REGION_FILE = "GENERAL";   // which data file to load
 let currentFilter = "all";       // all | english | arabic
 let ALL_QUESTIONS = [];
+const IS_LOGGED_IN = <?php echo $LOGGED_IN ? 'true' : 'false'; ?>;
 
 // fetch data from backend
 async function loadAllQuestions() {
@@ -512,6 +513,8 @@ async function render(pageIndex = 0) {
   pageItems.forEach(q => {
     const card = document.createElement("article");
     card.className = "feature-card " + (q.lang === "english" ? "en" : "ar");
+    card.style.position = "relative";
+    card.style.paddingBottom = "80px";
 
     const h3 = document.createElement("h3");
     const p = document.createElement("p");
@@ -529,6 +532,240 @@ async function render(pageIndex = 0) {
 
     card.appendChild(h3);
     card.appendChild(p);
+
+    const textForShare = (q.lang === "arabic" ? "س: " : "Q: ") + q.question + "\n\n" + (q.lang === "arabic" ? "ج: " : "Answer: ") + q.answer;
+    const textForShareWithURL = textForShare + "\n" + window.location.href;
+
+    // ===== Actions (Copy & Share) =====
+    const actions = document.createElement("div");
+    actions.className = "card-actions";
+    actions.style.position = "absolute";
+    actions.style.bottom = "10px";
+    actions.style.left = "50%";
+    actions.style.transform = "translateX(-50%)";
+    actions.style.display = "flex";
+    actions.style.gap = "4px";
+    actions.style.justifyContent = "center";
+    actions.style.flexWrap = "nowrap";
+    actions.style.maxWidth = "calc(100% - 20px)";
+    actions.style.overflow = "visible";
+
+    // Copy Button
+    const copyBtn = document.createElement("button");
+    copyBtn.title = "نسخ";
+    copyBtn.innerHTML = " نسخ 📄";
+    copyBtn.style.background = "var(--gold-500)";
+    copyBtn.style.color = "#1a1a1a";
+    copyBtn.style.boxShadow = "var(--shadow-md)";
+    copyBtn.style.fontWeight = "700";
+    copyBtn.style.fontSize = ".85rem";
+    copyBtn.style.lineHeight = "1.2";
+    copyBtn.style.padding = ".5rem .75rem";
+    copyBtn.style.borderRadius = ".8rem";
+    copyBtn.style.border = "1px solid transparent";
+    copyBtn.style.cursor = "pointer";
+    copyBtn.style.transition = "transform .15s ease, box-shadow .15s ease, background .2s ease";
+    copyBtn.style.fontFamily = "'Noto Kufi Arabic', sans-serif";
+    copyBtn.onmouseover = () => { copyBtn.style.transform = "translateY(-2px)"; copyBtn.style.boxShadow = "var(--shadow-gold-hover)"; };
+    copyBtn.onmouseout = () => { copyBtn.style.transform = "translateY(0)"; copyBtn.style.boxShadow = "var(--shadow-md)"; };
+
+    copyBtn.onclick = () => {
+      navigator.clipboard.writeText(textForShare);
+
+      const toast = document.createElement("div");
+      toast.textContent = " تم النسخ! ";
+      toast.style.position = "fixed";
+      toast.style.bottom = "90px";
+      toast.style.right = "20px";
+      toast.style.background = "#4CAF50";
+      toast.style.color = "#fff";
+      toast.style.padding = "8px 14px";
+      toast.style.borderRadius = "6px";
+      toast.style.opacity = "0";
+      toast.style.transition = "0.3s";
+      toast.style.zIndex = "9999";
+      document.body.appendChild(toast);
+
+      setTimeout(() => (toast.style.opacity = "1"), 10);
+      setTimeout(() => {
+        toast.style.opacity = "0";
+        setTimeout(() => toast.remove(), 300);
+      }, 2000);
+    };
+
+    // Share Button
+    const shareBtn = document.createElement('button');
+    shareBtn.textContent = "مشاركة 🔗";
+    shareBtn.style.background = "var(--gold-500)";
+    shareBtn.style.color = "#1a1a1a";
+    shareBtn.style.boxShadow = "var(--shadow-md)";
+    shareBtn.style.fontWeight = "700";
+    shareBtn.style.fontSize = ".85rem";
+    shareBtn.style.lineHeight = "1.2";
+    shareBtn.style.padding = ".5rem .75rem";
+    shareBtn.style.borderRadius = ".8rem";
+    shareBtn.style.border = "1px solid transparent";
+    shareBtn.style.cursor = "pointer";
+    shareBtn.style.fontFamily = "'Noto Kufi Arabic', sans-serif";
+    shareBtn.style.transition = "transform .15s ease, box-shadow .15s ease, background .2s ease";
+    shareBtn.style.position = "relative";
+
+    shareBtn.onmouseover = () => { shareBtn.style.transform = "translateY(-2px)"; shareBtn.style.boxShadow = "var(--shadow-gold-hover)"; };
+    shareBtn.onmouseout = () => { shareBtn.style.transform = "translateY(0)"; shareBtn.style.boxShadow = "var(--shadow-md)"; };
+
+    // Share Menu
+    const shareMenu = document.createElement("div");
+    shareMenu.style.position = 'absolute';
+    shareMenu.style.bottom = '110%';
+    shareMenu.style.left = '50%';
+    shareMenu.style.transform = 'translateX(-50%)';
+    shareMenu.style.background = '#fff';
+    shareMenu.style.border = '1px solid #ddd';
+    shareMenu.style.borderRadius = '8px';
+    shareMenu.style.padding = '8px 12px';
+    shareMenu.style.display = 'none';
+    shareMenu.style.gap = '12px';
+    shareMenu.style.boxShadow = '0 4px 16px rgba(0,0,0,.18)';
+    shareMenu.style.flexDirection = 'row';
+    shareMenu.style.flexWrap = 'nowrap';
+    shareMenu.style.zIndex = '100';
+
+    shareBtn.onclick = (e) => {
+      e.stopPropagation();
+      shareMenu.style.display = shareMenu.style.display === 'none' ? 'flex' : 'none';
+    };
+
+    // Hide share menu if mouse leaves the menu or the button
+    let shareMenuHideTimeout;
+    function hideShareMenuSoon() {
+      shareMenuHideTimeout = setTimeout(() => {
+        shareMenu.style.display = 'none';
+      }, 120);
+    }
+    function cancelHideShareMenu() {
+      clearTimeout(shareMenuHideTimeout);
+    }
+    shareMenu.addEventListener('mouseleave', hideShareMenuSoon);
+    shareMenu.addEventListener('mouseenter', cancelHideShareMenu);
+    shareBtn.addEventListener('mouseleave', hideShareMenuSoon);
+    shareBtn.addEventListener('mouseenter', cancelHideShareMenu);
+
+    document.addEventListener('click', (e) => {
+      if (!shareBtn.contains(e.target) && !shareMenu.contains(e.target)) shareMenu.style.display = 'none';
+    });
+
+    // Share Platforms
+    const platforms = [
+      { name: 'X', icon: 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/x.svg', id: 'x' },
+      { name: 'فيسبوك', icon: 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/facebook.svg', id: 'facebook' },
+      { name: 'واتساب', icon: 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/whatsapp.svg', id: 'whatsapp' }
+    ];
+
+    platforms.forEach(pf => {
+      const a = document.createElement('a');
+      a.href = '#';
+      a.title = pf.name;
+      a.style.margin = '2px';
+      a.style.display = 'inline-block';
+
+      const img = document.createElement('img');
+      img.src = pf.icon;
+      img.width = 26;
+      img.height = 26;
+      img.style.transition = 'transform 0.2s';
+      img.onmouseover = () => img.style.transform = 'scale(1.2)';
+      img.onmouseout = () => img.style.transform = 'scale(1)';
+
+      let href;
+      if (pf.id === 'x') {
+        href = `https://x.com/intent/tweet?text=${encodeURIComponent(textForShareWithURL)}`;
+      } else if (pf.id === 'whatsapp') {
+        href = `https://api.whatsapp.com/send?text=${encodeURIComponent(textForShareWithURL)}`;
+      } else if (pf.id === 'facebook') {
+        href = `https://www.facebook.com/sharer/sharer.php?quote=${encodeURIComponent(textForShareWithURL)}`;
+      }
+
+      a.appendChild(img);
+      a.onclick = (e) => { e.preventDefault(); window.open(href, '_blank'); shareMenu.style.display = 'none'; };
+      shareMenu.appendChild(a);
+    });
+
+    shareBtn.appendChild(shareMenu);
+
+    // Favorite Button
+    const favBtn = document.createElement("button");
+    favBtn.title = "المفضلة";
+    favBtn.innerHTML = "المفضلة ⭐";
+    favBtn.style.background = "var(--gold-500)";
+    favBtn.style.color = "#1a1a1a";
+    favBtn.style.boxShadow = "var(--shadow-md)";
+    favBtn.style.fontWeight = "700";
+    favBtn.style.fontSize = ".85rem";
+    favBtn.style.lineHeight = "1.2";
+    favBtn.style.padding = ".5rem .75rem";
+    favBtn.style.borderRadius = ".8rem";
+    favBtn.style.border = "1px solid transparent";
+    favBtn.style.cursor = "pointer";
+    favBtn.style.transition = "transform .15s ease, box-shadow .15s ease, background .2s ease";
+    favBtn.style.fontFamily = "'Noto Kufi Arabic', sans-serif";
+    favBtn.onmouseover = () => { favBtn.style.transform = "translateY(-2px)"; favBtn.style.boxShadow = "var(--shadow-gold-hover)"; };
+    favBtn.onmouseout = () => { favBtn.style.transform = "translateY(0)"; favBtn.style.boxShadow = "var(--shadow-md)"; };
+    favBtn.onclick = async () => {
+      if (!IS_LOGGED_IN) {
+        window.location.href = "/sign/SignUp_LogIn_Form.html";
+        return;
+      }
+
+      const showToast = (message, bg = "#4CAF50") => {
+        const toast = document.createElement("div");
+        toast.textContent = message;
+        toast.style.position = "fixed";
+        toast.style.bottom = "90px";
+        toast.style.right = "20px";
+        toast.style.background = bg;
+        toast.style.color = "#fff";
+        toast.style.padding = "8px 14px";
+        toast.style.borderRadius = "6px";
+        toast.style.opacity = "0";
+        toast.style.transition = "0.3s";
+        toast.style.zIndex = "9999";
+        document.body.appendChild(toast);
+
+        setTimeout(() => (toast.style.opacity = "1"), 10);
+        setTimeout(() => {
+          toast.style.opacity = "0";
+          setTimeout(() => toast.remove(), 300);
+        }, 2000);
+      };
+
+      try {
+        const resp = await fetch("api/favorite_questions.php", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "same-origin",
+          body: JSON.stringify({
+            action: "add",
+            region: REGION_FILE,
+            lang: q.lang,
+            question: q.question,
+            answer: q.answer,
+            url: window.location.href
+          })
+        });
+        if (!resp.ok) throw new Error("Request failed");
+        const data = await resp.json().catch(() => ({}));
+        if (data && data.ok === false) throw new Error(data.error || "Failed");
+        showToast("تمت الإضافة إلى المفضلة!");
+      } catch (e) {
+        showToast("تعذر الإضافة إلى المفضلة", "#e53935");
+      }
+    };
+
+    actions.appendChild(copyBtn);
+    actions.appendChild(favBtn);
+    actions.appendChild(shareBtn);
+    card.appendChild(actions);
+
     container.appendChild(card);
   });
 
@@ -579,6 +816,8 @@ document.getElementById("langFilter").addEventListener("change", (e) => {
 render(0);
 </script>
 
-
+<script>
+(function(){if(!window.chatbase||window.chatbase("getState")!=="initialized"){window.chatbase=(...arguments)=>{if(!window.chatbase.q){window.chatbase.q=[]}window.chatbase.q.push(arguments)};window.chatbase=new Proxy(window.chatbase,{get(target,prop){if(prop==="q"){return target.q}return(...args)=>target(prop,...args)}})}const onLoad=function(){const script=document.createElement("script");script.src="https://www.chatbase.co/embed.min.js";script.id="PkSRl6nFY3Csgenh8koIS";script.domain="www.chatbase.co";document.body.appendChild(script)};if(document.readyState==="complete"){onLoad()}else{window.addEventListener("load",onLoad)}})();
+</script>
 </body>
 </html>

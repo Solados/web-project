@@ -44,7 +44,7 @@ if (!$LOGGED_IN) {
     <!-- Header -->
     <!-- Navigation -->
     <nav class="navbar" aria-label="Main navigation">
-    <a class="brand" href="#top" aria-label="Back to top">
+    <a class="brand" href="../index.php" aria-label="Back to top">
                 <img src="../image/Hawiyah.png" alt="Logo" class="site-logo">
      </a>
     <button class="menu-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Toggle menu">☰</button>
@@ -57,9 +57,9 @@ if (!$LOGGED_IN) {
             <!-- Profile dropdown list -->
             <ul class="dropdown-content">
               <li><a href="../dashboard.php">My profile</a></li>
-              <li><a href="Favorites.php">Favorites</a></li>
-              <li><a href="My_quizzes.php">My Quizzes</a></li>
-              <li><a href="sign/check_session.php?logout=true" onclick="return confirm('Are you sure you want to logout?')">Logout</a></li>
+              <li><a href="../Favorite.php">Favorites</a></li>
+              
+              <li><a href="../sign/check_session.php?logout=true" onclick="return confirm('Are you sure you want to logout?')">Logout</a></li>
             </ul>
           </li>
 <?php else: ?>
@@ -131,10 +131,6 @@ if (!$LOGGED_IN) {
     <div class="select-wrapper">
       <select id="categoryFilter" class="quiz-gold-select">
         <option value="all">All Categories</option>
-        <option value="food">Food</option>
-        <option value="clothes">Clothes</option>
-        <option value="celebration">Celebration</option>
-        <option value="games">Entertainment</option>
       </select>
     </div>
 
@@ -161,43 +157,29 @@ if (!$LOGGED_IN) {
      <li><a href="#main">Back to Top</a></li>
     </ul>
     <div style="text-align:right">
-     <strong>Saudi Culture</strong>
+     <strong>Hawiyyah</strong>
      <p>© 2025 All rights reserved</p>
     </div>
    </div>
   </footer>
   <!-- Scripts -->
   <script src="../assets/script.js"></script>
-  <script src="../assets/quiz-parser.js"></script>
 
   <!-- Quiz Script -->
 <script>
-  /*
-    Array of quiz questions.
-    Each question object contains:
-    - question: The question text
-    - choices: Multiple-choice answers
-    - answer: The correct answer
-  */
-  
-  /*
-    Function to shuffle array elements
-    (Used to randomize question order and choice order)
-  */
- function showToast(message, bgColor = "#4CAF50") {
+  function showToast(message, bgColor = "#4CAF50") {
     const toast = document.getElementById("toast");
     toast.textContent = message;
-    toast.style.background = bgColor; // يمكن تغيير اللون حسب نوع الرسالة
+    toast.style.background = bgColor;
     toast.style.display = "block";
     toast.style.opacity = "1";
-    
-    // إخفاء التنبيه تدريجيًا بعد 3 ثواني
+
     setTimeout(() => {
-        toast.style.transition = "opacity 0.5s ease";
-        toast.style.opacity = "0";
-        setTimeout(() => { toast.style.display = "none"; toast.style.transition = ""; }, 500);
+      toast.style.transition = "opacity 0.5s ease";
+      toast.style.opacity = "0";
+      setTimeout(() => { toast.style.display = "none"; toast.style.transition = ""; }, 500);
     }, 3000);
-}
+  }
 
   function shuffle(arr){
     for(let i=arr.length-1;i>0;i--){
@@ -206,231 +188,399 @@ if (!$LOGGED_IN) {
     }
   }
 
-  // detect whether a question should be treated as multiple-correct
-  function isMultiple(q) {
-    if (!q) return false;
-    const t = String(q.type || q.english_type || q.arabic_type || '').toLowerCase();
-    if (t.indexOf('multiple') !== -1 || t.indexOf('multiple correct') !== -1 || t.indexOf('multiple answers') !== -1) return true;
-    if (typeof q.answer === 'string') {
-      if (q.answer.indexOf('/') !== -1) return true;
-      if (q.answer.indexOf(',') !== -1) return true;
-      if (/\band\b/i.test(q.answer)) return true;
-    }
-    return false;
+  // ===== NEW: English quiz only =====
+  let selectedQuestions = [];
+
+  function mapTypeFilter(val){
+    if(!val) return 'all';
+    const v = String(val).trim();
+    const low = v.toLowerCase();
+    if (low === 'all') return 'all';
+    if (low === 'mcq') return 'MCQ (one correct)';
+    if (low === 'multi' || low === 'multiple') return 'MCQ (multiple correct)';
+    if (low === 'fill' || low === 'open' || low === 'open-ended') return 'Open-ended';
+    // لو القائمة صارت ترجع النص الكامل
+    return v;
   }
 
-  // Array to store randomly selected questions
-  let selectedQuestions = [];
+  function normTypeFromQuestion(q){
+  const t = String(q.english_type_norm || q.english_type || q.type || '').toLowerCase().trim();
+
+  // ✅ يدعم القيم المختصرة اللي يرسلها السيرفر: multi/one/open
+  if (t === 'multi' || t.includes('multiple correct') || t.includes('multiple')) return 'multi';
+  if (t === 'one'  || t.includes('one correct')      || t.includes('one'))      return 'one';
+  if (t === 'open' || t.includes('open-ended')       || t.includes('open'))     return 'open';
+
+  const hasChoices = Array.isArray(q.choices) && q.choices.length >= 2;
+  return hasChoices ? 'one' : 'open';
+}
+
+  function parseChoice(choiceStr){
+    const s = String(choiceStr || '').trim();
+    const m = s.match(/^([A-D])\.\s*(.*)$/i);
+    if (!m) return { key: s, text: s, raw: s };
+    return { key: String(m[1]).toUpperCase(), text: m[2], raw: s };
+  }
+
+  function sortChoicesABCD(choices){
+    const order = { A: 0, B: 1, C: 2, D: 3 };
+    const keyOf = (choiceStr) => {
+      const s = String(choiceStr || '').trim();
+      const m = s.match(/^([A-D])\./i);
+      if (!m) return 99;
+      const k = String(m[1]).toUpperCase();
+      return (k in order) ? order[k] : 99;
+    };
+    return Array.isArray(choices)
+      ? choices.slice().sort((a, b) => keyOf(a) - keyOf(b))
+      : [];
+  }
+
+  async function fetchEnglishQuestions({file, count, type, category}){
+    const qs = new URLSearchParams();
+    qs.set('file', file);
+    qs.set('lang', 'english');
+    qs.set('count', String(count));
+    if (type && type !== 'all') qs.set('type', type);
+    if (category && category !== 'all') qs.set('category', category);
+
+    const resp = await fetch(`quiz.php?${qs.toString()}`);
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const data = await resp.json();
+    return (data && Array.isArray(data.questions)) ? data.questions : [];
+  }
+
+  async function fetchEnglishMeta(file){
+    // نجيب كمية كبيرة بدون فلتر ثم نجمع الأنواع/التصنيفات
+    const qs = new URLSearchParams();
+    qs.set('file', file);
+    qs.set('lang', 'english');
+    qs.set('count', '5000');
+
+    const resp = await fetch(`quiz.php?${qs.toString()}`);
+    if (!resp.ok) return { types: [], categories: [] };
+    const data = await resp.json();
+    const qsArr = (data && Array.isArray(data.questions)) ? data.questions : [];
+
+    const typeSet = new Map();
+    const catSet  = new Map();
+
+    for (const q of qsArr){
+      const tr = String(q.english_type || '').trim();
+      const cr = String(q.english_category || '').trim();
+      if (tr) typeSet.set(tr.toLowerCase(), tr);
+      if (cr) catSet.set(cr.toLowerCase(), cr);
+    }
+
+    const types = Array.from(typeSet.values()).sort((a,b)=>a.localeCompare(b));
+    const categories = Array.from(catSet.values()).sort((a,b)=>a.localeCompare(b));
+    return { types, categories };
+  }
+
+  async function populateTypeAndCategory(){
+    const regionSelect = document.getElementById('regionFilter');
+    const typeSelect = document.getElementById('typeFilter');
+    const catSelect = document.getElementById('categoryFilter');
+    if (!regionSelect || !typeSelect || !catSelect) return;
+
+    const regionValue = regionSelect.value || 'GENERAL';
+    const regionFiles = ['GENERAL','CENTERAL','NORTH','SOUTH','EAST','WEST'];
+    const src = (regionValue === 'RANDOM')
+      ? regionFiles[Math.floor(Math.random()*regionFiles.length)]
+      : regionValue;
+
+    // reset
+    typeSelect.innerHTML = '';
+    const optAllT = document.createElement('option');
+    optAllT.value = 'all';
+    optAllT.textContent = 'All Types';
+    typeSelect.appendChild(optAllT);
+
+    catSelect.innerHTML = '';
+    const optAllC = document.createElement('option');
+    optAllC.value = 'all';
+    optAllC.textContent = 'All Categories';
+    catSelect.appendChild(optAllC);
+
+    const meta = await fetchEnglishMeta(src);
+
+    // types
+    for (const t of meta.types){
+      const o = document.createElement('option');
+      // نخلي value شورت عشان startQuiz يعمل mapTypeFilter
+      if (t.toLowerCase().includes('multiple')) o.value = 'multi';
+      else if (t.toLowerCase().includes('one')) o.value = 'mcq';
+      else if (t.toLowerCase().includes('open')) o.value = 'fill';
+      else o.value = t;
+      o.textContent = t;
+      typeSelect.appendChild(o);
+    }
+
+    // categories
+    for (const c of meta.categories){
+      const o = document.createElement('option');
+      o.value = c;
+      o.textContent = c;
+      catSelect.appendChild(o);
+    }
+  }
 
   async function startQuiz(){
     const count = Number(document.getElementById('questionCount').value) || 5;
-    const regionSelect = document.getElementById('regionFilter');
-    const regionValue = regionSelect ? regionSelect.value : 'Words';
 
-    // helper list of known region CSVs (matches files under data/)
+    const regionSelect = document.getElementById('regionFilter');
+    const regionValue = regionSelect ? regionSelect.value : 'GENERAL';
     const regionFiles = ['GENERAL','CENTERAL','NORTH','SOUTH','EAST','WEST'];
 
-    // determine source to request from server
-    let source = 'Words';
-    if (regionValue === 'RANDOM') {
-      source = regionFiles[Math.floor(Math.random()*regionFiles.length)];
-    } else if (regionValue && regionValue !== 'Words') {
-      source = regionValue;
-    }
+    let source = 'GENERAL';
+    if (regionValue === 'RANDOM') source = regionFiles[Math.floor(Math.random()*regionFiles.length)];
+    else source = regionValue || 'GENERAL';
+
+    const typeVal = document.getElementById('typeFilter') ? document.getElementById('typeFilter').value : 'all';
+    const mappedType = mapTypeFilter(typeVal);
+
+    const categoryVal = document.getElementById('categoryFilter') ? document.getElementById('categoryFilter').value : 'all';
 
     const resultEl = document.getElementById('result');
     resultEl.innerHTML = 'Loading quiz...';
-    const lang = document.getElementById('langSelect') ? document.getElementById('langSelect').value : 'ar';
 
-    // read UI filters
-    let type = document.getElementById('typeFilter') ? document.getElementById('typeFilter').value : 'all';
-    // Map UI shorthand to CSV Question Type strings used in the data files
-    function mapTypeFilter(val) {
-      if (!val) return 'all';
-      const v = String(val).toLowerCase();
-      if (v === 'all') return 'all';
-      if (v === 'mcq') return 'MCQ (one correct)';
-      if (v === 'multi' || v === 'multiple') return 'MCQ (multiple correct)';
-      if (v === 'fill' || v === 'open' || v === 'open-ended') return 'Open-ended';
-      // allow passing exact CSV strings as well
-      return val;
-    }
-    const mappedType = mapTypeFilter(type);
-    const category = document.getElementById('categoryFilter') ? document.getElementById('categoryFilter').value : 'all';
+    try{
+      const questions = await fetchEnglishQuestions({
+        file: source,
+        count,
+        type: mappedType,
+        category: categoryVal
+      });
 
-    // try client-side CSV loader first (works without PHP)
-    if (typeof fetchQuestions === 'function'){
-      try{
-          const clientQ = await fetchQuestions(source, count, lang, mappedType, category);
-        if(Array.isArray(clientQ) && clientQ.length>0){
-          selectedQuestions = clientQ.map(q => ({
-            question: q.question,
-            choices: Array.isArray(q.choices) ? q.choices.slice() : [],
-            answer: q.answer || null,
-            type: q.type || q.english_type || q.arabic_type || null
-          }));
-          // shuffle question order for variety
-          shuffle(selectedQuestions);
-          selectedQuestions.forEach(q => shuffle(q.choices));
-          displayQuestions();
-          resultEl.innerHTML = '';
-          window.location.hash = '#quiz';
-          return;
-        } else {
-          resultEl.innerHTML = 'No questions returned from client parser, trying server...';
-        }
-      }catch(e){
-        console.warn('client-side parser failed:', e);
+      if (!questions || questions.length === 0){
+        resultEl.innerHTML = 'No questions found for your filters.';
+        selectedQuestions = [];
+        document.getElementById('quizContainer').innerHTML = '';
+        return;
       }
+
+      selectedQuestions = questions;
+      // shuffle for variety
+      shuffle(selectedQuestions);
+      // keep MCQ options tidy (A, B, C, D)
+      selectedQuestions.forEach(q => {
+        if (Array.isArray(q.choices)) q.choices = sortChoicesABCD(q.choices);
+      });
+
+      displayQuestions();
+      resultEl.innerHTML = '';
+      window.location.hash = '#quiz';
+    }catch(e){
+      console.error(e);
+      resultEl.innerHTML = 'Could not load quiz questions.';
     }
-
-    // try server-side endpoint first with a timeout
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 6000); // 6s timeout
-
-    try {
-      const qs = new URLSearchParams({ source: source, count: String(count), type: mappedType === 'all' ? '' : mappedType, category: category || '' });
-      const resp = await fetch(`quiz.php?${qs.toString()}`, { signal: controller.signal });
-      clearTimeout(timeout);
-      if (resp.ok) {
-        const data = await resp.json();
-        if (data && Array.isArray(data.questions) && data.questions.length > 0) {
-          selectedQuestions = data.questions.map(q => ({
-            question: q.question,
-            choices: Array.isArray(q.choices) ? q.choices.slice() : [],
-            answer: q.answer || null,
-            type: q.type || q.english_type || q.arabic_type || null
-          }));
-          // shuffle question order for variety
-          shuffle(selectedQuestions);
-          // shuffle choices for each question
-          selectedQuestions.forEach(q => shuffle(q.choices));
-          displayQuestions();
-          resultEl.innerHTML = '';
-          window.location.hash = '#quiz';
-          return;
-        } else {
-          resultEl.innerHTML = 'No questions returned from server, using local fallback.';
-        }
-      } else {
-        resultEl.innerHTML = `Server returned ${resp.status}, using local fallback.`;
-      }
-    } catch (err) {
-      clearTimeout(timeout);
-      if (err.name === 'AbortError') {
-        resultEl.innerHTML = 'Server request timed out (6s). Using local fallback.';
-      } else {
-        resultEl.innerHTML = 'Could not reach quiz endpoint. Using local fallback.';
-      }
-      console.warn('quiz.php fetch failed or timed out:', err);
-    }
-
-    // fallback to embedded questions when server-side generation fails or times out
-    selectedQuestions = allQuestions.slice();
-    shuffle(selectedQuestions);
-    selectedQuestions = selectedQuestions.slice(0, count);
-    selectedQuestions.forEach(q => shuffle(q.choices));
-    displayQuestions();
-    // clear any lingering loading text
-    setTimeout(() => { if (resultEl && resultEl.innerHTML.startsWith('Loading')) resultEl.innerHTML = ''; }, 300);
-    window.location.hash = '#quiz';
   }
 
-  /*
-    Displays the selected questions on the page
-  */
   function displayQuestions(){
     const container = document.getElementById('quizContainer');
     container.innerHTML = '';
-
-    
 
     selectedQuestions.forEach((q, i) => {
       const box = document.createElement('div');
       box.className = 'feature-card';
 
-      // determine a short type label for the badge
-      const inferredType = (q.type && q.type.trim()) ? q.type.trim() : (Array.isArray(q.choices) && q.choices.length > 0 ? 'MCQ' : 'Open-ended');
-      const multi = isMultiple(q);
-      const badgeText = multi ? 'MCQ (multiple correct)' : (inferredType === 'MCQ' ? 'MCQ (one correct)' : inferredType);
-      let html = `<h3 dir="ltr">${i+1}. ${q.question} <span class="q-badge" style="font-size:.7rem;padding:.15rem .4rem;margin-left:.6rem;border-radius:4px;background:#efefef;color:#333;border:1px solid #ddd">${badgeText}</span></h3>`;
+      const qTypeNorm = normTypeFromQuestion(q);
+      const hasChoices = Array.isArray(q.choices) && q.choices.length >= 2;
 
-      // If the question has choices, render radios; otherwise render an open-answer textarea
-      if (Array.isArray(q.choices) && q.choices.length > 0) {
-        q.choices.forEach(choice => {
-          if (multi) {
-            html += `\n          <label style="display:block;margin:.25rem 0">\n            <input type="checkbox" name="q${i}" value="${choice}"> ${choice}\n          </label>`;
-          } else {
-            html += `\n          <label style="display:block;margin:.25rem 0">\n            <input type="radio" name="q${i}" value="${choice}"> ${choice}\n          </label>`;
-          }
-        });
+      // header row
+      const titleRow = document.createElement('div');
+      titleRow.style.display = 'flex';
+      titleRow.style.justifyContent = 'space-between';
+      titleRow.style.gap = '10px';
+      titleRow.style.alignItems = 'center';
+
+      const h3 = document.createElement('h3');
+      h3.style.margin = '0';
+      h3.textContent = `${i + 1}. ${q.question || ''}`;
+
+      const badge = document.createElement('span');
+      badge.className = 'q-badge';
+      badge.style.fontSize = '.7rem';
+      badge.style.padding = '.15rem .4rem';
+      badge.style.marginLeft = '.6rem';
+      badge.style.borderRadius = '4px';
+      badge.style.background = '#efefef';
+      badge.style.color = '#333';
+      badge.style.border = '1px solid #ddd';
+
+      if (qTypeNorm === 'multi') badge.textContent = 'MCQ (multiple correct)';
+      else if (qTypeNorm === 'one' && hasChoices) badge.textContent = 'MCQ (one correct)';
+      else badge.textContent = 'Open-ended';
+
+      titleRow.appendChild(h3);
+      titleRow.appendChild(badge);
+      box.appendChild(titleRow);
+
+      const answersWrap = document.createElement('div');
+      answersWrap.className = 'answers';
+      answersWrap.style.marginTop = '12px';
+
+      // Open-ended
+      if (qTypeNorm === 'open' || !hasChoices){
+        const ta = document.createElement('textarea');
+        ta.name = `q${i}_open`;
+        ta.rows = 3;
+        ta.placeholder = 'Write your answer here...';
+        ta.style.width = '100%';
+        ta.style.resize = 'vertical';
+        ta.style.padding = '.5rem';
+        ta.style.border = '1px solid #e0e0e0';
+        ta.style.borderRadius = '6px';
+        ta.style.fontSize = '1rem';
+        ta.style.fontFamily = 'inherit';
+        answersWrap.appendChild(ta);
       } else {
-        html += `
-          <div style="margin-top:.5rem">
-            <textarea name="q${i}_open" placeholder="Write your answer here..." 
-              style="width:100%;min-height:88px;padding:.5rem;border:1px solid #e0e0e0;border-radius:6px;font-size:1rem;font-family:inherit;resize:vertical"></textarea>
-          </div>`;
+        const multi = (qTypeNorm === 'multi');
+        const sortedChoices = sortChoicesABCD(q.choices);
+        sortedChoices.forEach((choiceStr) => {
+          const c = parseChoice(choiceStr);
+
+          const label = document.createElement('label');
+          label.style.display = 'flex';
+          label.style.alignItems = 'center';
+          label.style.gap = '10px';
+          label.style.margin = '.25rem 0';
+
+          const input = document.createElement('input');
+          input.type = multi ? 'checkbox' : 'radio';
+          input.name = `q${i}`;
+          // القيمة = الحرف (A/B/C/D) للتصحيح
+          input.value = c.key;
+
+          const span = document.createElement('span');
+          span.textContent = c.raw; // يعرض A. النص كما في الملف
+
+          label.appendChild(input);
+          label.appendChild(span);
+          answersWrap.appendChild(label);
+        });
       }
 
-      html += `
-        <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
+      box.appendChild(answersWrap);
 
+      // actions inside card (same idea as قبل)
+      const actions = document.createElement('div');
+      actions.style.marginTop = '10px';
+      actions.style.display = 'flex';
+      actions.style.gap = '10px';
+      actions.style.flexWrap = 'wrap';
+      // Copy button
+      const copyBtn = document.createElement('button');
+      copyBtn.title = "Copy question";
+      copyBtn.innerHTML = " Copy 📄";
+      copyBtn.style.background = "var(--gold-500)";
+      copyBtn.style.color = "#1a1a1a";
+      copyBtn.style.boxShadow = "var(--shadow-md)";
+      copyBtn.style.fontWeight = "700";
+      copyBtn.style.padding = ".75rem 1.1rem";
+      copyBtn.style.borderRadius = ".8rem";
+      copyBtn.style.border = "1px solid transparent";
+      copyBtn.style.cursor = "pointer";
+      copyBtn.style.transition = "transform .15s ease, box-shadow .15s ease, background .2s ease";
+      copyBtn.style.fontFamily = "'Noto Kufi Arabic', sans-serif";
+      copyBtn.onmouseover = () => { copyBtn.style.transform = "translateY(-2px)"; copyBtn.style.boxShadow = "var(--shadow-gold-hover)"; };
+      copyBtn.onmouseout = () => { copyBtn.style.transform = "translateY(0)"; copyBtn.style.boxShadow = "var(--shadow-md)"; };
+      copyBtn.onclick = () => copyQuestion(i);
 
-          <button onclick="favoriteQuestion(${i})" 
-            style="padding:6px 12px; background:#ffb800; color:white; border:0; border-radius:6px; cursor:pointer;">
-            Favorite ⭐ 
-          </button>
+      // Share button
+      const shareBtn = document.createElement('button');
+      shareBtn.textContent = "Share 🔗";
+      shareBtn.style.background = "var(--gold-500)";
+      shareBtn.style.color = "#1a1a1a";
+      shareBtn.style.boxShadow = "var(--shadow-md)";
+      shareBtn.style.fontWeight = "700";
+      shareBtn.style.padding = ".75rem 1.1rem";
+      shareBtn.style.borderRadius = ".8rem";
+      shareBtn.style.border = "1px solid transparent";
+      shareBtn.style.cursor = "pointer";
+      shareBtn.style.transition = "transform .15s ease, box-shadow .15s ease, background .2s ease";
+      shareBtn.style.position = "relative";
+      shareBtn.style.fontFamily = "'Noto Kufi Arabic', sans-serif";
+      shareBtn.onmouseover = () => { shareBtn.style.transform = "translateY(-2px)"; shareBtn.style.boxShadow = "var(--shadow-gold-hover)"; };
+      shareBtn.onmouseout = () => { shareBtn.style.transform = "translateY(0)"; shareBtn.style.boxShadow = "var(--shadow-md)"; };
 
-          <button onclick="copyQuestion(${i})" 
-            style="padding:6px 12px; background:#2196F3; color:white; border:0; border-radius:6px; cursor:pointer;">
-           copy 📋 
-          </button>
+      // Dropdown
+      const popup = document.createElement('div');
+      popup.style.position = 'absolute';
+      popup.style.top = '0';
+      popup.style.left = '100%';
+      popup.style.background = '#fff';
+      popup.style.border = '1px solid #ddd';
+      popup.style.borderRadius = '8px';
+      popup.style.padding = '6px 10px';
+      popup.style.display = 'none';
+      popup.style.gap = '8px';
+      popup.style.boxShadow = '0 4px 12px rgba(0,0,0,.15)';
+      popup.style.flexWrap = 'nowrap';
+      popup.style.zIndex = '100';
 
-          <div style="display:flex; gap:5px; align-items:center;">
-            <a href="#" onclick="shareQuestion(${i}, 'x'); return false;" title="Share on X">
-              <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/x.svg" width="24" height="24" style="filter: invert(36%) sepia(97%) saturate(1595%) hue-rotate(176deg) brightness(93%) contrast(95%);"/>
-            </a>
-            <a href="#" onclick="shareQuestion(${i}, 'facebook'); return false;" title="Share on Facebook">
-              <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/facebook.svg" width="24" height="24" style="filter: invert(29%) sepia(72%) saturate(900%) hue-rotate(182deg) brightness(90%) contrast(90%);"/>
-            </a>
-            <a href="#" onclick="shareQuestion(${i}, 'whatsapp'); return false;" title="Share on WhatsApp">
-              <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/whatsapp.svg" width="24" height="24" style="filter: invert(49%) sepia(92%) saturate(510%) hue-rotate(95deg) brightness(93%) contrast(95%);"/>
-            </a>
-          </div>
-        </div>
-      `;
+      const platforms = [
+        { name: 'X', icon: 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/x.svg', id: 'x' },
+        { name: 'Facebook', icon: 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/facebook.svg', id: 'facebook' },
+        { name: 'WhatsApp', icon: 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/whatsapp.svg', id: 'whatsapp' }
+      ];
 
-      box.innerHTML = html;
+      platforms.forEach(p => {
+        const a = document.createElement('a');
+        a.href = '#';
+        a.title = p.name;
+        a.style.margin = '2px';
+        a.style.display = 'inline-block';
+
+        const img = document.createElement('img');
+        img.src = p.icon;
+        img.width = 26;
+        img.height = 26;
+        img.style.transition = 'transform 0.2s';
+        img.onmouseover = () => img.style.transform = 'scale(1.2)';
+        img.onmouseout = () => img.style.transform = 'scale(1)';
+
+        a.appendChild(img);
+        a.onclick = (e) => { e.preventDefault(); shareQuestion(i, p.id); popup.style.display = 'none'; };
+        popup.appendChild(a);
+      });
+
+      shareBtn.appendChild(popup);
+      shareBtn.onclick = (e) => {
+        e.stopPropagation();
+        popup.style.display = popup.style.display === 'none' ? 'flex' : 'none';
+      };
+
+      document.addEventListener('click', (e) => {
+        if (!shareBtn.contains(e.target)) popup.style.display = 'none';
+      });
+
+      actions.appendChild(copyBtn);
+      actions.appendChild(shareBtn);
+      box.appendChild(actions);
+
       container.appendChild(box);
     });
 
-    // Add "Check Answers" button
+    // ===== bottom buttons (لا تختفي) =====
+    const actionBar = document.createElement('div');
+    actionBar.style.display = 'flex';
+    actionBar.style.gap = '10px';
+    actionBar.style.flexWrap = 'wrap';
+    actionBar.style.justifyContent = 'flex-start';
+    actionBar.style.marginTop = '1rem';
+
     const checkBtn = document.createElement('a');
     checkBtn.className = 'btn btn-primary';
     checkBtn.textContent = 'Check Answers';
     checkBtn.href = '#result';
-    checkBtn.style.display = 'inline-block';
-    checkBtn.style.marginTop = '1rem';
-    checkBtn.style.marginRight = '10px';
+    checkBtn.addEventListener('click', (e)=>{ e.preventDefault(); checkAnswers(); });
 
-    //Favorite button
-    const favBtn = document.createElement('a');
-    favBtn.className = 'btn btn-primary';
-    favBtn.textContent = 'view Favorites ⭐';
-    favBtn.href = 'favorites.php';
-    favBtn.style.display = 'inline-block';
-    favBtn.style.marginTop = '1rem';
-
-    checkBtn.addEventListener('click', (e) => { 
-      e.preventDefault(); 
-      checkAnswers(); 
-    });
-
-    container.appendChild(checkBtn);
-    container.appendChild(favBtn);
+    actionBar.appendChild(checkBtn);
+    container.appendChild(actionBar);
   }
 
-  /* ▼▼▼ save the question as favorite ▼▼▼ */
+  // ===== favorites/copy/share (same) =====
   function favoriteQuestion(index) {
     const box = document.getElementsByClassName('feature-card')[index];
     const htmlContent = box.outerHTML;
@@ -441,49 +591,48 @@ if (!$LOGGED_IN) {
       body: 'html=' + encodeURIComponent(htmlContent)
     })
     .then(res => res.text())
-    .then(data => { showToast("The question has been added to favorites! ⭐"); })
+    .then(() => { showToast("The question has been added to favorites! ⭐"); })
     .catch(err => { console.error("Error saving favorite:", err); showToast("Error saving question ❌", "#F44336"); });
-
   }
-  function deleteFavorite(favHtml) {
-    if (!confirm("Are you sure you want to remove this question from favorites?")) return;
 
-    fetch('delete_favorite.php', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: 'html=' + encodeURIComponent(favHtml)
-    })
-    .then(res => res.text())
-    .then(msg => {
-        showToast("Question removed from favorites ❌", "#F44336");
-        // إعادة تحميل الصفحة لتحديث قائمة المفضلة
-        setTimeout(() => { location.reload(); }, 500);
-    })
-    .catch(err => {
-        console.error(err);
-        showToast("Error removing question ❌", "#F44336");
-    });
-}
-
-  /* ▲▲▲ favorite ▲▲▲ */
-
-  /* copy */
   function copyQuestion(index) {
     const box = document.getElementsByClassName('feature-card')[index];
-    const text = box.innerText;
+    const questionText = box.querySelector('h3').innerText;
+    const answersDiv = box.querySelector('.answers');
+    let answersText = '';
+    if (answersDiv) {
+      const labels = answersDiv.querySelectorAll('label');
+      labels.forEach(label => {
+        const span = label.querySelector('span');
+        if (span) answersText += span.textContent + '\n';
+      });
+      const ta = answersDiv.querySelector('textarea');
+      if (ta && ta.value) answersText += ta.value + '\n';
+    }
+    const text = questionText + '\n\n' + answersText;
     navigator.clipboard.writeText(text).then(() => {
-    showToast("Question copied! 📋");
+      showToast("Question copied! 📋");
     }).catch(err => {
       console.error("Error copying question:", err);
       showToast("Error copying question ❌", "#F44336");
     });
-
   }
 
-  /* Share */
   function shareQuestion(index, platform) {
     const box = document.getElementsByClassName('feature-card')[index];
-    const text = encodeURIComponent(box.innerText + "\n" + window.location.href);
+    const questionText = box.querySelector('h3').innerText;
+    const answersDiv = box.querySelector('.answers');
+    let answersText = '';
+    if (answersDiv) {
+      const labels = answersDiv.querySelectorAll('label');
+      labels.forEach(label => {
+        const span = label.querySelector('span');
+        if (span) answersText += span.textContent + '\n';
+      });
+      const ta = answersDiv.querySelector('textarea');
+      if (ta && ta.value) answersText += ta.value + '\n';
+    }
+    const text = encodeURIComponent(questionText + '\n\n' + answersText + "\n" + window.location.href);
     let url = "";
     if(platform === 'x') url = `https://x.com/intent/tweet?text=${text}`;
     else if(platform === 'facebook') url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`;
@@ -491,213 +640,296 @@ if (!$LOGGED_IN) {
     window.open(url, "_blank");
   }
 
-  /*
-    Checks the user's answers:
-    - Counts correct responses
-    - Calculates percentage
-    - Colors the score based on performance
-  */
+  // ===== chart center text plugin (same idea) =====
+  const centerTextPlugin = {
+    id: 'centerText',
+    beforeDraw(chart) {
+      const { width, height, ctx } = chart;
+      ctx.save();
+
+      const text = chart.config.data.centerText;
+      if (!text) return;
+      const fontSize = height / 8;
+      ctx.font = `bold ${fontSize}px Noto Kufi Arabic`;
+      ctx.fillStyle = "#000";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText(text, width / 2, height / 2 - fontSize * 0.3);
+
+      ctx.restore();
+    }
+  };
+
   function checkAnswers(){
     let score = 0;
+    const cards = document.querySelectorAll('#quizContainer .feature-card');
 
     for(let i=0;i<selectedQuestions.length;i++){
       const q = selectedQuestions[i];
+      const typeNorm = normTypeFromQuestion(q);
+
       let isCorrect = false;
 
-      if (Array.isArray(q.choices) && q.choices.length > 0) {
-        const multiple = isMultiple(q);
-        if (multiple) {
-          const sels = Array.from(document.querySelectorAll(`input[name="q${i}"]:checked`)).map(el => (el.value || '').trim());
-          // build expected array from q.answer (support strings like 'A / B' or 'Ans1 / Ans2')
-          let expected = [];
-          if (Array.isArray(q.answer)) expected = q.answer.map(x => (x||'').trim());
-          else if (typeof q.answer === 'string') expected = q.answer.split(/\s*\/\s*|\s*,\s*|\s+and\s+/i).map(s => s.trim()).filter(Boolean);
-
-          const aSet = new Set(sels.map(s => s.toLowerCase()));
-          const bSet = new Set(expected.map(s => s.toLowerCase()));
-          const equal = aSet.size === bSet.size && [...aSet].every(v => bSet.has(v));
-          if (equal) { score++; isCorrect = true; }
-        } else {
-          const sel = document.querySelector(`input[name="q${i}"]:checked`);
-          if(sel && sel.value === q.answer){
-              score++;
-              isCorrect = true;
-          }
-        }
-      } else {
+      if (typeNorm === 'open') {
         const ta = document.querySelector(`textarea[name="q${i}_open"]`);
-        if (ta) {
-          const user = (ta.value || '').trim();
-          const corr = (q.answer || '').trim();
-          if (corr !== '') {
-            if (user !== '' && user.toLowerCase() === corr.toLowerCase()){
-                score++;
-                isCorrect = true;
-            }
+        const user = (ta ? ta.value : '').trim().toLowerCase();
+        const corr = String(q.answer_text || '').trim().toLowerCase();
+        if (corr && user && user === corr) {
+          score++; isCorrect = true;
+        }
+      } else {
+        const expected = Array.isArray(q.correct_letters) ? q.correct_letters.map(x=>String(x).trim().toUpperCase()).filter(Boolean) : [];
+        // إذا ما عندنا expected واضح: نعتبرها غلط (عشان ما يصير “بدون إجابة = صح”)
+        if (expected.length > 0) {
+          if (typeNorm === 'multi') {
+            const sels = Array.from(document.querySelectorAll(`input[name="q${i}"]:checked`))
+              .map(el => String(el.value || '').trim().toUpperCase())
+              .filter(Boolean);
+
+            const aSet = new Set(sels);
+            const bSet = new Set(expected);
+            const equal = aSet.size === bSet.size && [...aSet].every(v => bSet.has(v));
+            if (equal) { score++; isCorrect = true; }
+          } else {
+            const sel = document.querySelector(`input[name="q${i}"]:checked`);
+            const v = sel ? String(sel.value || '').trim().toUpperCase() : '';
+            if (v && v === expected[0]) { score++; isCorrect = true; }
           }
         }
       }
 
-      //  color the question box based on correctness
-      const box = document.getElementById("quizContainer").children[i];
-      if (isCorrect){
-        box.style.background = "rgba(0,255,0,0.2)";
-      } else {
-        box.style.background = "rgba(255,0,0,0.2)";
+      // color card
+      const box = cards[i];
+      if (box) {
+        box.style.background = isCorrect ? "rgba(0,255,0,0.2)" : "rgba(255,0,0,0.2)";
+        box.style.transition = "0.3s";
       }
-      box.style.transition = "0.3s";
     }
 
     const total = selectedQuestions.length || 1;
     const percent = Math.round((score/total)*100);
 
-document.getElementById('result').innerHTML = `
-<div class="score-box animate" data-correct="${score}" data-wrong="${total - score}" data-total="${total}">
-    <h2 class="score-title">Your Result</h2>
-    <div class="score-values">
-        <span class="score-main">${score} / ${total}</span>
-    </div>
+    document.getElementById('result').innerHTML = `
+      <div class="score-box animate" data-correct="${score}" data-wrong="${total - score}" data-total="${total}">
+        <h2 class="score-title">Your Result</h2>
+        <div class="score-values">
+          <span class="score-main">${score} / ${total}</span>
+        </div>
+        <div class="tooltip">
+          Correct: ${score}<br>
+          Wrong: ${total - score}<br>
+          Total: ${total}
+        </div>
+      </div>
+      <canvas id="scoreChart" style="max-width:300px;margin:20px auto;display:block;"></canvas>
+    `;
+    (function() {
+  const container = document.getElementById('result');
+  if (!container) return;
 
-    <div class="tooltip">
-        Correct: ${score}<br>
-        Wrong: ${total - score}<br>
-        Total: ${total}
-    </div>
-</div>
+  // Wrapper للأزرار
+  const btnWrapper = document.createElement('div');
+  btnWrapper.style.display = 'flex';
+  btnWrapper.style.gap = '12px';
+  btnWrapper.style.alignItems = 'center';
+  btnWrapper.style.marginTop = '20px';
+  btnWrapper.style.flexWrap = 'wrap';
 
-<canvas id="scoreChart" style="max-width:300px;margin:20px auto;display:block;"></canvas>
-`;
+  // ===== زر النسخ =====
+  const copyBtn = document.createElement('button');
+  copyBtn.title = "Copy result";
+  copyBtn.innerHTML = " Copy 📄"; // أيقونة صفحتين متتالية
+  copyBtn.style.background = "var(--gold-500)";
+  copyBtn.style.color = "#1a1a1a";
+  copyBtn.style.boxShadow = "var(--shadow-md)";
+  copyBtn.style.fontWeight = "700";
+  copyBtn.style.padding = ".75rem 1.1rem";
+  copyBtn.style.borderRadius = ".8rem";
+  copyBtn.style.border = "1px solid transparent";
+  copyBtn.style.fontFamily = "'Noto Kufi Arabic', sans-serif";
+  copyBtn.style.cursor = "pointer";
+  copyBtn.style.transition = "transform .15s ease, box-shadow .15s ease, background .2s ease";
+  copyBtn.onmouseover = () => { copyBtn.style.transform = "translateY(-2px)"; copyBtn.style.boxShadow = "var(--shadow-gold-hover)"; };
+  copyBtn.onmouseout = () => { copyBtn.style.transform = "translateY(0)"; copyBtn.style.boxShadow = "var(--shadow-md)"; };
+
+  copyBtn.onclick = () => {
+    const scoreText = document.querySelector('.score-main') ? document.querySelector('.score-main').innerText : 'My Quiz Result';
+    const shareText = `I scored ${scoreText} on this quiz! 🧠✨`;
+    navigator.clipboard.writeText(`${shareText}\n${window.location.href}`);
+    showToast("Result copied! 📋");
+  };
+  btnWrapper.appendChild(copyBtn);
+
+  // ===== زر المشاركة =====
+  const shareBtn = document.createElement('button');
+  shareBtn.textContent = "Share 🔗";
+  shareBtn.style.background = "var(--gold-500)";
+  shareBtn.style.color = "#1a1a1a";
+  shareBtn.style.boxShadow = "var(--shadow-md)";
+  shareBtn.style.fontWeight = "700";
+  shareBtn.style.padding = ".75rem 1.1rem";
+  shareBtn.style.borderRadius = ".8rem";
+  shareBtn.style.border = "1px solid transparent";
+  shareBtn.style.cursor = "pointer";
+  shareBtn.style.fontFamily = "'Noto Kufi Arabic', sans-serif";
+  shareBtn.style.transition = "transform .15s ease, box-shadow .15s ease, background .2s ease";
+  shareBtn.style.position = "relative";
+
+  shareBtn.onmouseover = () => { shareBtn.style.transform = "translateY(-2px)"; shareBtn.style.boxShadow = "var(--shadow-gold-hover)"; };
+  shareBtn.onmouseout = () => { shareBtn.style.transform = "translateY(0)"; shareBtn.style.boxShadow = "var(--shadow-md)"; };
+
+  // نافذة أيقونات المشاركة
+  const popup = document.createElement('div');
+  popup.style.position = 'absolute';
+  popup.style.bottom = '45px';
+  popup.style.left = '0';
+  popup.style.background = '#fff';
+  popup.style.border = '1px solid #ddd';
+  popup.style.borderRadius = '8px';
+  popup.style.padding = '6px 10px';
+  popup.style.display = 'none';
+  popup.style.gap = '8px';
+  popup.style.boxShadow = '0 4px 12px rgba(0,0,0,.15)';
+  popup.style.flexWrap = 'nowrap';
+  popup.style.display = 'flex';
+  popup.style.zIndex = '100';
+
+  const platforms = [
+    { name: 'X', icon: 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/x.svg', id: 'x', color: '#1DA1F2' },
+    { name: 'Facebook', icon: 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/facebook.svg', id: 'facebook', color: '#1877F2' },
+    { name: 'WhatsApp', icon: 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/whatsapp.svg', id: 'whatsapp', color: '#25D366' }
+  ];
+
+  platforms.forEach(p => {
+    const a = document.createElement('a');
+    a.href = '#';
+    a.title = p.name;
+    a.style.margin = '2px';
+    a.style.display = 'inline-block';
+
+    const img = document.createElement('img');
+    img.src = p.icon;
+    img.width = 26;
+    img.height = 26;
+    img.style.filter = ""; // إزالة أي فلتر أسود
+    img.style.transition = 'transform 0.2s';
+    img.onmouseover = () => img.style.transform = 'scale(1.2)';
+    img.onmouseout = () => img.style.transform = 'scale(1)';
+
+    a.appendChild(img);
+    a.onclick = function(e) {
+      e.preventDefault();
+      const scoreText = document.querySelector('.score-main') ? document.querySelector('.score-main').innerText : 'My Quiz Result';
+      const shareText = `I scored ${scoreText} on this quiz! 🧠✨`;
+      const text = encodeURIComponent(shareText + "\n" + window.location.href);
+      let url = '';
+      if (p.id === 'x') url = `https://x.com/intent/tweet?text=${text}`;
+      else if (p.id === 'facebook') url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}&quote=${text}`;
+      else if (p.id === 'whatsapp') url = `https://api.whatsapp.com/send?text=${text}`;
+      window.open(url, '_blank');
+      popup.style.display = 'none';
+    };
+    popup.appendChild(a);
+  });
+
+  shareBtn.appendChild(popup);
+  shareBtn.onclick = (e) => {
+    e.stopPropagation();
+    popup.style.display = popup.style.display === 'none' ? 'flex' : 'none';
+  };
+
+  document.addEventListener('click', (e) => {
+    if (!shareBtn.contains(e.target)) popup.style.display = 'none';
+  });
+
+  btnWrapper.appendChild(shareBtn);
+  container.appendChild(btnWrapper);
+})();
+
+
 
     function loadChart(callback){
-        if (window.Chart){
-            callback();
-            return;
-        }
-        const s = document.createElement("script");
-        s.src = "https://cdn.jsdelivr.net/npm/chart.js";
-        s.onload = callback;
-        document.body.appendChild(s);
+      if (window.Chart){ callback(); return; }
+      const s = document.createElement("script");
+      s.src = "https://cdn.jsdelivr.net/npm/chart.js";
+      s.onload = callback;
+      document.body.appendChild(s);
     }
 
     loadChart(() => {
-        const ctx = document.getElementById("scoreChart");
-        if (window.quizChart){ window.quizChart.destroy(); }
-  
+      const ctx = document.getElementById("scoreChart");
+      if (window.quizChart){ window.quizChart.destroy(); }
 
-       window.quizChart = new Chart(ctx, {
-    type: "doughnut",
-    data: {
-        labels: ["Correct", "Wrong"],
-        datasets: [{
+      window.quizChart = new Chart(ctx, {
+        type: "doughnut",
+        data: {
+          labels: ["Correct", "Wrong"],
+          datasets: [{
             data: [score, total - score],
-            backgroundColor: ["#1A7F3C", "#C9A86A"],   // أخضر + ذهبي
+            backgroundColor: ["#1A7F3C", "#e4645aff"],
             borderWidth: 2,
             hoverOffset: 10
-        }]
-    },
-    options: {
-        responsive: true,
-        plugins: {
+          }],
+          centerText: percent + "%"
+        },
+        options: {
+          responsive: true,
+          plugins: {
             legend: {
-                position: "bottom",
-                labels: {
-                    font: {size: 14, family: "Noto Kufi Arabic"},
-                    padding: 15
-                }
-            },
-            title: {
-                display: false,
-              
+              position: "bottom",
+              labels: { font: {size: 14, family: "Noto Kufi Arabic"}, padding: 15 }
             },
             tooltip: {
-                bodyFont: { family: "Noto Kufi Arabic" },
-                titleFont: { family: "Noto Kufi Arabic" }
+              bodyFont: { family: "Noto Kufi Arabic" },
+              titleFont: { family: "Noto Kufi Arabic" }
             }
+          },
+          cutout: "65%"
         },
-        cutout: "65%" // حجم الدائرة الداخلية
-    }
-});
-
-
-
-
+        plugins: [centerTextPlugin]
+      });
     });
 
-      // Send result to server to attach to user profile
-      (async function sendResult() {
-        try {
-          const form = new URLSearchParams();
-          form.append('score', String(score));
-          form.append('total', String(total));
-          // attempt to include region/source if available
-          const regionEl = document.getElementById('regionFilter');
-          if (regionEl) form.append('source', regionEl.value || '');
+    // save result
+    (async function sendResult() {
+      try {
+        const form = new URLSearchParams();
+        form.append('score', String(score));
+        form.append('total', String(total));
+        const regionEl = document.getElementById('regionFilter');
+        if (regionEl) form.append('source', regionEl.value || '');
 
-          const resp = await fetch('save_quiz_result.php', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: form.toString()
-          });
-          const data = await resp.json().catch(() => ({}));
-          if (resp.ok && data.success) {
-            showToast('Result saved to your profile ✅');
-          } else {
-            showToast('Could not save result to profile', '#F44336');
-          }
-        } catch (e) {
-          console.warn('save result failed', e);
-          showToast('Could not save result to profile', '#F44336');
-        }
-      })();
+        const resp = await fetch('save_quiz_result.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: form.toString()
+        });
+        const data = await resp.json().catch(() => ({}));
+        if (resp.ok && data.success) showToast('Result saved to your profile ✅');
+        else showToast('Could not save result to profile', '#F44336');
+      } catch (e) {
+        console.warn('save result failed', e);
+        showToast('Could not save result to profile', '#F44336');
+      }
+    })();
+
+    window.location.hash = '#result';
   }
 
-  /*
-    Activates the Start button on page load
-  */
-  document.addEventListener('DOMContentLoaded', () => {
+  document.addEventListener('DOMContentLoaded', async () => {
     const startBtn = document.getElementById('startBtn');
-    if(startBtn) startBtn.addEventListener('click', (e) => { 
-      e.preventDefault(); 
-      startQuiz(); 
-    });
+    if (startBtn) startBtn.addEventListener('click', (e)=>{ e.preventDefault(); startQuiz(); });
 
-    async function populateTypeFilter() {
-      const regionSelect = document.getElementById('regionFilter');
-      const typeSelect = document.getElementById('typeFilter');
-      if (!typeSelect || !regionSelect) return;
-      const src = regionSelect.value || 'Words';
-      typeSelect.innerHTML = '';
-      const optAll = document.createElement('option'); optAll.value = 'all'; optAll.textContent = 'All Types';
-      typeSelect.appendChild(optAll);
+    await populateTypeAndCategory();
 
-      let types = [];
-      if (typeof fetchQuestionTypes === 'function') {
-        try { types = await fetchQuestionTypes(src); } catch (e) { types = []; }
-      }
-      if ((!types || types.length === 0)) {
-        try {
-          const qs = new URLSearchParams({ action: 'types', source: src });
-          const resp = await fetch(`quiz.php?${qs.toString()}`);
-          if (resp.ok) {
-            const data = await resp.json(); if (data && Array.isArray(data.types)) types = data.types;
-          }
-        } catch (e) { }
-      }
-
-      if (types && types.length > 0) {
-        for (const t of types) {
-          const o = document.createElement('option'); o.value = t; o.textContent = t; typeSelect.appendChild(o);
-        }
-      } else {
-        const labels = [{v:'mcq',t:'Multiple Choice'},{v:'multi',t:'Multiple Answers (Choose more than one)'},{v:'fill',t:'Fill in the Blank'}];
-        for (const l of labels){ const o=document.createElement('option'); o.value=l.v; o.textContent=l.t; typeSelect.appendChild(o); }
-      }
-    }
-
-    populateTypeFilter();
     const regionSelectEl = document.getElementById('regionFilter');
-    if (regionSelectEl) regionSelectEl.addEventListener('change', () => populateTypeFilter());
+    if (regionSelectEl) {
+      regionSelectEl.addEventListener('change', async () => {
+        await populateTypeAndCategory();
+      });
+    }
   });
+  
 </script>
 
  </body>
