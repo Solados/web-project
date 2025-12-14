@@ -289,7 +289,7 @@ $join_date_ar = "$day $month $year";
             <!-- Profile dropdown list -->
             <ul class="dropdown-content">
               <li><a href="dashboard-ar.php">ملفي الشخصي</a></li>
-              <li><a href="Favorites.php">المفضلة</a></li>
+              <li><a href="Favorite-ar.php">المفضلة</a></li>
               
               <li><a href="sign/check_session.php?logout=true" onclick="return confirm('هل أنت متأكد أنك تريد تسجيل الخروج؟')">تسجيل الخروج</a></li>
             </ul>
@@ -377,19 +377,19 @@ $join_date_ar = "$day $month $year";
     <!-- Quick Links -->
     <h2 class="section-title">روابط سريعة</h2>
     <div class="dashboard-grid">
-      <a href="quiz/QUIZ-en.php" style="text-decoration: none;">
+      <a href="quiz/QUIZ-ar.php" style="text-decoration: none;">
         <div class="stat-card" style="cursor: pointer; transition: transform 0.2s;">
           <div class="icon">📝</div>
           <div class="label" style="font-size: 1rem; font-weight: 600;">ابدأ اختبارًا</div>
         </div>
       </a>
-      <a href="General.php" style="text-decoration: none;">
+      <a href="General-ar.php" style="text-decoration: none;">
         <div class="stat-card" style="cursor: pointer; transition: transform 0.2s;">
           <div class="icon">🗺️</div>
           <div class="label" style="font-size: 1rem; font-weight: 600;">استكشف المناطق</div>
         </div>
       </a>
-      <a href="index.php" style="text-decoration: none;">
+      <a href="index-ar.php" style="text-decoration: none;">
         <div class="stat-card" style="cursor: pointer; transition: transform 0.2s;">
           <div class="icon">🏠</div>
           <div class="label" style="font-size: 1rem; font-weight: 600;">العودة للرئيسية</div>

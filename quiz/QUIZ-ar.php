@@ -81,7 +81,7 @@ if (!$LOGGED_IN) {
             <!-- Profile dropdown list -->
             <ul class="dropdown-content">
               <li><a href="../dashboard-ar.php">ملفي الشخصي</a></li>
-              <li><a href="Favorites.php">المفضلة</a></li>
+              <li><a href="Favorite-ar.php">المفضلة</a></li>
               
               <li><a href="../sign/check_session.php?logout=true" onclick="return confirm('هل أنت متأكد أنك تريد تسجيل الخروج؟')">تسجيل خروج</a></li>
             </ul>
@@ -194,9 +194,23 @@ if (!$LOGGED_IN) {
 
   function parseChoice(choiceStr){
     const s = String(choiceStr || '').trim();
-    const m = s.match(/^([A-D])\.\s*(.*)$/);
+    const m = s.match(/^([A-D])\.\s*(.*)$/i);
     if (!m) return { key: s, text: s, raw: s };
-    return { key: m[1], text: m[2], raw: s };
+    return { key: String(m[1]).toUpperCase(), text: m[2], raw: s };
+  }
+
+  function sortChoicesABCD(choices){
+    const order = { A: 0, B: 1, C: 2, D: 3 };
+    const keyOf = (choiceStr) => {
+      const s = String(choiceStr || '').trim();
+      const m = s.match(/^([A-D])\./i);
+      if (!m) return 99;
+      const k = String(m[1]).toUpperCase();
+      return (k in order) ? order[k] : 99;
+    };
+    return Array.isArray(choices)
+      ? choices.slice().sort((a, b) => keyOf(a) - keyOf(b))
+      : [];
   }
 
   function showToast(message, bgColor = "#4CAF50") {
@@ -259,7 +273,7 @@ if (!$LOGGED_IN) {
             type: q.type || ''
           }));
           shuffle(selectedQuestions); // Always shuffle, even for 'all'
-          selectedQuestions.forEach(q => shuffle(q.choices));
+          selectedQuestions.forEach(q => { if (Array.isArray(q.choices)) q.choices = sortChoicesABCD(q.choices); });
           displayQuestions();
           resultEl.innerHTML = '';
           window.location.hash = '#quiz';
@@ -300,7 +314,7 @@ if (!$LOGGED_IN) {
         }));
 
           shuffle(selectedQuestions); // Always shuffle, even for 'all'
-          selectedQuestions.forEach(q => shuffle(q.choices));
+          selectedQuestions.forEach(q => { if (Array.isArray(q.choices)) q.choices = sortChoicesABCD(q.choices); });
           displayQuestions();
           resultEl.innerHTML = '';
           window.location.hash = '#quiz';
@@ -326,7 +340,7 @@ if (!$LOGGED_IN) {
       selectedQuestions = allQuestions.slice();
       shuffle(selectedQuestions);
       selectedQuestions = selectedQuestions.slice(0, count);
-      selectedQuestions.forEach(q => shuffle(q.choices));
+      selectedQuestions.forEach(q => { if (Array.isArray(q.choices)) q.choices = sortChoicesABCD(q.choices); });
     } else {
       selectedQuestions = []; // empty fallback
     }
@@ -368,7 +382,8 @@ if (!$LOGGED_IN) {
 
       if (Array.isArray(q.choices) && q.choices.length > 0) {
         html += `<div class="answers">`;
-        q.choices.forEach(choice => {
+        const sortedChoices = sortChoicesABCD(q.choices);
+        sortedChoices.forEach(choice => {
           html += `
           <label style="display:block;margin:.25rem 0; text-align:right;" dir="rtl">
             <input type="radio" name="q${i}" value="${choice}"> ${choice}

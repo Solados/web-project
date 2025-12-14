@@ -217,9 +217,23 @@ if (!$LOGGED_IN) {
 
   function parseChoice(choiceStr){
     const s = String(choiceStr || '').trim();
-    const m = s.match(/^([A-D])\.\s*(.*)$/);
+    const m = s.match(/^([A-D])\.\s*(.*)$/i);
     if (!m) return { key: s, text: s, raw: s };
-    return { key: m[1], text: m[2], raw: s };
+    return { key: String(m[1]).toUpperCase(), text: m[2], raw: s };
+  }
+
+  function sortChoicesABCD(choices){
+    const order = { A: 0, B: 1, C: 2, D: 3 };
+    const keyOf = (choiceStr) => {
+      const s = String(choiceStr || '').trim();
+      const m = s.match(/^([A-D])\./i);
+      if (!m) return 99;
+      const k = String(m[1]).toUpperCase();
+      return (k in order) ? order[k] : 99;
+    };
+    return Array.isArray(choices)
+      ? choices.slice().sort((a, b) => keyOf(a) - keyOf(b))
+      : [];
   }
 
   async function fetchEnglishQuestions({file, count, type, category}){
@@ -348,8 +362,10 @@ if (!$LOGGED_IN) {
       selectedQuestions = questions;
       // shuffle for variety
       shuffle(selectedQuestions);
-      // shuffle choices per question (keep "A. ..." as item; shuffle doesn't break parsing)
-      selectedQuestions.forEach(q => { if (Array.isArray(q.choices)) shuffle(q.choices); });
+      // keep MCQ options tidy (A, B, C, D)
+      selectedQuestions.forEach(q => {
+        if (Array.isArray(q.choices)) q.choices = sortChoicesABCD(q.choices);
+      });
 
       displayQuestions();
       resultEl.innerHTML = '';
@@ -420,7 +436,8 @@ if (!$LOGGED_IN) {
         answersWrap.appendChild(ta);
       } else {
         const multi = (qTypeNorm === 'multi');
-        q.choices.forEach((choiceStr) => {
+        const sortedChoices = sortChoicesABCD(q.choices);
+        sortedChoices.forEach((choiceStr) => {
           const c = parseChoice(choiceStr);
 
           const label = document.createElement('label');

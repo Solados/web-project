@@ -66,7 +66,7 @@ $q = isset($_GET['q']) ? trim($_GET['q']) : '';
             <!-- Profile dropdown list -->
             <ul class="dropdown-content">
               <li><a href="dashboard-ar.php">ملفي الشخصي</a></li>
-              <li><a href="Favorites.php">المفضلة</a></li>
+              <li><a href="Favorite-ar.php">المفضلة</a></li>
               
               <li><a href="sign/check_session.php?logout=true" onclick="return confirm('هل أنت متأكد أنك تريد تسجيل الخروج؟')">تسجيل خروج</a></li>
             </ul>

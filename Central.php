@@ -294,6 +294,7 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
 const REGION_FILE = "CENTERAL";   // which data file to load
 let currentFilter = "all";       // all | english | arabic
 let ALL_QUESTIONS = [];
+const IS_LOGGED_IN = <?php echo $LOGGED_IN ? 'true' : 'false'; ?>;
 
 // fetch data from backend
 async function loadAllQuestions() {
@@ -490,6 +491,7 @@ async function render(pageIndex = 0) {
     const card = document.createElement("article");
     card.className = "feature-card";
     card.style.position = "relative";
+    card.style.paddingBottom = "80px";
 
     const h3 = document.createElement("h3");
     const p = document.createElement("p");
@@ -516,9 +518,14 @@ async function render(pageIndex = 0) {
     actions.className = "card-actions";
     actions.style.position = "absolute";
     actions.style.bottom = "10px";
-    actions.style.left = "10px";
+    actions.style.left = "50%";
+    actions.style.transform = "translateX(-50%)";
     actions.style.display = "flex";
-    actions.style.gap = "6px";
+    actions.style.gap = "4px";
+    actions.style.justifyContent = "center";
+    actions.style.flexWrap = "nowrap";
+    actions.style.maxWidth = "calc(100% - 20px)";
+    actions.style.overflow = "visible";
 
     // Copy Button
     const copyBtn = document.createElement("button");
@@ -528,7 +535,9 @@ async function render(pageIndex = 0) {
     copyBtn.style.color = "#1a1a1a";
     copyBtn.style.boxShadow = "var(--shadow-md)";
     copyBtn.style.fontWeight = "700";
-    copyBtn.style.padding = ".75rem 1.1rem";
+    copyBtn.style.fontSize = ".85rem";
+    copyBtn.style.lineHeight = "1.2";
+    copyBtn.style.padding = ".5rem .75rem";
     copyBtn.style.borderRadius = ".8rem";
     copyBtn.style.border = "1px solid transparent";
     copyBtn.style.cursor = "pointer";
@@ -560,6 +569,75 @@ async function render(pageIndex = 0) {
       }, 2000);
     };
 
+    // Favorite Button
+    const favBtn = document.createElement("button");
+    favBtn.title = "Favorite";
+    favBtn.innerHTML = " Favorite ⭐";
+    favBtn.style.background = "var(--gold-500)";
+    favBtn.style.color = "#1a1a1a";
+    favBtn.style.boxShadow = "var(--shadow-md)";
+    favBtn.style.fontWeight = "700";
+    favBtn.style.fontSize = ".85rem";
+    favBtn.style.lineHeight = "1.2";
+    favBtn.style.padding = ".5rem .75rem";
+    favBtn.style.borderRadius = ".8rem";
+    favBtn.style.border = "1px solid transparent";
+    favBtn.style.cursor = "pointer";
+    favBtn.style.transition = "transform .15s ease, box-shadow .15s ease, background .2s ease";
+    favBtn.style.fontFamily = "'Noto Kufi Arabic', sans-serif";
+    favBtn.onmouseover = () => { favBtn.style.transform = "translateY(-2px)"; favBtn.style.boxShadow = "var(--shadow-gold-hover)"; };
+    favBtn.onmouseout = () => { favBtn.style.transform = "translateY(0)"; favBtn.style.boxShadow = "var(--shadow-md)"; };
+    favBtn.onclick = async () => {
+      if (!IS_LOGGED_IN) {
+        window.location.href = "/sign/SignUp_LogIn_Form.html";
+        return;
+      }
+
+      const showToast = (message, bg = "#4CAF50") => {
+        const toast = document.createElement("div");
+        toast.textContent = message;
+        toast.style.position = "fixed";
+        toast.style.bottom = "90px";
+        toast.style.right = "20px";
+        toast.style.background = bg;
+        toast.style.color = "#fff";
+        toast.style.padding = "8px 14px";
+        toast.style.borderRadius = "6px";
+        toast.style.opacity = "0";
+        toast.style.transition = "0.3s";
+        toast.style.zIndex = "9999";
+        document.body.appendChild(toast);
+
+        setTimeout(() => (toast.style.opacity = "1"), 10);
+        setTimeout(() => {
+          toast.style.opacity = "0";
+          setTimeout(() => toast.remove(), 300);
+        }, 2000);
+      };
+
+      try {
+        const resp = await fetch("api/favorite_questions.php", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "same-origin",
+          body: JSON.stringify({
+            action: "add",
+            region: REGION_FILE,
+            lang: q.lang,
+            question: q.question,
+            answer: q.answer,
+            url: window.location.href
+          })
+        });
+        if (!resp.ok) throw new Error("Request failed");
+        const data = await resp.json().catch(() => ({}));
+        if (data && data.ok === false) throw new Error(data.error || "Failed");
+        showToast("Added to Favorites!");
+      } catch (e) {
+        showToast("Could not add to Favorites", "#e53935");
+      }
+    };
+
     // Share Button
     const shareBtn = document.createElement('button');
     shareBtn.textContent = "Share 🔗";
@@ -567,7 +645,9 @@ async function render(pageIndex = 0) {
     shareBtn.style.color = "#1a1a1a";
     shareBtn.style.boxShadow = "var(--shadow-md)";
     shareBtn.style.fontWeight = "700";
-    shareBtn.style.padding = ".75rem 1.1rem";
+    shareBtn.style.fontSize = ".85rem";
+    shareBtn.style.lineHeight = "1.2";
+    shareBtn.style.padding = ".5rem .75rem";
     shareBtn.style.borderRadius = ".8rem";
     shareBtn.style.border = "1px solid transparent";
     shareBtn.style.cursor = "pointer";
@@ -658,6 +738,7 @@ async function render(pageIndex = 0) {
     shareBtn.appendChild(shareMenu);
 
     actions.appendChild(copyBtn);
+    actions.appendChild(favBtn);
     actions.appendChild(shareBtn);
 
     card.appendChild(actions);
