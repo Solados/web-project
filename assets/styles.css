@@ -977,15 +977,51 @@ body { overflow-x: hidden; }
   position: absolute;
   bottom: 50px;
 
-  inset-inline-end: 8%;
+  inset-inline-end: 2%;
   inset-inline-start: auto;
 
   display: flex;
   gap: 20px;
   z-index: 100;
 }
+.carousel .list .item .content {
+  background: linear-gradient(
+    to left,
+    rgba(0,0,0,0.55),
+    rgba(0,0,0,0.23),
+    rgba(0,0,0,0)
+  );
+ 
+  padding: 24px 28px;
+  border-radius: 16px;
+  backdrop-filter: blur(2px);
+}
+.carousel .list .item .content .title,
+.carousel .list .item .content .topic {
+  text-shadow:
+    0 4px 10px rgba(0,0,0,0.9),
+    0 10px 28px rgba(0,0,0,0.8);
+}
 
+.carousel .list .item .content[dir="ltr"] {
+  background: linear-gradient(
+    to right,
+    rgba(0,0,0,0.55),
+    rgba(0,0,0,0.23),
+    rgba(0,0,0,0)
+  );
+}
 
+.carousel .list .item .content[dir="ltr"] .title,
+.carousel .list .item .content[dir="ltr"] .topic {
+  text-shadow:
+    0 4px 10px rgba(0,0,0,0.9),
+    0 10px 28px rgba(0,0,0,0.8);
+}
+.carousel .list .item .content[dir="ltr"] {
+  padding-left: 36px;   /* زِد أو قلّل حسب الذوق */
+  padding-right: 24px;  /* توازن مع الطرف الآخر */
+}
 
 
 
