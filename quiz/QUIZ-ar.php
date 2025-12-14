@@ -270,6 +270,7 @@ if (!$LOGGED_IN) {
             answer: q.answer || null,
             type: q.type || ''
           }));
+           shuffle(selectedQuestions);
           selectedQuestions.forEach(q => shuffle(q.choices));
           displayQuestions();
           resultEl.innerHTML = '';
