@@ -31,7 +31,7 @@ if (!$LOGGED_IN) {
 <style>
   /* override direction for the whole page */
   html, body { direction: rtl; }
-  .navbar { direction: rtl; }
+  .navbar { direction: ltr; }
   .nav-links { display:flex; gap:1rem; align-items:center; }
   .navbar .brand { order: 0; }
   .feature-card h3 { text-align: right; }
@@ -75,26 +75,7 @@ if (!$LOGGED_IN) {
       <button class="menu-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Toggle menu">☰</button>
       <ul id="nav-links" class="nav-links">
 
-       <?php if (!$LOGGED_IN): ?>
-    <li><a href="../sign/SignUp_LogIn_Form.html">تسجيل الدخول</a></li>
-<?php endif; ?>
-
-      <li><a href="QUIZ-ar.php">الاختبارات</a></li>
-
-      <li class="dropdown">
-        <a class="dropbtn">الأسئلة</a>
-        <ul class="dropdown-content">
-          <li><a href="../General-ar.php">أسئلة عامة</a></li>
-          <li><a href="../North-ar.php">أسئلة المنطقة الشمالية</a></li>
-          <li><a href="../South-ar.php">أسئلة المنطقة الجنوبية</a></li>
-          <li><a href="../West-ar.php">أسئلة المنطقة الغربية</a></li>
-          <li><a href="../East-ar.php">أسئلة المنطقة الشرقية</a></li>
-          <li><a href="../Central-ar.php">أسئلة المنطقة الوسطى</a></li>
-        </ul>
-      </li>
-
-      <li><a href="../index-ar.php">الرئيسية</a></li>
-      <?php if ($LOGGED_IN): ?>
+        <?php if ($LOGGED_IN): ?>
     <li class="dropdown">
             <a class="dropbtn">ملفي الشخصي</a>
             <!-- Profile dropdown list -->
@@ -105,13 +86,29 @@ if (!$LOGGED_IN) {
               <li><a href="../sign/check_session.php?logout=true" onclick="return confirm('هل أنت متأكد أنك تريد تسجيل الخروج؟')">تسجيل خروج</a></li>
             </ul>
           </li>
-          <?php endif; ?>
-      <li><a href="Quiz-en.php" style="font-weight:700">English</a></li>
+<?php else: ?>
+    <li><a href="../sign/SignUp_LogIn_Form.html">تسجيل الدخول</a></li>
+<?php endif; ?>
+        <li><a href="QUIZ-ar.php">الاختبارات</a></li>
 
-    </ul>
+        <li class="dropdown" >
+          <a class="dropbtn">الأسئلة</a>
+          <ul class="dropdown-content">
+            <li><a href="../General-ar.php">أسئلة عامة</a></li>
+            <li><a href="../North-ar.php">أسئلة المنطقة الشمالية</a></li>
+            <li><a href="../South-ar.php">أسئلة المنطقة الجنوبية</a></li>
+            <li><a href="../West-ar.php">أسئلة المنطقة الغربية</a></li>
+            <li><a href="../East-ar.php">أسئلة المنطقة الشرقية</a></li>
+            <li><a href="../Central-ar.php">أسئلة المنطقة الوسطى</a></li>
+          </ul>
+        </li>
 
-  </nav>
-</header>
+        <li><a href="../index-ar.php">الرئيسية</a></li>
+        <li><a href="QUIZ-en.php" style="font-weight:700">English</a></li>
+
+      </ul>
+    </nav>
+  </header>
 
   <!-- Main -->
   <main id="main">
