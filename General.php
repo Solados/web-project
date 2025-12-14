@@ -20,7 +20,37 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@300;400;600;700&display=swap" rel="stylesheet">
 	<link rel="stylesheet" href="assets/styles.css">
-	<style>		
+	<style>	
+  .feature-card {
+  position: relative;
+  padding-bottom: 52px; /* مساحة محفوظة للأزرار */
+}
+
+/* حاوية الأزرار */
+.card-actions {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;   /* يسار أسفل */
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+/* أيقونات الأزرار */
+.card-actions img,
+.card-actions svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* زر النسخ */
+.card-actions button {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+}
+	
 		.icon-btn {
   width: 20px;
   height: 20px;
@@ -540,13 +570,18 @@ async function render(pageIndex = 0) {
 
   container.innerHTML = "";
 
-  // render cards
 pageItems.forEach(q => {
   const card = document.createElement("article");
   card.className = "feature-card " + (q.lang === "english" ? "en" : "ar");
+  card.style.position = "relative";
 
   const h3 = document.createElement("h3");
   const p = document.createElement("p");
+
+  const textForShare =
+    q.lang === "arabic"
+      ? `س: ${q.question}\nج: ${q.answer}`
+      : `Q: ${q.question}\nAnswer: ${q.answer}`;
 
   if (q.lang === "arabic") {
     h3.textContent = "س: " + q.question;
@@ -562,74 +597,123 @@ pageItems.forEach(q => {
   card.appendChild(h3);
   card.appendChild(p);
 
-  // Container للأزرار
+  /* ======================
+     أزرار أسفل يسار
+  ====================== */
   const actions = document.createElement("div");
   actions.className = "card-actions";
-  actions.style.marginTop = "8px";
+  actions.style.position = "absolute";
+  actions.style.bottom = "10px";
+  actions.style.left = "10px";
+  actions.style.display = "flex";
+  actions.style.gap = "6px";
 
-  // --- زر النسخ مع toast ---
-  const copyBtn = document.createElement("button");
-  copyBtn.textContent = "copy 📋";
-  copyBtn.style.marginRight = "5px";
+  /* ===== زر النسخ ===== */
+const copyBtn = document.createElement("button");
+copyBtn.title = "Copy";
+
+copyBtn.innerHTML = `
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+     xmlns="http://www.w3.org/2000/svg">
+  <rect x="9" y="9" width="13" height="13" rx="2"
+        stroke="currentColor" stroke-width="2"/>
+  <rect x="3" y="3" width="13" height="13" rx="2"
+        stroke="currentColor" stroke-width="2"/>
+</svg>
+`;
+
+copyBtn.style.background = "transparent";
+copyBtn.style.border = "none";
+copyBtn.style.cursor = "pointer";
+copyBtn.style.padding = "4px";
+
   copyBtn.onclick = () => {
-    // تحديد النص مع س / Q و ج / Answer
-    let textToCopy = q.lang === "arabic" ? `س: ${q.question}\nج: ${q.answer}` : `Q: ${q.question}\nAnswer: ${q.answer}`;
-    navigator.clipboard.writeText(textToCopy);
+    navigator.clipboard.writeText(textForShare);
 
-    // toast
     const toast = document.createElement("div");
-    toast.textContent = "تم النسخ 📋";
+    toast.textContent = " Copyed! ";
     toast.style.position = "fixed";
-    toast.style.bottom = "20px";
+    toast.style.bottom = "90px";
     toast.style.right = "20px";
-    toast.style.backgroundColor = "#4CAF50";
+    toast.style.background = "#4CAF50";
     toast.style.color = "#fff";
-    toast.style.padding = "10px 15px";
+    toast.style.padding = "8px 14px";
     toast.style.borderRadius = "6px";
-    toast.style.boxShadow = "0 4px 12px rgba(0,0,0,0.2)";
-    toast.style.fontWeight = "600";
     toast.style.opacity = "0";
-    toast.style.transition = "opacity 0.4s ease, transform 0.4s ease";
-    toast.style.transform = "translateY(20px)";
+    toast.style.transition = "0.3s";
     document.body.appendChild(toast);
 
-    setTimeout(() => {
-      toast.style.opacity = "1";
-      toast.style.transform = "translateY(0)";
-    }, 10);
-
+    setTimeout(() => (toast.style.opacity = "1"), 10);
     setTimeout(() => {
       toast.style.opacity = "0";
-      toast.style.transform = "translateY(20px)";
-      setTimeout(() => toast.remove(), 400);
+      setTimeout(() => toast.remove(), 300);
     }, 2000);
   };
+
+  /* ===== زر المشاركة ===== */
+  const shareBtn = document.createElement("button");
+  shareBtn.textContent = "🔗";
+  shareBtn.title = "Share";
+
+  /* ===== نافذة المشاركة ===== */
+  const shareMenu = document.createElement("div");
+  shareMenu.style.position = "absolute";
+  shareMenu.style.bottom = "40px";
+  shareMenu.style.left = "0";
+  shareMenu.style.background = "#fff";
+  shareMenu.style.borderRadius = "10px";
+  shareMenu.style.padding = "6px";
+  shareMenu.style.display = "none";
+  shareMenu.style.gap = "8px";
+  shareMenu.style.boxShadow = "0 4px 12px rgba(0,0,0,0.15)";
+  shareMenu.style.display = "flex";
+
+  /* إخفاء مبدئي */
+  shareMenu.style.visibility = "hidden";
+
+  shareBtn.onclick = () => {
+    shareMenu.style.visibility =
+      shareMenu.style.visibility === "hidden" ? "visible" : "hidden";
+  };
+
+  /* ===== أيقونات المشاركة ===== */
+  const createIcon = (href, img) => {
+    const a = document.createElement("a");
+    a.href = href;
+    a.target = "_blank";
+    a.innerHTML = `<img src="${img}" style="width:22px;height:22px">`;
+    return a;
+  };
+
+  shareMenu.appendChild(
+    createIcon(
+      `https://x.com/intent/tweet?text=${encodeURIComponent(textForShare)}`,
+      "image/X_logo.jpg.webp"
+    )
+  );
+
+  shareMenu.appendChild(
+    createIcon(
+      `https://api.whatsapp.com/send?text=${encodeURIComponent(textForShare)}`,
+      "https://cdn-icons-png.flaticon.com/512/733/733585.png"
+    )
+  );
+
+  shareMenu.appendChild(
+    createIcon(
+      `https://www.facebook.com/sharer/sharer.php?quote=${encodeURIComponent(textForShare)}`,
+      "https://cdn-icons-png.flaticon.com/512/733/733547.png"
+    )
+  );
+
   actions.appendChild(copyBtn);
-
-  // --- زر X ---
-  const xBtn = document.createElement("a");
-  xBtn.href = `https://x.com/intent/tweet?text=${encodeURIComponent(q.lang === "arabic" ? `س: ${q.question}\nج: ${q.answer}` : `Q: ${q.question}\nAnswer: ${q.answer}`)}`;
-  xBtn.target = "_blank";
-  xBtn.innerHTML = `<img src="image/X_logo.jpg.webp" class="icon-btn" alt="X Logo">`;
-  actions.appendChild(xBtn);
-
-  // --- زر WhatsApp ---
-  const waBtn = document.createElement("a");
-  waBtn.href = `https://api.whatsapp.com/send?text=${encodeURIComponent(q.lang === "arabic" ? `س: ${q.question}\nج: ${q.answer}` : `Q: ${q.question}\nAnswer: ${q.answer}`)}`;
-  waBtn.target = "_blank";
-  waBtn.innerHTML = `<img src="https://cdn-icons-png.flaticon.com/512/733/733585.png" class="icon-btn" alt="WhatsApp">`;
-  actions.appendChild(waBtn);
-
-  // --- زر Facebook ---
-  const fbBtn = document.createElement("a");
-  fbBtn.href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}&quote=${encodeURIComponent(q.lang === "arabic" ? `س: ${q.question}\nج: ${q.answer}` : `Q: ${q.question}\nAnswer: ${q.answer}`)}`;
-  fbBtn.target = "_blank";
-  fbBtn.innerHTML = `<img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" class="icon-btn" alt="Facebook">`;
-  actions.appendChild(fbBtn);
+  actions.appendChild(shareBtn);
+  actions.appendChild(shareMenu);
 
   card.appendChild(actions);
   container.appendChild(card);
 });
+
 
 
 

@@ -452,30 +452,94 @@ if (!$LOGGED_IN) {
       actions.style.display = 'flex';
       actions.style.gap = '10px';
       actions.style.flexWrap = 'wrap';
-      actions.innerHTML = `
-        <button onclick="favoriteQuestion(${i})"
-          style="padding:6px 12px; background:#ffb800; color:white; border:0; border-radius:6px; cursor:pointer;">
-          Favorite ⭐
-        </button>
-        <button onclick="copyQuestion(${i})"
-          style="padding:6px 12px; background:#2196F3; color:white; border:0; border-radius:6px; cursor:pointer;">
-          copy 📋
-        </button>
-        <div style="display:flex; gap:5px; align-items:center;">
-          <a href="#" onclick="shareQuestion(${i}, 'x'); return false;" title="Share on X">
-            <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/x.svg" width="24" height="24"
-              style="filter: invert(36%) sepia(97%) saturate(1595%) hue-rotate(176deg) brightness(93%) contrast(95%);" />
-          </a>
-          <a href="#" onclick="shareQuestion(${i}, 'facebook'); return false;" title="Share on Facebook">
-            <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/facebook.svg" width="24" height="24"
-              style="filter: invert(29%) sepia(72%) saturate(900%) hue-rotate(182deg) brightness(90%) contrast(90%);" />
-          </a>
-          <a href="#" onclick="shareQuestion(${i}, 'whatsapp'); return false;" title="Share on WhatsApp">
-            <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/whatsapp.svg" width="24" height="24"
-              style="filter: invert(49%) sepia(92%) saturate(510%) hue-rotate(95deg) brightness(93%) contrast(95%);" />
-          </a>
-        </div>
-      `;
+      // Copy button
+      const copyBtn = document.createElement('button');
+      copyBtn.title = "Copy question";
+      copyBtn.innerHTML = " Copy 📄";
+      copyBtn.style.background = "var(--gold-500)";
+      copyBtn.style.color = "#1a1a1a";
+      copyBtn.style.boxShadow = "var(--shadow-md)";
+      copyBtn.style.fontWeight = "700";
+      copyBtn.style.padding = ".75rem 1.1rem";
+      copyBtn.style.borderRadius = ".8rem";
+      copyBtn.style.border = "1px solid transparent";
+      copyBtn.style.cursor = "pointer";
+      copyBtn.style.transition = "transform .15s ease, box-shadow .15s ease, background .2s ease";
+      copyBtn.style.fontFamily = "'Noto Kufi Arabic', sans-serif";
+      copyBtn.onmouseover = () => { copyBtn.style.transform = "translateY(-2px)"; copyBtn.style.boxShadow = "var(--shadow-gold-hover)"; };
+      copyBtn.onmouseout = () => { copyBtn.style.transform = "translateY(0)"; copyBtn.style.boxShadow = "var(--shadow-md)"; };
+      copyBtn.onclick = () => copyQuestion(i);
+
+      // Share button
+      const shareBtn = document.createElement('button');
+      shareBtn.textContent = "Share 🔗";
+      shareBtn.style.background = "var(--gold-500)";
+      shareBtn.style.color = "#1a1a1a";
+      shareBtn.style.boxShadow = "var(--shadow-md)";
+      shareBtn.style.fontWeight = "700";
+      shareBtn.style.padding = ".75rem 1.1rem";
+      shareBtn.style.borderRadius = ".8rem";
+      shareBtn.style.border = "1px solid transparent";
+      shareBtn.style.cursor = "pointer";
+      shareBtn.style.transition = "transform .15s ease, box-shadow .15s ease, background .2s ease";
+      shareBtn.style.position = "relative";
+      shareBtn.style.fontFamily = "'Noto Kufi Arabic', sans-serif";
+      shareBtn.onmouseover = () => { shareBtn.style.transform = "translateY(-2px)"; shareBtn.style.boxShadow = "var(--shadow-gold-hover)"; };
+      shareBtn.onmouseout = () => { shareBtn.style.transform = "translateY(0)"; shareBtn.style.boxShadow = "var(--shadow-md)"; };
+
+      // Dropdown
+      const popup = document.createElement('div');
+      popup.style.position = 'absolute';
+      popup.style.top = '0';
+      popup.style.left = '100%';
+      popup.style.background = '#fff';
+      popup.style.border = '1px solid #ddd';
+      popup.style.borderRadius = '8px';
+      popup.style.padding = '6px 10px';
+      popup.style.display = 'none';
+      popup.style.gap = '8px';
+      popup.style.boxShadow = '0 4px 12px rgba(0,0,0,.15)';
+      popup.style.flexWrap = 'nowrap';
+      popup.style.zIndex = '100';
+
+      const platforms = [
+        { name: 'X', icon: 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/x.svg', id: 'x' },
+        { name: 'Facebook', icon: 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/facebook.svg', id: 'facebook' },
+        { name: 'WhatsApp', icon: 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/whatsapp.svg', id: 'whatsapp' }
+      ];
+
+      platforms.forEach(p => {
+        const a = document.createElement('a');
+        a.href = '#';
+        a.title = p.name;
+        a.style.margin = '2px';
+        a.style.display = 'inline-block';
+
+        const img = document.createElement('img');
+        img.src = p.icon;
+        img.width = 26;
+        img.height = 26;
+        img.style.transition = 'transform 0.2s';
+        img.onmouseover = () => img.style.transform = 'scale(1.2)';
+        img.onmouseout = () => img.style.transform = 'scale(1)';
+
+        a.appendChild(img);
+        a.onclick = (e) => { e.preventDefault(); shareQuestion(i, p.id); popup.style.display = 'none'; };
+        popup.appendChild(a);
+      });
+
+      shareBtn.appendChild(popup);
+      shareBtn.onclick = (e) => {
+        e.stopPropagation();
+        popup.style.display = popup.style.display === 'none' ? 'flex' : 'none';
+      };
+
+      document.addEventListener('click', (e) => {
+        if (!shareBtn.contains(e.target)) popup.style.display = 'none';
+      });
+
+      actions.appendChild(copyBtn);
+      actions.appendChild(shareBtn);
       box.appendChild(actions);
 
       container.appendChild(box);
@@ -495,13 +559,7 @@ if (!$LOGGED_IN) {
     checkBtn.href = '#result';
     checkBtn.addEventListener('click', (e)=>{ e.preventDefault(); checkAnswers(); });
 
-    const favBtn = document.createElement('a');
-    favBtn.className = 'btn btn-primary';
-    favBtn.textContent = 'view Favorites ⭐';
-    favBtn.href = 'favorites.php';
-
     actionBar.appendChild(checkBtn);
-    actionBar.appendChild(favBtn);
     container.appendChild(actionBar);
   }
 
@@ -522,7 +580,19 @@ if (!$LOGGED_IN) {
 
   function copyQuestion(index) {
     const box = document.getElementsByClassName('feature-card')[index];
-    const text = box.innerText;
+    const questionText = box.querySelector('h3').innerText;
+    const answersDiv = box.querySelector('.answers');
+    let answersText = '';
+    if (answersDiv) {
+      const labels = answersDiv.querySelectorAll('label');
+      labels.forEach(label => {
+        const span = label.querySelector('span');
+        if (span) answersText += span.textContent + '\n';
+      });
+      const ta = answersDiv.querySelector('textarea');
+      if (ta && ta.value) answersText += ta.value + '\n';
+    }
+    const text = questionText + '\n\n' + answersText;
     navigator.clipboard.writeText(text).then(() => {
       showToast("Question copied! 📋");
     }).catch(err => {
@@ -533,7 +603,19 @@ if (!$LOGGED_IN) {
 
   function shareQuestion(index, platform) {
     const box = document.getElementsByClassName('feature-card')[index];
-    const text = encodeURIComponent(box.innerText + "\n" + window.location.href);
+    const questionText = box.querySelector('h3').innerText;
+    const answersDiv = box.querySelector('.answers');
+    let answersText = '';
+    if (answersDiv) {
+      const labels = answersDiv.querySelectorAll('label');
+      labels.forEach(label => {
+        const span = label.querySelector('span');
+        if (span) answersText += span.textContent + '\n';
+      });
+      const ta = answersDiv.querySelector('textarea');
+      if (ta && ta.value) answersText += ta.value + '\n';
+    }
+    const text = encodeURIComponent(questionText + '\n\n' + answersText + "\n" + window.location.href);
     let url = "";
     if(platform === 'x') url = `https://x.com/intent/tweet?text=${text}`;
     else if(platform === 'facebook') url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`;
@@ -624,6 +706,130 @@ if (!$LOGGED_IN) {
       </div>
       <canvas id="scoreChart" style="max-width:300px;margin:20px auto;display:block;"></canvas>
     `;
+    (function() {
+  const container = document.getElementById('result');
+  if (!container) return;
+
+  // Wrapper للأزرار
+  const btnWrapper = document.createElement('div');
+  btnWrapper.style.display = 'flex';
+  btnWrapper.style.gap = '12px';
+  btnWrapper.style.alignItems = 'center';
+  btnWrapper.style.marginTop = '20px';
+  btnWrapper.style.flexWrap = 'wrap';
+
+  // ===== زر النسخ =====
+  const copyBtn = document.createElement('button');
+  copyBtn.title = "Copy result";
+  copyBtn.innerHTML = " Copy 📄"; // أيقونة صفحتين متتالية
+  copyBtn.style.background = "var(--gold-500)";
+  copyBtn.style.color = "#1a1a1a";
+  copyBtn.style.boxShadow = "var(--shadow-md)";
+  copyBtn.style.fontWeight = "700";
+  copyBtn.style.padding = ".75rem 1.1rem";
+  copyBtn.style.borderRadius = ".8rem";
+  copyBtn.style.border = "1px solid transparent";
+  copyBtn.style.fontFamily = "'Noto Kufi Arabic', sans-serif";
+  copyBtn.style.cursor = "pointer";
+  copyBtn.style.transition = "transform .15s ease, box-shadow .15s ease, background .2s ease";
+  copyBtn.onmouseover = () => { copyBtn.style.transform = "translateY(-2px)"; copyBtn.style.boxShadow = "var(--shadow-gold-hover)"; };
+  copyBtn.onmouseout = () => { copyBtn.style.transform = "translateY(0)"; copyBtn.style.boxShadow = "var(--shadow-md)"; };
+
+  copyBtn.onclick = () => {
+    const scoreText = document.querySelector('.score-main') ? document.querySelector('.score-main').innerText : 'My Quiz Result';
+    const shareText = `I scored ${scoreText} on this quiz! 🧠✨`;
+    navigator.clipboard.writeText(`${shareText}\n${window.location.href}`);
+    showToast("Result copied! 📋");
+  };
+  btnWrapper.appendChild(copyBtn);
+
+  // ===== زر المشاركة =====
+  const shareBtn = document.createElement('button');
+  shareBtn.textContent = "Share 🔗";
+  shareBtn.style.background = "var(--gold-500)";
+  shareBtn.style.color = "#1a1a1a";
+  shareBtn.style.boxShadow = "var(--shadow-md)";
+  shareBtn.style.fontWeight = "700";
+  shareBtn.style.padding = ".75rem 1.1rem";
+  shareBtn.style.borderRadius = ".8rem";
+  shareBtn.style.border = "1px solid transparent";
+  shareBtn.style.cursor = "pointer";
+  shareBtn.style.fontFamily = "'Noto Kufi Arabic', sans-serif";
+  shareBtn.style.transition = "transform .15s ease, box-shadow .15s ease, background .2s ease";
+  shareBtn.style.position = "relative";
+
+  shareBtn.onmouseover = () => { shareBtn.style.transform = "translateY(-2px)"; shareBtn.style.boxShadow = "var(--shadow-gold-hover)"; };
+  shareBtn.onmouseout = () => { shareBtn.style.transform = "translateY(0)"; shareBtn.style.boxShadow = "var(--shadow-md)"; };
+
+  // نافذة أيقونات المشاركة
+  const popup = document.createElement('div');
+  popup.style.position = 'absolute';
+  popup.style.bottom = '45px';
+  popup.style.left = '0';
+  popup.style.background = '#fff';
+  popup.style.border = '1px solid #ddd';
+  popup.style.borderRadius = '8px';
+  popup.style.padding = '6px 10px';
+  popup.style.display = 'none';
+  popup.style.gap = '8px';
+  popup.style.boxShadow = '0 4px 12px rgba(0,0,0,.15)';
+  popup.style.flexWrap = 'nowrap';
+  popup.style.display = 'flex';
+  popup.style.zIndex = '100';
+
+  const platforms = [
+    { name: 'X', icon: 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/x.svg', id: 'x', color: '#1DA1F2' },
+    { name: 'Facebook', icon: 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/facebook.svg', id: 'facebook', color: '#1877F2' },
+    { name: 'WhatsApp', icon: 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/whatsapp.svg', id: 'whatsapp', color: '#25D366' }
+  ];
+
+  platforms.forEach(p => {
+    const a = document.createElement('a');
+    a.href = '#';
+    a.title = p.name;
+    a.style.margin = '2px';
+    a.style.display = 'inline-block';
+
+    const img = document.createElement('img');
+    img.src = p.icon;
+    img.width = 26;
+    img.height = 26;
+    img.style.filter = ""; // إزالة أي فلتر أسود
+    img.style.transition = 'transform 0.2s';
+    img.onmouseover = () => img.style.transform = 'scale(1.2)';
+    img.onmouseout = () => img.style.transform = 'scale(1)';
+
+    a.appendChild(img);
+    a.onclick = function(e) {
+      e.preventDefault();
+      const scoreText = document.querySelector('.score-main') ? document.querySelector('.score-main').innerText : 'My Quiz Result';
+      const shareText = `I scored ${scoreText} on this quiz! 🧠✨`;
+      const text = encodeURIComponent(shareText + "\n" + window.location.href);
+      let url = '';
+      if (p.id === 'x') url = `https://x.com/intent/tweet?text=${text}`;
+      else if (p.id === 'facebook') url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}&quote=${text}`;
+      else if (p.id === 'whatsapp') url = `https://api.whatsapp.com/send?text=${text}`;
+      window.open(url, '_blank');
+      popup.style.display = 'none';
+    };
+    popup.appendChild(a);
+  });
+
+  shareBtn.appendChild(popup);
+  shareBtn.onclick = (e) => {
+    e.stopPropagation();
+    popup.style.display = popup.style.display === 'none' ? 'flex' : 'none';
+  };
+
+  document.addEventListener('click', (e) => {
+    if (!shareBtn.contains(e.target)) popup.style.display = 'none';
+  });
+
+  btnWrapper.appendChild(shareBtn);
+  container.appendChild(btnWrapper);
+})();
+
+
 
     function loadChart(callback){
       if (window.Chart){ callback(); return; }
@@ -706,6 +912,7 @@ if (!$LOGGED_IN) {
       });
     }
   });
+  
 </script>
 
  </body>

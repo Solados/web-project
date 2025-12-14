@@ -60,6 +60,12 @@ if (!$LOGGED_IN) {
 
 </head>
 <body class="rtl">
+  <div id="toast" 
+     style="position:fixed; bottom:20px; right:20px; background:#4CAF50; 
+            color:white; padding:12px 20px; border-radius:8px; 
+            display:none; box-shadow:0 4px 12px rgba(0,0,0,0.2); 
+            font-family:'Noto Kufi Arabic', sans-serif; font-size:0.95rem; z-index:999; transition: opacity 0.5s ease;">
+</div>
   <!-- Header -->
   <header class="site-header">
     <nav class="navbar" aria-label="Main navigation">
@@ -184,6 +190,26 @@ if (!$LOGGED_IN) {
       const j = Math.floor(Math.random()*(i+1));
       [arr[i], arr[j]] = [arr[j], arr[i]];
     }
+  }
+
+  function parseChoice(choiceStr){
+    const s = String(choiceStr || '').trim();
+    const m = s.match(/^([A-D])\.\s*(.*)$/);
+    if (!m) return { key: s, text: s, raw: s };
+    return { key: m[1], text: m[2], raw: s };
+  }
+
+  function showToast(message, bgColor = "#4CAF50") {
+    const toast = document.getElementById("toast");
+    if (!toast) return;
+    toast.textContent = message;
+    toast.style.background = bgColor;
+    toast.style.display = "block";
+    toast.style.opacity = "1";
+    setTimeout(() => {
+      toast.style.opacity = "0";
+      setTimeout(() => { toast.style.display = "none"; }, 500);
+    }, 3000);
   }
 
   let selectedQuestions = [];
@@ -341,12 +367,14 @@ if (!$LOGGED_IN) {
       </h3>`;
 
       if (Array.isArray(q.choices) && q.choices.length > 0) {
+        html += `<div class="answers">`;
         q.choices.forEach(choice => {
           html += `
           <label style="display:block;margin:.25rem 0; text-align:right;" dir="rtl">
             <input type="radio" name="q${i}" value="${choice}"> ${choice}
           </label>`;
         });
+        html += `</div>`;
       } else {
         html += `
           <div style="margin-top:.5rem">
@@ -356,6 +384,109 @@ if (!$LOGGED_IN) {
       }
 
       box.innerHTML = html;
+
+      // actions inside card
+      const actions = document.createElement('div');
+      actions.style.marginTop = '10px';
+      actions.style.display = 'flex';
+      actions.style.gap = '10px';
+      actions.style.flexWrap = 'wrap';
+
+      // Copy button
+      const copyBtn = document.createElement('button');
+      copyBtn.title = "نسخ السؤال";
+      copyBtn.innerHTML = " نسخ 📄";
+      copyBtn.style.background = "var(--gold-500)";
+      copyBtn.style.color = "#1a1a1a";
+      copyBtn.style.boxShadow = "var(--shadow-md)";
+      copyBtn.style.fontWeight = "700";
+      copyBtn.style.padding = ".75rem 1.1rem";
+      copyBtn.style.borderRadius = ".8rem";
+      copyBtn.style.border = "1px solid transparent";
+      copyBtn.style.cursor = "pointer";
+      copyBtn.style.transition = "transform .15s ease, box-shadow .15s ease, background .2s ease";
+      copyBtn.style.fontFamily = "'Noto Kufi Arabic', sans-serif";
+      copyBtn.onmouseover = () => { copyBtn.style.transform = "translateY(-2px)"; copyBtn.style.boxShadow = "var(--shadow-gold-hover)"; };
+      copyBtn.onmouseout = () => { copyBtn.style.transform = "translateY(0)"; copyBtn.style.boxShadow = "var(--shadow-md)"; };
+      copyBtn.onclick = () => copyQuestion(i);
+
+      // Share button
+      const shareBtn = document.createElement('button');
+      shareBtn.textContent = "مشاركة 🔗";
+      shareBtn.style.background = "var(--gold-500)";
+      shareBtn.style.color = "#1a1a1a";
+      shareBtn.style.boxShadow = "var(--shadow-md)";
+      shareBtn.style.fontWeight = "700";
+      shareBtn.style.padding = ".75rem 1.1rem";
+      shareBtn.style.borderRadius = ".8rem";
+      shareBtn.style.border = "1px solid transparent";
+      shareBtn.style.cursor = "pointer";
+      shareBtn.style.transition = "transform .15s ease, box-shadow .15s ease, background .2s ease";
+      shareBtn.style.position = "relative";
+      shareBtn.style.fontFamily = "'Noto Kufi Arabic', sans-serif";
+      shareBtn.onmouseover = () => { shareBtn.style.transform = "translateY(-2px)"; shareBtn.style.boxShadow = "var(--shadow-gold-hover)"; };
+      shareBtn.onmouseout = () => { shareBtn.style.transform = "translateY(0)"; shareBtn.style.boxShadow = "var(--shadow-md)"; };
+
+      // Dropdown
+      const popup = document.createElement('div');
+      popup.style.position = 'absolute';
+      popup.style.top = '0';
+      popup.style.right = '100%';
+      popup.style.background = '#fff';
+      popup.style.border = '1px solid #ddd';
+      popup.style.borderRadius = '8px';
+      popup.style.padding = '6px 10px';
+      popup.style.display = 'none';
+      popup.style.gap = '8px';
+      popup.style.boxShadow = '0 4px 12px rgba(0,0,0,.15)';
+      popup.style.flexWrap = 'nowrap';
+      popup.style.zIndex = '100';
+
+      const platforms = [
+        { name: 'X', icon: 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/x.svg', id: 'x' },
+        { name: 'Facebook', icon: 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/facebook.svg', id: 'facebook' },
+        { name: 'WhatsApp', icon: 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/whatsapp.svg', id: 'whatsapp' }
+      ];
+
+      platforms.forEach(p => {
+        const a = document.createElement('a');
+        a.href = '#';
+        a.title = p.name;
+        a.style.margin = '2px';
+        a.style.display = 'inline-block';
+
+        const img = document.createElement('img');
+        img.src = p.icon;
+        img.width = 26;
+        img.height = 26;
+        img.style.transition = 'transform 0.2s';
+        img.onmouseover = () => img.style.transform = 'scale(1.2)';
+        img.onmouseout = () => img.style.transform = 'scale(1)';
+
+        a.appendChild(img);
+        a.onclick = (e) => { e.preventDefault(); shareQuestion(i, p.id); popup.style.display = 'none'; };
+        popup.appendChild(a);
+      });
+
+      shareBtn.appendChild(popup);
+      shareBtn.onclick = (e) => {
+        e.stopPropagation();
+        popup.style.display = popup.style.display === 'none' ? 'flex' : 'none';
+      };
+
+      popup.addEventListener('mouseleave', () => {
+        popup.style.display = 'none';
+      });
+
+      document.addEventListener('click', (e) => {
+        if (!shareBtn.contains(e.target)) popup.style.display = 'none';
+      });
+
+      actions.appendChild(copyBtn);
+      actions.appendChild(shareBtn);
+
+      box.appendChild(actions);
+
       container.appendChild(box);
     });
 
@@ -374,6 +505,61 @@ if (!$LOGGED_IN) {
 
     container.appendChild(checkBtn);
   }
+
+  // ===== favorites/copy/share =====
+  function copyQuestion(index) {
+    const box = document.getElementsByClassName('feature-card')[index];
+    const h3 = box.querySelector('h3');
+    const badge = h3.querySelector('.q-badge');
+    let questionText = h3.textContent;
+    if (badge) {
+      questionText = questionText.replace(badge.textContent, '').trim();
+    }
+    const answersDiv = box.querySelector('.answers');
+    let answersText = '';
+    if (answersDiv) {
+      const labels = answersDiv.querySelectorAll('label');
+      labels.forEach(label => {
+        answersText += label.textContent.trim() + '\n';
+      });
+      const ta = answersDiv.querySelector('textarea');
+      if (ta && ta.value) answersText += ta.value + '\n';
+    }
+    const text = questionText + '\n\n' + answersText;
+    navigator.clipboard.writeText(text).then(() => {
+      showToast("تم نسخ السؤال! 📋");
+    }).catch(err => {
+      console.error("Error copying question:", err);
+      showToast("خطأ في نسخ السؤال ❌", "#F44336");
+    });
+  }
+
+  function shareQuestion(index, platform) {
+    const box = document.getElementsByClassName('feature-card')[index];
+    const h3 = box.querySelector('h3');
+    const badge = h3.querySelector('.q-badge');
+    let questionText = h3.textContent;
+    if (badge) {
+      questionText = questionText.replace(badge.textContent, '').trim();
+    }
+    const answersDiv = box.querySelector('.answers');
+    let answersText = '';
+    if (answersDiv) {
+      const labels = answersDiv.querySelectorAll('label');
+      labels.forEach(label => {
+        answersText += label.textContent.trim() + '\n';
+      });
+      const ta = answersDiv.querySelector('textarea');
+      if (ta && ta.value) answersText += ta.value + '\n';
+    }
+    const text = encodeURIComponent(questionText + '\n\n' + answersText + "\n" + window.location.href);
+    let url = "";
+    if(platform === 'x') url = `https://x.com/intent/tweet?text=${text}`;
+    else if(platform === 'facebook') url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`;
+    else if(platform === 'whatsapp') url = `https://api.whatsapp.com/send?text=${text}`;
+    window.open(url, "_blank");
+  }
+
  const centerTextPlugin = {
   id: 'centerText',
   beforeDraw(chart) {
@@ -517,18 +703,33 @@ const encodedURL = encodeURIComponent(window.location.href);
 
 // أزرار المشاركة HTML باللوقو الرسمي لكل منصة
 shareContainer.innerHTML = `
-  <a href="https://x.com/intent/tweet?text=${encodedText}" target="_blank" style="margin:0 5px;">
-    <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/x.svg" width="32" height="32" alt="x" style="vertical-align:middle; filter: invert(36%) sepia(97%) saturate(1595%) hue-rotate(176deg) brightness(93%) contrast(95%);" />
-  </a>
-
-  <a href="https://www.facebook.com/sharer/sharer.php?u=${encodedURL}" target="_blank" style="margin:0 5px;">
-    <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/facebook.svg" width="32" height="32" alt="Facebook" style="vertical-align:middle; filter: invert(29%) sepia(72%) saturate(900%) hue-rotate(182deg) brightness(90%) contrast(90%);" />
-  </a>
-
-  <a href="https://api.whatsapp.com/send?text=${encodedText}" target="_blank" style="margin:0 5px;">
-    <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/whatsapp.svg" width="32" height="32" alt="WhatsApp" style="vertical-align:middle; filter: invert(49%) sepia(92%) saturate(510%) hue-rotate(95deg) brightness(93%) contrast(95%);" />
-  </a>
+<div style="display: flex; gap: 12px; align-items: center; margin-top: 20px; flex-wrap: wrap;"><button title="Copy result" style="background: var(--gold-500); color: rgb(26, 26, 26); box-shadow: var(--shadow-md); font-weight: 700; padding: 0.75rem 1.1rem; border-radius: 0.8rem; border: 1px solid transparent; cursor: pointer; transition: transform 0.15s, box-shadow 0.15s, background 0.2s; font-family:'Noto Kufi Arabic', sans-serif;"> نسخ 📄</button><button style="background: var(--gold-500); color: rgb(26, 26, 26); box-shadow: var(--shadow-md); font-weight: 700; padding: 0.75rem 1.1rem; border-radius: 0.8rem; border: 1px solid transparent; cursor: pointer; transition: transform 0.15s, box-shadow 0.15s, background 0.2s; position: relative; transform: translateY(0px); font-family:'Noto Kufi Arabic', sans-serif;">مشاركة 🔗<div style="position: absolute; bottom: 45px; left: 0px; background: rgb(255, 255, 255); border: 1px solid rgb(221, 221, 221); border-radius: 8px; padding: 6px 10px; display: none; gap: 8px; box-shadow: rgba(0, 0, 0, 0.15) 0px 4px 12px; flex-wrap: wrap; z-index: 100;"><a href="https://x.com/intent/tweet?text=${encodedText}" target="_blank" title="X" style="margin: 2px; display: inline-block;"><img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/x.svg" width="26" height="26" style="transition: transform 0.2s;"></a><a href="https://www.facebook.com/sharer/sharer.php?u=${encodedURL}" target="_blank" title="Facebook" style="margin: 2px; display: inline-block;"><img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/facebook.svg" width="26" height="26" style="transition: transform 0.2s;"></a><a href="https://api.whatsapp.com/send?text=${encodedText}" target="_blank" title="WhatsApp" style="margin: 2px; display: inline-block;"><img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/whatsapp.svg" width="26" height="26" style="transition: transform 0.2s;"></a></div></button></div>
 `;
+
+// Add event listeners
+const copyBtn = shareContainer.querySelector('button[title="Copy result"]');
+copyBtn.addEventListener('click', () => {
+  navigator.clipboard.writeText(shareText).then(() => {
+    showToast("النتيجة تم نسخها! 📋");
+  }).catch(err => {
+    console.error('Copy failed', err);
+    showToast("خطأ في نسخ النتيجة ❌", "#F44336");
+  });
+});
+
+const shareBtn = shareContainer.querySelector('button:nth-child(2)');
+shareBtn.addEventListener('click', (e) => {
+  e.stopPropagation();
+  const dropdown = shareBtn.querySelector('div');
+  dropdown.style.display = dropdown.style.display === 'none' ? 'flex' : 'none';
+});
+
+document.addEventListener('click', (e) => {
+  const dropdown = shareBtn.querySelector('div');
+  if (!shareBtn.contains(e.target)) {
+    dropdown.style.display = 'none';
+  }
+});
     });
 
   // إرسال النتيجة إلى الخادم لحفظها في ملف الملف الشخصي
