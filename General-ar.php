@@ -11,41 +11,40 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
 <!doctype html>
 <html lang="ar" dir="rtl">
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>أسئلة عامة</title>
-	<meta name="description" content="اكتشف العادات والتقاليد ومناطق المملكة العربية السعودية.">
-    
-	<link rel="preconnect" href="https://fonts.googleapis.com">
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ثقافة السعودية | المنطقة الشمالية</title>
+  <meta name="description" content="اكتشف عادات وتقاليد ومواقع المنطقة الشمالية في المملكة.">
 
-	<link rel="stylesheet" href="assets/styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@300;400;600;700&display=swap" rel="stylesheet">
 
-	<style>
-		body { direction: rtl; text-align: right; }
-		.navbar { flex-direction: row-reverse; }
-		.nav-links { flex-direction: row-reverse; }
-		.dropdown-content { text-align: right; right: 0; left: auto; }
-		.carousel .content { direction: rtl !important; text-align: right; }
-		.question-filter { direction: rtl; }
-		[dir="rtl"] { direction: rtl; }
-	</style>
+  <link rel="stylesheet" href="assets/styles.css">
+
+  <style>
+    /* محلي: تعديلات RTL لضمان توافق العناصر */
+    body { direction: rtl; text-align: right; }
+    .navbar { flex-direction: row-reverse; }
+    .nav-links { flex-direction: row-reverse; }
+    .dropdown-content { right: 0; left: auto; text-align: right; }
+    .carousel .content { text-align: right; direction: rtl; }
+    .thumbnail .content { text-align: right; direction: rtl; }
+    /* حافظت على بعض عناصر الـ qs-pagination لعرض أرقام الصفحات بشكل منطقي */
+    .qs-pagination { direction: ltr; }
+  </style>
 </head>
-
 <body class="rtl">
+  <!-- Header -->
+  <header class="site-header">
+    <nav class="navbar" aria-label="التنقل الرئيسي">
+      <a class="brand" href="index-ar.php" aria-label="العودة للرئيسية"> 
+        <img src="image/Hawiyah.png" alt="Logo" class="site-logo">
+      </a>
+      <button class="menu-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="قائمة">☰</button>
 
-<!-- Header -->
-<header class="site-header">
-	<nav class="navbar" aria-label="التنقل الرئيسي">
-		<a class="brand" href="#top">
-                <img src="image/Hawiyah.png" alt="Logo" class="site-logo">
-    </a>
+      <ul id="nav-links" class="nav-links">
 
-		<button class="menu-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="قائمة">☰</button>
-
-		<ul id="nav-links" class="nav-links">
-            
           <li class="nav-search">
             <button class="search-toggle" type="button" aria-label="Search" aria-expanded="false">🔍</button>
             <form class="nav-search-form" action="Search-ar.php" method="get" role="search">
@@ -54,8 +53,7 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
             </form>
           </li>
 
-			<!-- زر تغيير اللغة -->
-			<?php if ($LOGGED_IN): ?>
+        <?php if ($LOGGED_IN): ?>
     <li class="dropdown">
             <a class="dropbtn">ملفي الشخصي</a>
             <!-- Profile dropdown list -->
@@ -70,205 +68,205 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
     <li><a href="/sign/SignUp_LogIn_Form.html">تسجيل الدخول</a></li>
 <?php endif; ?>
 
-			<li><a href="quiz/QUIZ-ar.php">الاختبارات</a></li>
+        <li><a href="quiz/QUIZ-ar.php">الاختبارات</a></li>
 
-			<li class="dropdown">
-				<a class="dropbtn">الأسئلة</a>
-				<ul class="dropdown-content">
-					<li><a href="General-ar.php">أسئلة عامة</a></li>
-					<li><a href="North-ar.php">أسئلة المنطقة الشمالية</a></li>
-					<li><a href="South-ar.php">أسئلة المنطقة الجنوبية</a></li>
-					<li><a href="West-ar.php">أسئلة المنطقة الغربية</a></li>
-					<li><a href="East-ar.php">أسئلة المنطقة الشرقية</a></li>
-					<li><a href="Central-ar.php">أسئلة المنطقة الوسطى</a></li>
-				</ul>
-			</li>
+        <li class="dropdown">
+            <a class="dropbtn">الأسئلة</a>
+            <ul class="dropdown-content">
+              <li><a href="General-ar.php">أسئلة عامة</a></li>
+              <li><a href="North-ar.php">أسئلة المنطقة الشمالية</a></li>
+              <li><a href="South-ar.php">أسئلة المنطقة الجنوبية</a></li>
+              <li><a href="West-ar.php">أسئلة المنطقة الغربية</a></li>
+              <li><a href="East-ar.php">أسئلة المنطقة الشرقية</a></li>
+              <li><a href="Central-ar.php">أسئلة المنطقة الوسطى</a></li>
+            </ul>
 
-			<li><a href="index-ar.php">الرئيسية</a></li>
-					<li><a href="General.php" style="font-weight:700">English</a></li>
+        <li><a href="index-ar.php">الرئيسية</a></li>
 
-		</ul>
+        <!-- زر تبديل اللغة — يفتح الصفحة الإنجليزية المطابقة -->
+        <li><a href="North.php" style="font-weight:700">English</a></li>
+      </ul>
+    </nav>
+  </header>
 
-	</nav>
-</header>
-
-
-<!-- Slider -->
+  <!-- Slider (مبني كما في الصفحة الأصلية، مع ترجمة الوصف) -->
+  <!-- Slider -->
+  <!-- Slider -->
 <div id="top" class="carousel">
 
-	<div class="list">
+  <div class="list">
 
-		<div class="item">
-			<img src="image/Central.jpeg" alt="المنطقة الوسطى">
-			<div class="content">
-				<div class="author">المنطقة الوسطى</div>
-				<div class="topic">الرياض</div>
-				<div class="des">تجمع المنطقة الوسطى بين التراث العريق والتطور الحضري السريع.</div>
-			</div>
-		</div>
+    <div class="item">
+      <img src="image/Central.jpeg" alt="المنطقة الوسطى">
+      <div class="content">
+        <div class="author">المنطقة الوسطى</div>
+        <div class="topic">الرياض</div>
+        <div class="des">
+          تجمع المنطقة الوسطى بين التراث العريق والتطور الحضري السريع.
+        </div>
+      </div>
+    </div>
 
-		<div class="item">
-			<img src="image/North.jpg" alt="المنطقة الشمالية">
-			<div class="content">
-				<div class="author">المنطقة الشمالية</div>
-				<div class="topic">تبوك</div>
-				<div class="des">وجهة مميزة بتاريخ طويل وطبيعة خلابة.</div>
-			</div>
-		</div>
+    <div class="item">
+      <img src="image/North.jpg" alt="المنطقة الشمالية">
+      <div class="content">
+        <div class="author">المنطقة الشمالية</div>
+        <div class="topic">تبوك</div>
+        <div class="des">
+          وجهة مميزة بتاريخ طويل وطبيعة خلابة.
+        </div>
+      </div>
+    </div>
 
-		<div class="item">
-			<img src="image/West.jpeg" alt="المنطقة الغربية">
-			<div class="content">
-				<div class="author">المنطقة الغربية</div>
-				<div class="topic">جدة</div>
-				<div class="des">ثقافة بحرية وتنوع حضاري مميز.</div>
-			</div>
-		  	<!-- Link: Central -->
-					<div class="buttons">
-						<button type="button" onclick="location.href='Central.php'">Explore</button>
-					</div>
-				</div>
-			</div>
+    <div class="item">
+      <img src="image/West.jpeg" alt="المنطقة الغربية">
+      <div class="content">
+        <div class="author">المنطقة الغربية</div>
+        <div class="topic">جدة</div>
+        <div class="des">
+          ثقافة بحرية وتنوع حضاري مميز.
+        </div>
+      </div>
+    </div>
 
-		<div class="item">
-			<img src="image/South.jpeg" alt="المنطقة الجنوبية">
-			<div class="content">
-				<div class="author">المنطقة الجنوبية</div>
-				<div class="topic">أبها</div>
-				<div class="des">طبيعة خضراء وتراث غني.</div>
-			</div>
-		</div>
+    <div class="item">
+      <img src="image/South.jpeg" alt="المنطقة الجنوبية">
+      <div class="content">
+        <div class="author">المنطقة الجنوبية</div>
+        <div class="topic">أبها</div>
+        <div class="des">
+          طبيعة خضراء وتراث غني.
+        </div>
+      </div>
+    </div>
 
-		<div class="item">
-			<img src="image/East.jpeg" alt="المنطقة الشرقية">
-			<div class="content">
-				<div class="author">المنطقة الشرقية</div>
-				<div class="topic">الدمام</div>
-				<div class="des">صناعة وطاقة وبحر.</div>
-			</div>
-		</div>
-	</div>
+    <div class="item">
+      <img src="image/East.jpeg" alt="المنطقة الشرقية">
+      <div class="content">
+        <div class="author">المنطقة الشرقية</div>
+        <div class="topic">الدمام</div>
+        <div class="des">
+          صناعة وطاقة وبحر.
+        </div>
+      </div>
+    </div>
 
-	<!-- Thumbnails -->
-	<div class="thumbnail">
+  </div>
 
-		<div class="item">
-			<img src="image/Central.jpeg">
-			<div class="content">
-				<div class="title">المنطقة الوسطى</div>
-				<div class="description">الرياض – القصيم – حائل</div>
-			</div>
-		</div>
+  <!-- Thumbnails -->
+  <div class="thumbnail">
 
-		<div class="item">
-			<img src="image/North.jpg">
-			<div class="content">
-				<div class="title">المنطقة الشمالية</div>
-				<div class="description">تبوك – الجوف – الحدود الشمالية</div>
-			</div>
-		</div>
+    <div class="item">
+      <img src="image/Central.jpeg">
+      <div class="content">
+        <div class="title">المنطقة الوسطى</div>
+        <div class="description">الرياض – القصيم – حائل</div>
+      </div>
+    </div>
 
-		<div class="item">
-			<img src="image/West.jpeg">
-			<div class="content">
-				<div class="title">المنطقة الغربية</div>
-				<div class="description">مكة – المدينة – جدة – الطائف</div>
-			</div>
-		</div>
+    <div class="item">
+      <img src="image/North.jpg">
+      <div class="content">
+        <div class="title">المنطقة الشمالية</div>
+        <div class="description">تبوك – الجوف – الحدود الشمالية</div>
+      </div>
+    </div>
 
-		<div class="item">
-			<img src="image/South.jpeg">
-			<div class="content">
-				<div class="title">المنطقة الجنوبية</div>
-				<div class="description">عسير – جازان – نجران – الباحة</div>
-			</div>
-		</div>
+    <div class="item">
+      <img src="image/West.jpeg">
+      <div class="content">
+        <div class="title">المنطقة الغربية</div>
+        <div class="description">مكة – المدينة – جدة – الطائف</div>
+      </div>
+    </div>
 
-		<div class="item">
-			<img src="image/East.jpeg">
-			<div class="content">
-				<div class="title">المنطقة الشرقية</div>
-				<div class="description">الدمام – الخبر – القطيف – الأحساء</div>
-			</div>
-		</div>
-	</div>
+    <div class="item">
+      <img src="image/South.jpeg">
+      <div class="content">
+        <div class="title">المنطقة الجنوبية</div>
+        <div class="description">عسير – جازان – نجران – الباحة</div>
+      </div>
+    </div>
 
-	<!-- Arrows -->
-	<div class="arrows">
-		<button id="next">‹</button>
-		<button id="prev">›</button>
-	</div>
+    <div class="item">
+      <img src="image/East.jpeg">
+      <div class="content">
+        <div class="title">المنطقة الشرقية</div>
+        <div class="description">الدمام – الخبر – القطيف – الأحساء</div>
+      </div>
+    </div>
 
-	<div class="time"></div>
+  </div>
 
+  <!-- Arrows -->
+  <div class="arrows">
+    <button id="prev">‹</button>
+    <button id="next">›</button>
+  </div>
+
+  <div class="time"></div>
 </div>
 
+  <!-- Main -->
+  <main id="main">
 
-<!-- Main -->
-<main id="main">
+    <!-- Overview / نظرة عامة -->
+    <section id="overview" class="section section-intro">
+      <div class="container">
+       			<h2>نظرة عامة عن المملكة العربية السعودية</h2>
 
-	<!-- Overview -->
-	<section id="overview" class="section section-intro">
-		<div class="container">
-
-			<h2>نظرة عامة عن المملكة العربية السعودية</h2>
-
-			<p>
-				المملكة العربية السعودية هي دولة ذات تاريخ عريق وتطور حديث، تجمع بين الأصالة والمعاصرة، 
-				وهي مهد الإسلام وموطن الحرمين الشريفين.
+       			<p>
+				المملكة العربية السعودية هي دولة ذات تاريخ عريق وتطور حديث، تجمع بين الأصالة والمعاصرة،	وهي مهد الإسلام وموطن الحرمين الشريفين.
 			</p>
 
-			<!-- فلتر اللغة -->
-			<div class="question-filter">
-			<label>اللغة:</label>
-			<select id="langFilter">
-				<option value="all">الكل</option>
-				<option value="arabic">عربي</option>
-				<option value="english">إنجليزي</option>
-			</select>
-			</div>
+        <!-- فلتر اللغة -->
+            <div class="question-filter">
+            <label>اللغة:</label>
+            <select id="langFilter">
+                <option value="all">الكل</option>
+                <option value="arabic">عربي</option>
+                <option value="english">إنجليزي</option>
+            </select>
+            </div>
 
-			<!-- فلتر نوع السؤال العربي -->
-			<div id="arabicFilter" style="display:none; margin-top:10px;" class="question-filter">
-				<label>نوع السؤال:</label>
-				<select id="arabicType">
-					<option value="all">الكل</option>
-				</select>
-			</div>
+            <!-- فلتر نوع السؤال العربي -->
+            <div id="arabicFilter" style="display:none; margin-top:10px;" class="question-filter">
+                <label>نوع السؤال:</label>
+                <select id="arabicType">
+                    <option value="all">الكل</option>
+                </select>
+            </div>
 
-			<!-- فلاتر الأسئلة الإنجليزية -->
-			<div id="englishFilters" style="display:none; margin-top:10px;" class="question-filter">
+            <!-- فلاتر الأسئلة الإنجليزية -->
+            <div id="englishFilters" style="display:none; margin-top:10px;" class="question-filter">
 
-				<label>نوع السؤال:</label>
-				<select id="englishType">
-					<option value="all">الكل</option>
-				</select>
+                <label>نوع السؤال:</label>
+                <select id="englishType">
+                    <option value="all">الكل</option>
+                </select>
 
-				<label style="margin-left:15px;">الفئة:</label>
-				<select id="englishCategory">
-					<option value="all">الكل</option>
-				</select>
-			</div>
+                <label style="margin-left:15px;">الفئة:</label>
+                <select id="englishCategory">
+                    <option value="all">الكل</option>
+                </select>
+            </div>
 
-			<div class="features"></div>
+        <div class="features"></div>
+      </div>
+    </section>
 
-		</div>
-	</section>
+    <!-- CTA -->
+    <section id="visit" class="section section-cta">
+      <div class="container cta">
+       			<h2>اختبر معرفتك بالثقافة السعودية</h2>
+        		<p>ابدأ اختبارًا ممتعًا لمعرفة مدى معرفتك بالموروث السعودي.</p>
+        <a class="btn btn-primary" href="quiz/QUIZ-ar.php">ابدأ الآن</a>
+      </div>
+    </section>
 
+  </main>
 
-	<!-- CTA -->
-	<section id="visit" class="section section-cta">
-		<div class="container cta">
-			<h2>اختبر معرفتك بالثقافة السعودية</h2>
-			<p>ابدأ اختبارًا ممتعًا لمعرفة مدى معرفتك بالموروث السعودي.</p>
-			<a class="btn btn-primary" href="quiz/QUIZ-ar.php">ابدأ الآن</a>
-		</div>
-	</section>
-
-</main>
-
-
-<!-- Footer -->
+  <!-- Footer -->
   <footer class="site-footer" aria-label="تذييل الصفحة">
     <div class="container footer-grid">
       <div>
@@ -314,7 +312,7 @@ const TRANSLATIONS = {
   "dating": "التعارف والعلاقات"
 };
 
-const REGION_FILE = "GENERAL";   // which data file to load
+const REGION_FILE = "NORTH";   // which data file to load
 let currentFilter = "all";       // all | english | arabic
 let ALL_QUESTIONS = [];
 
