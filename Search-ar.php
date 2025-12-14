@@ -41,10 +41,9 @@ $q = isset($_GET['q']) ? trim($_GET['q']) : '';
 <header class="site-header">
 	<nav class="navbar">
 
-		<a class="brand" href="#top">
-                <img src="image/Hawiyah.png" alt="Logo" class="site-logo">
-
-    </a>
+		<a class="brand" href="index-ar.php" aria-label="العودة للرئيسية"> 
+        <img src="image/Hawiyah.png" alt="Logo" class="site-logo">
+      </a>
 
 		<button class="menu-toggle">☰</button>
 
