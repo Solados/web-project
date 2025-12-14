@@ -100,23 +100,8 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
 
       <!-- زر تغيير اللغة -->
 
-<<<<<<< Updated upstream
-      <?php if ($LOGGED_IN): ?>
-    <li class="dropdown">
-            <a class="dropbtn">ملفي الشخصي</a>
-            <!-- Profile dropdown list -->
-            <ul class="dropdown-content">
-              <li><a href="dashboard-ar.php">ملفي الشخصي</a></li>
-              <li><a href="Favorite-ar.php">المفضلة</a></li>
-              
-              <li><a href="sign/check_session.php?logout=true" onclick="return confirm('هل أنت متأكد أنك تريد تسجيل الخروج؟')">تسجيل خروج</a></li>
-            </ul>
-          </li>
-<?php else: ?>
-=======
     
 <?php if (!$LOGGED_IN): ?>
->>>>>>> Stashed changes
     <li><a href="/sign/SignUp_LogIn_Form.html">تسجيل الدخول</a></li>
 <?php endif; ?>
 
@@ -363,5 +348,5 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
 </script>
 
 
- </body>
- </html>
+    </body>
+</html>
