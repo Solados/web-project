@@ -283,9 +283,21 @@ $join_date_ar = "$day $month $year";
 
      <?php include 'sign/check_login_status.php'; ?>
 
+        <?php if ($LOGGED_IN): ?>
+            <li class="dropdown">
+                    <a class="dropbtn">ملفي الشخصي</a>
+                    <!-- Profile dropdown list -->
+                    <ul class="dropdown-content">
+                      <li><a href="dashboard-ar.php">ملفي الشخصي</a></li>
+                      <li><a href="Favorite-ar.php">المفضلة</a></li>
+                      
+                      <li><a href="sign/check_session.php?logout=true" onclick="return confirm('هل أنت متأكد أنك تريد تسجيل الخروج؟')">تسجيل خروج</a></li>
+                    </ul>
+                  </li>
+                  <?php endif; ?>
 
        <?php if (!$LOGGED_IN): ?>
-    <li><a href="/sign/SignUp_LogIn_Form.html">تسجيل الدخول</a></li>
+    <li><a href="/sign/SignUp_LogIn_Form_ar.html">تسجيل الدخول</a></li>
 <?php endif; ?>
 
       <li><a href="quiz/QUIZ-ar.php">الاختبارات</a></li>
@@ -303,18 +315,7 @@ $join_date_ar = "$day $month $year";
       </li>
 
       <li><a href="index-ar.php">الرئيسية</a></li>
-      <?php if ($LOGGED_IN): ?>
-    <li class="dropdown">
-            <a class="dropbtn">ملفي الشخصي</a>
-            <!-- Profile dropdown list -->
-            <ul class="dropdown-content">
-              <li><a href="dashboard-ar.php">ملفي الشخصي</a></li>
-              <li><a href="Favorite-ar.php">المفضلة</a></li>
-              
-              <li><a href="sign/check_session.php?logout=true" onclick="return confirm('هل أنت متأكد أنك تريد تسجيل الخروج؟')">تسجيل خروج</a></li>
-            </ul>
-          </li>
-          <?php endif; ?>
+      
       <li><a href="dashboard.php" style="font-weight:700">English</a></li>
 
     </ul>
