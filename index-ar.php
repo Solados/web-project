@@ -272,7 +272,7 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
   <footer class="site-footer" aria-label="footer">
    <div class="container footer-grid">
     <div>
-     <strong>الهويّة </strong>
+     <strong>هويّة</strong>
      <p>© 2025 جميع الحقوق محفوظة</p>
     </div>
     <ul class="footer-links">

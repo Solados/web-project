@@ -157,7 +157,7 @@ if (!$LOGGED_IN) {
      <li><a href="#main">Back to Top</a></li>
     </ul>
     <div style="text-align:right">
-     <strong>Hawiyyah</strong>
+     <strong>Hawiyya</strong>
      <p>© 2025 All rights reserved</p>
     </div>
    </div>

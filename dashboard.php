@@ -397,7 +397,7 @@ $join_date = $login_time > 0 ? date('F j, Y', $login_time) : 'Unknown';
   <footer class="site-footer" aria-label="footer">
    <div class="container footer-grid">
     <div>
-     <strong>Hawiyyah</strong>
+     <strong>Hawiyya</strong>
      <p>© 2025 All rights reserved</p>
     </div>
     <ul class="footer-links">
