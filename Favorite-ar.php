@@ -25,10 +25,11 @@ if (!$LOGGED_IN) {
   <link rel="stylesheet" href="assets/styles.css">
 
   <style>
-    body { direction: rtl; text-align: right; }
-    .navbar { flex-direction: row-reverse; }
-    .nav-links { flex-direction: row-reverse; }
-    .dropdown-content { right: 0; left: auto; text-align: right; }
+    /* RTL overrides */
+  html, body { direction: rtl; }
+  .navbar { direction: rtl;}
+  .nav-links { direction: rtl; }
+  .dropdown-content { text-align: right; right: 0; left: auto; }
 
     /* Prevent the page title from being hidden under the fixed header/navbar */
     main#main { padding-top: 90px; }
