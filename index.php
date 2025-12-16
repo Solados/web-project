@@ -162,7 +162,7 @@ if (session_status() === PHP_SESSION_NONE) {
     <section id="overview" class="section section-intro">
       <div class="container">
         <div class="overview-card sr-hidden">
-          <h2>About the platform</h2>
+          <h2>About Hawiyyah</h2>
           <p>Hawiyyah provides thousands of authentic questions and interactive quizzes to help learners explore Saudi traditions, language, and regions.</p>
         </div>
       </div>

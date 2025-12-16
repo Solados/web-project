@@ -162,7 +162,7 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
     <section id="overview" class="section section-intro">
       <div class="container">
         <div class="overview-card sr-hidden">
-          <h2>ماذا نقدم</h2>
+          <h2>ماذا تقدم منصة هويّة</h2>
           <p>منصة تتيح الوصول إلى آلاف الأسئلة والاختبارات التفاعلية لاستكشاف الثقافة السعودية والتقاليد والمناطق.</p>
         </div>
       </div>
