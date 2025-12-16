@@ -269,7 +269,7 @@ if (session_status() === PHP_SESSION_NONE) {
   <footer class="site-footer" aria-label="footer">
    <div class="container footer-grid">
     <div>
-     <strong>Hawiyya</strong>
+     <strong>Hawiyyah</strong>
      <p>© 2025 All rights reserved</p>
     </div>
     <ul class="footer-links">

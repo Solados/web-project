@@ -13,7 +13,7 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>الهويّة | الصفحة الرئيسية</title>
+    <title>هويّة | الصفحة الرئيسية</title>
     <meta name="description" content="اكتشف العادات والتقاليد ومناطق المملكة العربية السعودية.">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
