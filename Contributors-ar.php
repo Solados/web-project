@@ -259,8 +259,7 @@ if (session_status() === PHP_SESSION_NONE) {
     </div>
 
     <ul class="footer-links">
-      <li><a href="#top">العودة للأعلى</a></li>
-      <li><a href="#main">الأسئلة والأجوبة</a></li>
+      <li><a href="#main">العودة للأعلى</a></li>
     </ul>
 
     <!-- زر جديد بالأسفل بالمنتصف -->

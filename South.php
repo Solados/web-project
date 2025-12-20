@@ -273,7 +273,7 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
 
     <!-- New: Contributors button -->
     <div class="footer-cta">
-      <a class="footer-contributors-btn" href="Contributors.php">Contributors</a>
+      <a class="footer-contributors-btn" href="Contributors.php">Our Team</a>
     </div>
   </div>
 </footer>

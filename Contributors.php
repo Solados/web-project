@@ -267,7 +267,7 @@ if (session_status() === PHP_SESSION_NONE) {
 
     <!-- New: Contributors button -->
     <div class="footer-cta">
-      <a class="footer-contributors-btn" href="Contributors.php">Contributors</a>
+      <a class="footer-contributors-btn" href="Contributors.php">Our Team</a>
     </div>
   </div>
 </footer>

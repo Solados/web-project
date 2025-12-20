@@ -416,7 +416,7 @@ $join_date = $login_time > 0 ? date('F j, Y', $login_time) : 'Unknown';
 
     <!-- New: Contributors button -->
     <div class="footer-cta">
-      <a class="footer-contributors-btn" href="Contributors.php">Contributors</a>
+      <a class="footer-contributors-btn" href="Contributors.php">Our Team</a>
     </div>
   </div>
 </footer>
