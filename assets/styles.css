@@ -162,6 +162,11 @@ body { overflow-x: hidden; }
 .feature-card h3 { margin: .5rem 0 .25rem; font-size: 1.1rem; color: var(--green-700); }
 .feature-card p { margin: 0; color: var(--text-700); }
 
+/* Circular icon buttons used in question cards (Copy/Favorite/Share) */
+.qa-icon-btn svg {
+  display: block;
+}
+
 .two-col {
   display: grid;
   grid-template-columns: 1.1fr .9fr;
@@ -223,6 +228,21 @@ body { overflow-x: hidden; }
 .footer-links { list-style: none; display: flex; gap: .75rem; margin: 0; padding: 0; }
 .footer-links a { color: var(--text-700); text-decoration: none; }
 .footer-links a:hover { text-decoration: underline; }
+
+/* Footer sources line */
+.footer-sources {
+  margin: .35rem 0 0;
+  font-size: .9rem;
+  color: var(--text-700);
+  max-width: 58rem;
+}
+.footer-sources a {
+  color: inherit;
+  text-decoration: underline;
+}
+.footer-sources a:hover {
+  color: var(--text-900);
+}
 
 /* Responsive */
 @media (max-width: 900px) {
