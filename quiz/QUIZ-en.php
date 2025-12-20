@@ -45,7 +45,7 @@ if (!$LOGGED_IN) {
     <!-- Navigation -->
     <nav class="navbar" aria-label="Main navigation">
     <a class="brand" href="../index.php" aria-label="Back to top">
-                <img src="../image/Hawiyah.png" alt="Logo" class="site-logo">
+                <img src="../image/Hawiyah-En.png" alt="Logo" class="site-logo">
      </a>
     <button class="menu-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Toggle menu">☰</button>
       <!-- Nav list -->
@@ -108,6 +108,7 @@ if (!$LOGGED_IN) {
     <label class="quiz-gold-label">Select region/source:</label>
     <div class="select-wrapper">
       <select id="regionFilter" class="quiz-gold-select">
+        <option value="USERQUESTIONS">User Questions</option>
         <option value="GENERAL">GENERAL</option>
         <option value="CENTERAL">Central</option>
         <option value="NORTH">North</option>
@@ -150,17 +151,33 @@ if (!$LOGGED_IN) {
    </section>
   </main>
 
-  <!-- Footer -->
-  <footer class="site-footer" aria-label="footer">
-   <div class="container footer-grid">
-    <ul class="footer-links">
-     <li><a href="#main">Back to Top</a></li>
-    </ul>
-    <div style="text-align:right">
-     <strong>Hawiyyah</strong>
-     <p>© 2025 All rights reserved</p>
+<!-- Footer -->
+<footer class="site-footer" aria-label="footer">
+  <div class="container footer-grid">
+    <div>
+      <strong>Hawiyya</strong>
+      <p>© 2025 All rights reserved</p>
+      <p class="footer-sources">
+        Sources:
+        <a href="https://github.com/LamaAy/SaudiCulture-Dataset" target="_blank" rel="noopener noreferrer">SaudiCulture-Dataset</a>,
+        Absher sources:
+        <a href="https://docs.google.com/spreadsheets/d/1-O91eSIvOUJEuSIDnHoaS21OHMnVc3anpw0jAVw_krs/edit?usp=sharing" target="_blank" rel="noopener noreferrer">Absher (Words)</a>,
+        <a href="https://docs.google.com/spreadsheets/d/1nwVsA24SzxqITv_-jVQ_rQWxQ4eqpGJmIifyxZq2jsY/edit?usp=sharing" target="_blank" rel="noopener noreferrer">Absher (Phrases)</a>,
+        <a href="https://docs.google.com/spreadsheets/d/1HAUXQnbA8L4dhFNEx-XQA67OeOaO5lpwX5RUMgC3swQ/edit?usp=sharing" target="_blank" rel="noopener noreferrer">Absher (Proverbs)</a>,
+        <a href="https://www.absher.sa" target="_blank" rel="noopener noreferrer">Absher website</a>.
+      </p>
     </div>
-   </div>
+
+    <ul class="footer-links">
+      <li><a href="#main">Back to Top</a></li>
+    </ul>
+
+    <!-- New: Contributors button -->
+    <div class="footer-cta">
+      <a class="footer-contributors-btn" href="Contributors.php">Our Team</a>
+    </div>
+  </div>
+</footer>
   </footer>
   <!-- Scripts -->
   <script src="../assets/script.js"></script>
@@ -179,6 +196,32 @@ if (!$LOGGED_IN) {
       toast.style.opacity = "0";
       setTimeout(() => { toast.style.display = "none"; toast.style.transition = ""; }, 500);
     }, 3000);
+  }
+
+  const ICON_COPY = `
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <rect x="9" y="9" width="11" height="11" rx="2" stroke="currentColor" stroke-width="2"/>
+      <rect x="4" y="4" width="11" height="11" rx="2" stroke="currentColor" stroke-width="2" opacity="0.9"/>
+    </svg>`;
+  const ICON_SHARE = `
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M12 3v10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      <path d="M8 7l4-4 4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M5 14v6a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    </svg>`;
+
+  function applyCircleIconButtonStyles(btn) {
+    btn.classList.add("qa-icon-btn");
+    btn.style.width = "42px";
+    btn.style.height = "42px";
+    btn.style.borderRadius = "999px";
+    btn.style.padding = "0";
+    btn.style.display = "inline-flex";
+    btn.style.alignItems = "center";
+    btn.style.justifyContent = "center";
+    btn.style.gap = "0";
+    btn.style.fontSize = "0";
+    btn.style.lineHeight = "0";
   }
 
   function shuffle(arr){
@@ -472,7 +515,8 @@ if (!$LOGGED_IN) {
       // Copy button
       const copyBtn = document.createElement('button');
       copyBtn.title = "Copy question";
-      copyBtn.innerHTML = " Copy 📄";
+      copyBtn.innerHTML = ICON_COPY;
+      copyBtn.setAttribute("aria-label", "Copy question");
       copyBtn.style.background = "var(--gold-500)";
       copyBtn.style.color = "#1a1a1a";
       copyBtn.style.boxShadow = "var(--shadow-md)";
@@ -483,13 +527,15 @@ if (!$LOGGED_IN) {
       copyBtn.style.cursor = "pointer";
       copyBtn.style.transition = "transform .15s ease, box-shadow .15s ease, background .2s ease";
       copyBtn.style.fontFamily = "'Noto Kufi Arabic', sans-serif";
-      copyBtn.onmouseover = () => { copyBtn.style.transform = "translateY(-2px)"; copyBtn.style.boxShadow = "var(--shadow-gold-hover)"; };
+      applyCircleIconButtonStyles(copyBtn);
+      copyBtn.onmouseover = () => { copyBtn.style.transform = "translateY(-2px)"; copyBtn.style.boxShadow = "var(--shadow-md)"; };
       copyBtn.onmouseout = () => { copyBtn.style.transform = "translateY(0)"; copyBtn.style.boxShadow = "var(--shadow-md)"; };
       copyBtn.onclick = () => copyQuestion(i);
 
       // Share button
       const shareBtn = document.createElement('button');
-      shareBtn.textContent = "Share 🔗";
+      shareBtn.innerHTML = ICON_SHARE;
+      shareBtn.setAttribute("aria-label", "Share");
       shareBtn.style.background = "var(--gold-500)";
       shareBtn.style.color = "#1a1a1a";
       shareBtn.style.boxShadow = "var(--shadow-md)";
@@ -501,7 +547,8 @@ if (!$LOGGED_IN) {
       shareBtn.style.transition = "transform .15s ease, box-shadow .15s ease, background .2s ease";
       shareBtn.style.position = "relative";
       shareBtn.style.fontFamily = "'Noto Kufi Arabic', sans-serif";
-      shareBtn.onmouseover = () => { shareBtn.style.transform = "translateY(-2px)"; shareBtn.style.boxShadow = "var(--shadow-gold-hover)"; };
+      applyCircleIconButtonStyles(shareBtn);
+      shareBtn.onmouseover = () => { shareBtn.style.transform = "translateY(-2px)"; shareBtn.style.boxShadow = "var(--shadow-md)"; };
       shareBtn.onmouseout = () => { shareBtn.style.transform = "translateY(0)"; shareBtn.style.boxShadow = "var(--shadow-md)"; };
 
       // Dropdown
@@ -738,7 +785,8 @@ if (!$LOGGED_IN) {
   // ===== زر النسخ =====
   const copyBtn = document.createElement('button');
   copyBtn.title = "Copy result";
-  copyBtn.innerHTML = " Copy 📄"; // أيقونة صفحتين متتالية
+  copyBtn.innerHTML = ICON_COPY;
+  copyBtn.setAttribute("aria-label", "Copy result");
   copyBtn.style.background = "var(--gold-500)";
   copyBtn.style.color = "#1a1a1a";
   copyBtn.style.boxShadow = "var(--shadow-md)";
@@ -749,7 +797,8 @@ if (!$LOGGED_IN) {
   copyBtn.style.fontFamily = "'Noto Kufi Arabic', sans-serif";
   copyBtn.style.cursor = "pointer";
   copyBtn.style.transition = "transform .15s ease, box-shadow .15s ease, background .2s ease";
-  copyBtn.onmouseover = () => { copyBtn.style.transform = "translateY(-2px)"; copyBtn.style.boxShadow = "var(--shadow-gold-hover)"; };
+  applyCircleIconButtonStyles(copyBtn);
+  copyBtn.onmouseover = () => { copyBtn.style.transform = "translateY(-2px)"; copyBtn.style.boxShadow = "var(--shadow-md)"; };
   copyBtn.onmouseout = () => { copyBtn.style.transform = "translateY(0)"; copyBtn.style.boxShadow = "var(--shadow-md)"; };
 
   copyBtn.onclick = () => {
@@ -762,7 +811,8 @@ if (!$LOGGED_IN) {
 
   // ===== زر المشاركة =====
   const shareBtn = document.createElement('button');
-  shareBtn.textContent = "Share 🔗";
+  shareBtn.innerHTML = ICON_SHARE;
+  shareBtn.setAttribute("aria-label", "Share");
   shareBtn.style.background = "var(--gold-500)";
   shareBtn.style.color = "#1a1a1a";
   shareBtn.style.boxShadow = "var(--shadow-md)";
@@ -775,7 +825,8 @@ if (!$LOGGED_IN) {
   shareBtn.style.transition = "transform .15s ease, box-shadow .15s ease, background .2s ease";
   shareBtn.style.position = "relative";
 
-  shareBtn.onmouseover = () => { shareBtn.style.transform = "translateY(-2px)"; shareBtn.style.boxShadow = "var(--shadow-gold-hover)"; };
+  applyCircleIconButtonStyles(shareBtn);
+  shareBtn.onmouseover = () => { shareBtn.style.transform = "translateY(-2px)"; shareBtn.style.boxShadow = "var(--shadow-md)"; };
   shareBtn.onmouseout = () => { shareBtn.style.transform = "translateY(0)"; shareBtn.style.boxShadow = "var(--shadow-md)"; };
 
   // نافذة أيقونات المشاركة

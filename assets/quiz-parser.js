@@ -4,28 +4,6 @@
 
 (function (window) {
   // small fallback set of questions in case of fetch/parse failure
-const builtin = [
-  { question: 'ما هي عاصمة المملكة العربية السعودية؟', choices: ['الرياض', 'جدة', 'مكة', 'الدمام'], answer: 'الرياض' },
-  { question: 'ما هو اليوم الوطني السعودي؟', choices: ['23 سبتمبر', '1 يناير', '5 يونيو', '12 ديسمبر'], answer: '23 سبتمبر' },
-  { question: 'ما هو اللباس التقليدي للرجال في السعودية؟', choices: ['الثوب', 'الكيمونو', 'الساري', 'البدلة'], answer: 'الثوب' },
-  { question: 'ما هو اللباس التقليدي للنساء في السعودية؟', choices: ['العباءة', 'الكيمونو', 'الساري', 'الجلابية'], answer: 'العباءة' },
-  { question: 'أي مدينة تُعرف بكونها أقدس مدينة في الإسلام؟', choices: ['مكة المكرمة', 'المدينة المنورة', 'الرياض', 'جدة'], answer: 'مكة المكرمة' },
-  { question: 'أي مدينة تحتضن المسجد النبوي؟', choices: ['المدينة المنورة', 'مكة المكرمة', 'الرياض', 'الدمام'], answer: 'المدينة المنورة' },
-  { question: 'ما هو اسم العملة السعودية؟', choices: ['الريال', 'الدينار', 'الجنيه', 'الدولار'], answer: 'الريال' },
-  { question: 'ما هو الطبق الشعبي السعودي الشهير؟', choices: ['الكبسة', 'البيتزا', 'السوشي', 'البرياني'], answer: 'الكبسة' },
-  { question: 'ما هو المشروب التقليدي الذي يُقدم مع التمر؟', choices: ['القهوة العربية', 'الشاي الأخضر', 'العصير', 'الحليب'], answer: 'القهوة العربية' },
-  { question: 'ما هو لون العلم السعودي؟', choices: ['أخضر', 'أحمر', 'أزرق', 'أبيض'], answer: 'أخضر' },
-  { question: 'ما هي العبارة المكتوبة على العلم السعودي؟', choices: ['لا إله إلا الله محمد رسول الله', 'الله أكبر', 'بسم الله الرحمن الرحيم', 'السلام عليكم'], answer: 'لا إله إلا الله محمد رسول الله' },
-  { question: 'ما هو الحيوان الوطني في السعودية؟', choices: ['الجمل', 'الأسد', 'الصقر', 'الحصان'], answer: 'الصقر' },
-  { question: 'ما هو أكبر ميناء بحري في السعودية؟', choices: ['ميناء جدة الإسلامي', 'ميناء الدمام', 'ميناء ينبع', 'ميناء جازان'], answer: 'ميناء جدة الإسلامي' },
-  { question: 'أي منطقة تشتهر بالورود في السعودية؟', choices: ['الطائف', 'الرياض', 'القصيم', 'حائل'], answer: 'الطائف' },
-  { question: 'ما هو اسم أكبر صحراء في السعودية؟', choices: ['الربع الخالي', 'صحراء النفود', 'صحراء سيناء', 'صحراء الكبرى'], answer: 'الربع الخالي' },
-  { question: 'ما هو نوع الرقص الشعبي السعودي؟', choices: ['العرضة', 'التانغو', 'السامبا', 'الفلامنكو'], answer: 'العرضة' },
-  { question: 'ما هو اسم أكبر جامعة في السعودية؟', choices: ['جامعة الملك سعود', 'جامعة الأزهر', 'جامعة القاهرة', 'جامعة دمشق'], answer: 'جامعة الملك سعود' },
-  { question: 'ما هو اسم برج مشهور في الرياض؟', choices: ['برج المملكة', 'برج خليفة', 'برج إيفل', 'برج لندن'], answer: 'برج المملكة' },
-  { question: 'أي مدينة سعودية تُعرف بعروس البحر الأحمر؟', choices: ['جدة', 'مكة', 'الدمام', 'المدينة'], answer: 'جدة' },
-  { question: 'ما هو اسم المهرجان الثقافي الذي يقام في الجنادرية؟', choices: ['مهرجان الجنادرية', 'مهرجان الطائف', 'مهرجان الرياض', 'مهرجان جدة'], answer: 'مهرجان الجنادرية' }
-];
 
   function shuffle(arr) {
     for (let i = arr.length - 1; i > 0; i--) {
@@ -379,29 +357,27 @@ const builtin = [
       // apply TYPE filter (Question Type)
 if (type && String(type).toLowerCase() !== 'all') {
 
-  // نحول النوع إلى شكل موحد (عشان ما يصير تداخل)
   function canonType(s) {
     const t = String(s || '').toLowerCase().trim();
     if (t.includes('multiple')) return 'multi';
     if (t.includes('one')) return 'one';
     if (t.includes('open')) return 'open';
-    // بعض الملفات قد تكتبها بشكل مختلف
     if (t.includes('fill')) return 'open';
     return t;
   }
 
   const requested = canonType(type);
 
-  // أهم شيء: ندعم "Question Type" (يصير مفتاحه 'question type')
+  // Question Type
   const typeKeys = ['question type', 'type', 'question_type', 'questiontype', 'qtype', 'question-type'];
   const found = findHeaderKey(typeKeys);
 
   if (found !== null) {
-    // فلترة صارمة من العمود نفسه
+    // Filter from the same column
     const idx = hmap[found];
     filteredRows = filteredRows.filter(r => canonType(r[idx]) === requested);
   } else {
-    // fallback heuristic فقط إذا ما فيه عمود نوع
+    // fallback heuristic only if no type column
     const choicesKeys = ['choices', 'choice', 'options'];
     const choicesKey = findHeaderKey(choicesKeys);
     if (choicesKey !== null) {
@@ -410,7 +386,7 @@ if (type && String(type).toLowerCase() !== 'all') {
       if (requested === 'open') {
         filteredRows = filteredRows.filter(r => !r[cidx] || String(r[cidx]).trim() === '' || String(r[cidx]).trim() === '–');
       } else {
-        // one أو multi: لازم تكون choices موجودة
+        // one or multi: choices must be available
         filteredRows = filteredRows.filter(r => r[cidx] && String(r[cidx]).trim() !== '' && String(r[cidx]).trim() !== '–');
       }
     }
@@ -561,7 +537,7 @@ if (type && String(type).toLowerCase() !== 'all') {
         const raw = String(r[idx] || '').trim();
         if (!raw) continue;
 
-        // لو في خلية فيها أكثر من تصنيف مفصول بفواصل/؛/|
+        // If a cell contains more than one category separated by commas
         raw.split(/[,;|/]+/).forEach(part => {
           const v = String(part || '').trim();
           if (!v) return;

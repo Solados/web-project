@@ -25,10 +25,11 @@ if (!$LOGGED_IN) {
   <link rel="stylesheet" href="assets/styles.css">
 
   <style>
-    body { direction: rtl; text-align: right; }
-    .navbar { flex-direction: row-reverse; }
-    .nav-links { flex-direction: row-reverse; }
-    .dropdown-content { right: 0; left: auto; text-align: right; }
+    /* RTL overrides */
+  html, body { direction: rtl; }
+  .navbar { direction: rtl;}
+  .nav-links { direction: rtl; }
+  .dropdown-content { text-align: right; right: 0; left: auto; }
 
     /* Prevent the page title from being hidden under the fixed header/navbar */
     main#main { padding-top: 90px; }
@@ -100,6 +101,34 @@ if (!$LOGGED_IN) {
     </div>
   </section>
 </main>
+
+<footer class="site-footer" aria-label="تذييل الصفحة">
+  <div class="container footer-grid">
+    <div>
+      <strong>هويّة</strong>
+      <p>© 2025 جميع الحقوق محفوظة</p>
+      <p class="footer-sources">
+        المصادر:
+        <a href="https://github.com/LamaAy/SaudiCulture-Dataset" target="_blank" rel="noopener noreferrer">SaudiCulture-Dataset</a>،
+        مصادر أبشر:
+        <a href="https://docs.google.com/spreadsheets/d/1-O91eSIvOUJEuSIDnHoaS21OHMnVc3anpw0jAVw_krs/edit?usp=sharing" target="_blank" rel="noopener noreferrer">أبشر (كلمات)</a>،
+        <a href="https://docs.google.com/spreadsheets/d/1nwVsA24SzxqITv_-jVQ_rQWxQ4eqpGJmIifyxZq2jsY/edit?usp=sharing" target="_blank" rel="noopener noreferrer">أبشر (عبارات)</a>،
+        <a href="https://docs.google.com/spreadsheets/d/1HAUXQnbA8L4dhFNEx-XQA67OeOaO5lpwX5RUMgC3swQ/edit?usp=sharing" target="_blank" rel="noopener noreferrer">أبشر (أمثال)</a>،
+        <a href="https://www.absher.sa" target="_blank" rel="noopener noreferrer">موقع أبشر</a>.
+      </p>
+    </div>
+
+    <ul class="footer-links">
+      <li><a href="#top">العودة للأعلى</a></li>
+      <li><a href="#main">الأسئلة والأجوبة</a></li>
+    </ul>
+
+    <!-- زر جديد بالأسفل بالمنتصف -->
+    <div class="footer-cta">
+      <a class="footer-contributors-btn" href="Contributors-ar.php">فريق العمل</a>
+    </div>
+  </div>
+</footer>
 
 <script src="assets/script.js"></script>
 <script>

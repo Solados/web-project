@@ -25,10 +25,10 @@ $q = isset($_GET['q']) ? trim($_GET['q']) : '';
 	<link rel="stylesheet" href="assets/styles.css">
 
 	<style>
-		body { direction: rtl; text-align: right; }
-		.navbar { flex-direction: row-reverse; }
-		.nav-links { flex-direction: row-reverse; }
-		.dropdown-content { text-align: right; right: 0; left: auto; }
+    html, body { direction: rtl; }
+    .navbar { direction: rtl;}
+    .nav-links { direction: rtl; }
+    .dropdown-content { text-align: right; right: 0; left: auto; }
 		.carousel .content { direction: rtl !important; text-align: right; }
 		.question-filter { direction: rtl; }
 		.qs-pagination { direction: rtl; }
@@ -57,8 +57,21 @@ $q = isset($_GET['q']) ? trim($_GET['q']) : '';
             </form>
           </li>
 
+          <?php if ($LOGGED_IN): ?>
+            <li class="dropdown">
+                    <a class="dropbtn">ملفي الشخصي</a>
+                    <!-- Profile dropdown list -->
+                    <ul class="dropdown-content">
+                      <li><a href="dashboard-ar.php">ملفي الشخصي</a></li>
+                      <li><a href="Favorite-ar.php">المفضلة</a></li>
+                      
+                      <li><a href="sign/check_session.php?logout=true" onclick="return confirm('هل أنت متأكد أنك تريد تسجيل الخروج؟')">تسجيل خروج</a></li>
+                    </ul>
+                  </li>
+                  <?php endif; ?>
+
        <?php if (!$LOGGED_IN): ?>
-    <li><a href="/sign/SignUp_LogIn_Form.html">تسجيل الدخول</a></li>
+    <li><a href="/sign/Signup_LogIn_Form_ar.html">تسجيل الدخول</a></li>
 <?php endif; ?>
 
       <li><a href="quiz/QUIZ-ar.php">الاختبارات</a></li>
@@ -76,19 +89,8 @@ $q = isset($_GET['q']) ? trim($_GET['q']) : '';
       </li>
 
       <li><a href="index-ar.php">الرئيسية</a></li>
-      <?php if ($LOGGED_IN): ?>
-    <li class="dropdown">
-            <a class="dropbtn">ملفي الشخصي</a>
-            <!-- Profile dropdown list -->
-            <ul class="dropdown-content">
-              <li><a href="dashboard-ar.php">ملفي الشخصي</a></li>
-              <li><a href="Favorite-ar.php">المفضلة</a></li>
-              
-              <li><a href="sign/check_session.php?logout=true" onclick="return confirm('هل أنت متأكد أنك تريد تسجيل الخروج؟')">تسجيل خروج</a></li>
-            </ul>
-          </li>
-          <?php endif; ?>
-      <li><a href="index.php" style="font-weight:700">English</a></li>
+      
+      <li><a href="Search.php" style="font-weight:700">English</a></li>
 
     </ul>
 

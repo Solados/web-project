@@ -354,19 +354,34 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
 	 </section>
 	</main>
 
-	<!-- Footer -->
-	<footer class="site-footer" aria-label="footer">
-	 <div class="container footer-grid">
-		<div>
-		 <strong>Hawiyyah</strong>
-		 <p>© 2025 All rights reserved</p>
-		</div>
-		<ul class="footer-links">
-		 <li><a href="#top">Back to Top</a></li>
-		 <li><a href="#main">Questions & Answers</a></li>
-		</ul>
-	 </div>
-	</footer>
+<!-- Footer -->
+<footer class="site-footer" aria-label="footer">
+  <div class="container footer-grid">
+    <div>
+      <strong>Hawiyya</strong>
+      <p>© 2025 All rights reserved</p>
+      <p class="footer-sources">
+        Sources:
+        <a href="https://github.com/LamaAy/SaudiCulture-Dataset" target="_blank" rel="noopener noreferrer">SaudiCulture-Dataset</a>,
+        Absher sources:
+        <a href="https://docs.google.com/spreadsheets/d/1-O91eSIvOUJEuSIDnHoaS21OHMnVc3anpw0jAVw_krs/edit?usp=sharing" target="_blank" rel="noopener noreferrer">Absher (Words)</a>,
+        <a href="https://docs.google.com/spreadsheets/d/1nwVsA24SzxqITv_-jVQ_rQWxQ4eqpGJmIifyxZq2jsY/edit?usp=sharing" target="_blank" rel="noopener noreferrer">Absher (Phrases)</a>,
+        <a href="https://docs.google.com/spreadsheets/d/1HAUXQnbA8L4dhFNEx-XQA67OeOaO5lpwX5RUMgC3swQ/edit?usp=sharing" target="_blank" rel="noopener noreferrer">Absher (Proverbs)</a>,
+        <a href="https://www.absher.sa" target="_blank" rel="noopener noreferrer">Absher website</a>.
+      </p>
+    </div>
+
+    <ul class="footer-links">
+      <li><a href="#top">Back to Top</a></li>
+      <li><a href="#main">Questions & Answers</a></li>
+    </ul>
+
+    <!-- New: Contributors button -->
+    <div class="footer-cta">
+      <a class="footer-contributors-btn" href="Contributors.php">Our Team</a>
+    </div>
+  </div>
+</footer>
 	<!-- Chatbase Script -->
 	<script>
 (function(){if(!window.chatbase||window.chatbase("getState")!=="initialized"){window.chatbase=(...arguments)=>{if(!window.chatbase.q){window.chatbase.q=[]}window.chatbase.q.push(arguments)};window.chatbase=new Proxy(window.chatbase,{get(target,prop){if(prop==="q"){return target.q}return(...args)=>target(prop,...args)}})}const onLoad=function(){const script=document.createElement("script");script.src="https://www.chatbase.co/embed.min.js";script.id="PkSRl6nFY3Csgenh8koIS";script.domain="www.chatbase.co";document.body.appendChild(script)};if(document.readyState==="complete"){onLoad()}else{window.addEventListener("load",onLoad)}})();
@@ -572,6 +587,36 @@ async function render(pageIndex = 0) {
 
   container.innerHTML = "";
 
+  const ICON_COPY = `
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <rect x="9" y="9" width="11" height="11" rx="2" stroke="currentColor" stroke-width="2"/>
+      <rect x="4" y="4" width="11" height="11" rx="2" stroke="currentColor" stroke-width="2" opacity="0.9"/>
+    </svg>`;
+  const ICON_SHARE = `
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M12 3v10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      <path d="M8 7l4-4 4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M5 14v6a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    </svg>`;
+  const ICON_FAVORITE = `
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M12 17.27l-5.18 2.73 0.99-5.81L3.6 10.1l5.84-0.85L12 4l2.56 5.25 5.84 0.85-4.21 4.09 0.99 5.81L12 17.27z"/>
+    </svg>`;
+
+  function applyCircleIconButtonStyles(btn) {
+    btn.classList.add("qa-icon-btn");
+    btn.style.width = "42px";
+    btn.style.height = "42px";
+    btn.style.borderRadius = "999px";
+    btn.style.padding = "0";
+    btn.style.display = "inline-flex";
+    btn.style.alignItems = "center";
+    btn.style.justifyContent = "center";
+    btn.style.gap = "0";
+    btn.style.fontSize = "0";
+    btn.style.lineHeight = "0";
+  }
+
 pageItems.forEach(q => {
   const card = document.createElement("article");
   card.className = "feature-card " + (q.lang === "english" ? "en" : "ar");
@@ -617,7 +662,8 @@ pageItems.forEach(q => {
   /* ===== زر النسخ ===== */
 const copyBtn = document.createElement("button");
 copyBtn.title = "Copy";
-copyBtn.innerHTML = " Copy 📄";
+copyBtn.innerHTML = ICON_COPY;
+copyBtn.setAttribute("aria-label", "Copy");
 copyBtn.style.background = "var(--gold-500)";
 copyBtn.style.color = "#1a1a1a";
 copyBtn.style.boxShadow = "var(--shadow-md)";
@@ -630,7 +676,8 @@ copyBtn.style.border = "1px solid transparent";
 copyBtn.style.cursor = "pointer";
 copyBtn.style.transition = "transform .15s ease, box-shadow .15s ease, background .2s ease";
 copyBtn.style.fontFamily = "'Noto Kufi Arabic', sans-serif";
-copyBtn.onmouseover = () => { copyBtn.style.transform = "translateY(-2px)"; copyBtn.style.boxShadow = "var(--shadow-gold-hover)"; };
+applyCircleIconButtonStyles(copyBtn);
+copyBtn.onmouseover = () => { copyBtn.style.transform = "translateY(-2px)"; copyBtn.style.boxShadow = "var(--shadow-md)"; };
 copyBtn.onmouseout = () => { copyBtn.style.transform = "translateY(0)"; copyBtn.style.boxShadow = "var(--shadow-md)"; };
 
   copyBtn.onclick = () => {
@@ -659,7 +706,8 @@ copyBtn.onmouseout = () => { copyBtn.style.transform = "translateY(0)"; copyBtn.
   // Favorite Button
   const favBtn = document.createElement("button");
   favBtn.title = "Favorite";
-  favBtn.innerHTML = " Favorite ⭐";
+  favBtn.innerHTML = ICON_FAVORITE;
+  favBtn.setAttribute("aria-label", "Favorite");
   favBtn.style.background = "var(--gold-500)";
   favBtn.style.color = "#1a1a1a";
   favBtn.style.boxShadow = "var(--shadow-md)";
@@ -672,7 +720,8 @@ copyBtn.onmouseout = () => { copyBtn.style.transform = "translateY(0)"; copyBtn.
   favBtn.style.cursor = "pointer";
   favBtn.style.transition = "transform .15s ease, box-shadow .15s ease, background .2s ease";
   favBtn.style.fontFamily = "'Noto Kufi Arabic', sans-serif";
-  favBtn.onmouseover = () => { favBtn.style.transform = "translateY(-2px)"; favBtn.style.boxShadow = "var(--shadow-gold-hover)"; };
+  applyCircleIconButtonStyles(favBtn);
+  favBtn.onmouseover = () => { favBtn.style.transform = "translateY(-2px)"; favBtn.style.boxShadow = "var(--shadow-md)"; };
   favBtn.onmouseout = () => { favBtn.style.transform = "translateY(0)"; favBtn.style.boxShadow = "var(--shadow-md)"; };
   favBtn.onclick = async () => {
     if (!IS_LOGGED_IN) {
@@ -727,7 +776,8 @@ copyBtn.onmouseout = () => { copyBtn.style.transform = "translateY(0)"; copyBtn.
 
   /* ===== زر المشاركة ===== */
   const shareBtn = document.createElement('button');
-  shareBtn.textContent = "Share 🔗";
+  shareBtn.innerHTML = ICON_SHARE;
+  shareBtn.setAttribute("aria-label", "Share");
   shareBtn.style.background = "var(--gold-500)";
   shareBtn.style.color = "#1a1a1a";
   shareBtn.style.boxShadow = "var(--shadow-md)";
@@ -740,9 +790,10 @@ copyBtn.onmouseout = () => { copyBtn.style.transform = "translateY(0)"; copyBtn.
   shareBtn.style.cursor = "pointer";
   shareBtn.style.fontFamily = "'Noto Kufi Arabic', sans-serif";
   shareBtn.style.transition = "transform .15s ease, box-shadow .15s ease, background .2s ease";
+  applyCircleIconButtonStyles(shareBtn);
   shareBtn.style.position = "relative";
 
-  shareBtn.onmouseover = () => { shareBtn.style.transform = "translateY(-2px)"; shareBtn.style.boxShadow = "var(--shadow-gold-hover)"; };
+  shareBtn.onmouseover = () => { shareBtn.style.transform = "translateY(-2px)"; shareBtn.style.boxShadow = "var(--shadow-md)"; };
   shareBtn.onmouseout = () => { shareBtn.style.transform = "translateY(0)"; shareBtn.style.boxShadow = "var(--shadow-md)"; };
 
   /* ===== نافذة المشاركة ===== */

@@ -91,3 +91,4 @@ Images and some fonts were obtained from public sources (for example, Unsplash a
 الصور وبعض الخطوط مأخوذة من مصادر عامة (مثل Unsplash وGoogle Fonts). استبدل أو أعد ترخيص العناصر قبل النشر في بيئة إنتاج.
 
 ---
+

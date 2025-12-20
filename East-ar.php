@@ -54,9 +54,21 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
             </form>
           </li>
 
+          <?php if ($LOGGED_IN): ?>
+    <li class="dropdown">
+            <a class="dropbtn">ملفي الشخصي</a>
+            <!-- Profile dropdown list -->
+            <ul class="dropdown-content">
+              <li><a href="dashboard-ar.php">ملفي الشخصي</a></li>
+              <li><a href="Favorite-ar.php">المفضلة</a></li>
+              
+              <li><a href="sign/check_session.php?logout=true" onclick="return confirm('هل أنت متأكد أنك تريد تسجيل الخروج؟')">تسجيل خروج</a></li>
+            </ul>
+          </li>
+          <?php endif; ?>
        
        <?php if (!$LOGGED_IN): ?>
-    <li><a href="/sign/SignUp_LogIn_Form.html">تسجيل الدخول</a></li>
+    <li><a href="/sign/Signup_LogIn_Form_ar.html">تسجيل الدخول</a></li>
 <?php endif; ?>
 
       <li><a href="quiz/QUIZ-ar.php">الاختبارات</a></li>
@@ -74,18 +86,7 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
       </li>
 
       <li><a href="index-ar.php">الرئيسية</a></li>
-      <?php if ($LOGGED_IN): ?>
-    <li class="dropdown">
-            <a class="dropbtn">ملفي الشخصي</a>
-            <!-- Profile dropdown list -->
-            <ul class="dropdown-content">
-              <li><a href="dashboard-ar.php">ملفي الشخصي</a></li>
-              <li><a href="Favorite-ar.php">المفضلة</a></li>
-              
-              <li><a href="sign/check_session.php?logout=true" onclick="return confirm('هل أنت متأكد أنك تريد تسجيل الخروج؟')">تسجيل خروج</a></li>
-            </ul>
-          </li>
-          <?php endif; ?>
+      
       <li><a href="East.php" style="font-weight:700">English</a></li>
 
     </ul>
@@ -246,18 +247,33 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
     </section>
   </main>
 
-  <footer class="site-footer" aria-label="تذييل الصفحة">
-    <div class="container footer-grid">
-      <div>
-        <strong>هويّة</strong>
-        <p>© 2025 جميع الحقوق محفوظة</p>
-      </div>
-      <ul class="footer-links">
-        <li><a href="#top">العودة للأعلى</a></li>
-        <li><a href="#main">الأسئلة والأجوبة</a></li>
-      </ul>
+<footer class="site-footer" aria-label="تذييل الصفحة">
+  <div class="container footer-grid">
+    <div>
+      <strong>هويّة</strong>
+      <p>© 2025 جميع الحقوق محفوظة</p>
+      <p class="footer-sources">
+        المصادر:
+        <a href="https://github.com/LamaAy/SaudiCulture-Dataset" target="_blank" rel="noopener noreferrer">SaudiCulture-Dataset</a>،
+        مصادر أبشر:
+        <a href="https://docs.google.com/spreadsheets/d/1-O91eSIvOUJEuSIDnHoaS21OHMnVc3anpw0jAVw_krs/edit?usp=sharing" target="_blank" rel="noopener noreferrer">أبشر (كلمات)</a>،
+        <a href="https://docs.google.com/spreadsheets/d/1nwVsA24SzxqITv_-jVQ_rQWxQ4eqpGJmIifyxZq2jsY/edit?usp=sharing" target="_blank" rel="noopener noreferrer">أبشر (عبارات)</a>،
+        <a href="https://docs.google.com/spreadsheets/d/1HAUXQnbA8L4dhFNEx-XQA67OeOaO5lpwX5RUMgC3swQ/edit?usp=sharing" target="_blank" rel="noopener noreferrer">أبشر (أمثال)</a>،
+        <a href="https://www.absher.sa" target="_blank" rel="noopener noreferrer">موقع أبشر</a>.
+      </p>
     </div>
-  </footer>
+
+    <ul class="footer-links">
+      <li><a href="#top">العودة للأعلى</a></li>
+      <li><a href="#main">الأسئلة والأجوبة</a></li>
+    </ul>
+
+    <!-- زر جديد بالأسفل بالمنتصف -->
+    <div class="footer-cta">
+      <a class="footer-contributors-btn" href="Contributors-ar.php">فريق العمل</a>
+    </div>
+  </div>
+</footer>
 
   <script src="assets/script.js"></script>
 
@@ -484,6 +500,36 @@ async function render(pageIndex = 0) {
 
   container.innerHTML = "";
 
+  const ICON_COPY = `
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <rect x="9" y="9" width="11" height="11" rx="2" stroke="currentColor" stroke-width="2"/>
+      <rect x="4" y="4" width="11" height="11" rx="2" stroke="currentColor" stroke-width="2" opacity="0.9"/>
+    </svg>`;
+  const ICON_SHARE = `
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M12 3v10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      <path d="M8 7l4-4 4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M5 14v6a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    </svg>`;
+  const ICON_FAVORITE = `
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M12 17.27l-5.18 2.73 0.99-5.81L3.6 10.1l5.84-0.85L12 4l2.56 5.25 5.84 0.85-4.21 4.09 0.99 5.81L12 17.27z"/>
+    </svg>`;
+
+  function applyCircleIconButtonStyles(btn) {
+    btn.classList.add("qa-icon-btn");
+    btn.style.width = "42px";
+    btn.style.height = "42px";
+    btn.style.borderRadius = "999px";
+    btn.style.padding = "0";
+    btn.style.display = "inline-flex";
+    btn.style.alignItems = "center";
+    btn.style.justifyContent = "center";
+    btn.style.gap = "0";
+    btn.style.fontSize = "0";
+    btn.style.lineHeight = "0";
+  }
+
   // render cards
   pageItems.forEach(q => {
     const card = document.createElement("article");
@@ -528,7 +574,8 @@ async function render(pageIndex = 0) {
     // Copy Button
     const copyBtn = document.createElement("button");
     copyBtn.title = "نسخ";
-    copyBtn.innerHTML = " نسخ 📄";
+    copyBtn.innerHTML = ICON_COPY;
+    copyBtn.setAttribute("aria-label", "نسخ");
     copyBtn.style.background = "var(--gold-500)";
     copyBtn.style.color = "#1a1a1a";
     copyBtn.style.boxShadow = "var(--shadow-md)";
@@ -541,7 +588,8 @@ async function render(pageIndex = 0) {
     copyBtn.style.cursor = "pointer";
     copyBtn.style.transition = "transform .15s ease, box-shadow .15s ease, background .2s ease";
     copyBtn.style.fontFamily = "'Noto Kufi Arabic', sans-serif";
-    copyBtn.onmouseover = () => { copyBtn.style.transform = "translateY(-2px)"; copyBtn.style.boxShadow = "var(--shadow-gold-hover)"; };
+    applyCircleIconButtonStyles(copyBtn);
+    copyBtn.onmouseover = () => { copyBtn.style.transform = "translateY(-2px)"; copyBtn.style.boxShadow = "var(--shadow-md)"; };
     copyBtn.onmouseout = () => { copyBtn.style.transform = "translateY(0)"; copyBtn.style.boxShadow = "var(--shadow-md)"; };
 
     copyBtn.onclick = () => {
@@ -570,7 +618,8 @@ async function render(pageIndex = 0) {
 
     // Share Button
     const shareBtn = document.createElement('button');
-    shareBtn.textContent = "مشاركة 🔗";
+    shareBtn.innerHTML = ICON_SHARE;
+    shareBtn.setAttribute("aria-label", "مشاركة");
     shareBtn.style.background = "var(--gold-500)";
     shareBtn.style.color = "#1a1a1a";
     shareBtn.style.boxShadow = "var(--shadow-md)";
@@ -583,9 +632,10 @@ async function render(pageIndex = 0) {
     shareBtn.style.cursor = "pointer";
     shareBtn.style.fontFamily = "'Noto Kufi Arabic', sans-serif";
     shareBtn.style.transition = "transform .15s ease, box-shadow .15s ease, background .2s ease";
+    applyCircleIconButtonStyles(shareBtn);
     shareBtn.style.position = "relative";
 
-    shareBtn.onmouseover = () => { shareBtn.style.transform = "translateY(-2px)"; shareBtn.style.boxShadow = "var(--shadow-gold-hover)"; };
+    shareBtn.onmouseover = () => { shareBtn.style.transform = "translateY(-2px)"; shareBtn.style.boxShadow = "var(--shadow-md)"; };
     shareBtn.onmouseout = () => { shareBtn.style.transform = "translateY(0)"; shareBtn.style.boxShadow = "var(--shadow-md)"; };
 
     // Share Menu
@@ -670,7 +720,8 @@ async function render(pageIndex = 0) {
     // Favorite Button
     const favBtn = document.createElement("button");
     favBtn.title = "المفضلة";
-    favBtn.innerHTML = "المفضلة ⭐";
+    favBtn.innerHTML = ICON_FAVORITE;
+    favBtn.setAttribute("aria-label", "المفضلة");
     favBtn.style.background = "var(--gold-500)";
     favBtn.style.color = "#1a1a1a";
     favBtn.style.boxShadow = "var(--shadow-md)";
@@ -683,7 +734,8 @@ async function render(pageIndex = 0) {
     favBtn.style.cursor = "pointer";
     favBtn.style.transition = "transform .15s ease, box-shadow .15s ease, background .2s ease";
     favBtn.style.fontFamily = "'Noto Kufi Arabic', sans-serif";
-    favBtn.onmouseover = () => { favBtn.style.transform = "translateY(-2px)"; favBtn.style.boxShadow = "var(--shadow-gold-hover)"; };
+    applyCircleIconButtonStyles(favBtn);
+    favBtn.onmouseover = () => { favBtn.style.transform = "translateY(-2px)"; favBtn.style.boxShadow = "var(--shadow-md)"; };
     favBtn.onmouseout = () => { favBtn.style.transform = "translateY(0)"; favBtn.style.boxShadow = "var(--shadow-md)"; };
     favBtn.onclick = async () => {
       if (!IS_LOGGED_IN) {

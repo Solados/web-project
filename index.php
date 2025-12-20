@@ -152,7 +152,7 @@ if (session_status() === PHP_SESSION_NONE) {
           Your browser does not support the video tag.
         </video>
         <div class="video-overlay">
-          <h1 class="video-welcome" id="video-welcome">Welcome in Saudi Arabia</h1>
+          <h1 class="video-welcome" id="video-welcome">Welcome to Hawiyya website</h1>
         </div>
         <button id="video-toggle" aria-pressed="false" aria-label="Pause video">Pause</button>
       </div>
@@ -162,8 +162,8 @@ if (session_status() === PHP_SESSION_NONE) {
     <section id="overview" class="section section-intro">
       <div class="container">
         <div class="overview-card sr-hidden">
-          <h2>About the platform</h2>
-          <p>Hawiyyah provides thousands of authentic questions and interactive quizzes to help learners explore Saudi traditions, language, and regions.</p>
+          <h2>About Hawiyya</h2>
+          <p>Hawiyya provides thousands of authentic questions and interactive quizzes to help learners explore Saudi traditions, language, and regions.</p>
         </div>
       </div>
     </section>
@@ -265,18 +265,33 @@ if (session_status() === PHP_SESSION_NONE) {
 
   </main>
 
-  <!-- Footer -->
-  <footer class="site-footer" aria-label="footer">
-   <div class="container footer-grid">
+<!-- Footer -->
+<footer class="site-footer" aria-label="footer">
+  <div class="container footer-grid">
     <div>
-     <strong>Hawiyyah</strong>
-     <p>© 2025 All rights reserved</p>
+      <strong>Hawiyya</strong>
+      <p>© 2025 All rights reserved</p>
+      <p class="footer-sources">
+        Sources:
+        <a href="https://github.com/LamaAy/SaudiCulture-Dataset" target="_blank" rel="noopener noreferrer">SaudiCulture-Dataset</a>,
+        Absher sources:
+        <a href="https://docs.google.com/spreadsheets/d/1-O91eSIvOUJEuSIDnHoaS21OHMnVc3anpw0jAVw_krs/edit?usp=sharing" target="_blank" rel="noopener noreferrer">Absher (Words)</a>,
+        <a href="https://docs.google.com/spreadsheets/d/1nwVsA24SzxqITv_-jVQ_rQWxQ4eqpGJmIifyxZq2jsY/edit?usp=sharing" target="_blank" rel="noopener noreferrer">Absher (Phrases)</a>,
+        <a href="https://docs.google.com/spreadsheets/d/1HAUXQnbA8L4dhFNEx-XQA67OeOaO5lpwX5RUMgC3swQ/edit?usp=sharing" target="_blank" rel="noopener noreferrer">Absher (Proverbs)</a>,
+        <a href="https://www.absher.sa" target="_blank" rel="noopener noreferrer">Absher website</a>.
+      </p>
     </div>
+
     <ul class="footer-links">
-     <li><a href="#main">Back to Top</a></li>
+      <li><a href="#main">Back to Top</a></li>
     </ul>
-   </div>
-  </footer>
+
+    <!-- New: Contributors button -->
+    <div class="footer-cta">
+      <a class="footer-contributors-btn" href="Contributors.php">Our Team</a>
+    </div>
+  </div>
+</footer>
   <!-- Chatbase Script -->
   <script>
 (function(){if(!window.chatbase||window.chatbase("getState")!=="initialized"){window.chatbase=(...arguments)=>{if(!window.chatbase.q){window.chatbase.q=[]}window.chatbase.q.push(arguments)};window.chatbase=new Proxy(window.chatbase,{get(target,prop){if(prop==="q"){return target.q}return(...args)=>target(prop,...args)}})}const onLoad=function(){const script=document.createElement("script");script.src="https://www.chatbase.co/embed.min.js";script.id="PkSRl6nFY3Csgenh8koIS";script.domain="www.chatbase.co";document.body.appendChild(script)};if(document.readyState==="complete"){onLoad()}else{window.addEventListener("load",onLoad)}})();

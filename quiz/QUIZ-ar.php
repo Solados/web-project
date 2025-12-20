@@ -75,8 +75,21 @@ if (!$LOGGED_IN) {
       <button class="menu-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Toggle menu">☰</button>
       <ul id="nav-links" class="nav-links">
 
+      <?php if ($LOGGED_IN): ?>
+        <li class="dropdown">
+                <a class="dropbtn">ملفي الشخصي</a>
+                <!-- Profile dropdown list -->
+                <ul class="dropdown-content">
+                  <li><a href="../dashboard-ar.php">ملفي الشخصي</a></li>
+                  <li><a href="../Favorite-ar.php">المفضلة</a></li>
+                  
+                  <li><a href="../sign/check_session.php?logout=true" onclick="return confirm('هل أنت متأكد أنك تريد تسجيل الخروج؟')">تسجيل خروج</a></li>
+                </ul>
+              </li>
+              <?php endif; ?>
+
        <?php if (!$LOGGED_IN): ?>
-    <li><a href="../sign/SignUp_LogIn_Form.html">تسجيل الدخول</a></li>
+    <li><a href="../sign/Signup_LogIn_Form_ar.html">تسجيل الدخول</a></li>
 <?php endif; ?>
 
       <li><a href="QUIZ-ar.php">الاختبارات</a></li>
@@ -94,18 +107,7 @@ if (!$LOGGED_IN) {
       </li>
 
       <li><a href="../index-ar.php">الرئيسية</a></li>
-      <?php if ($LOGGED_IN): ?>
-    <li class="dropdown">
-            <a class="dropbtn">ملفي الشخصي</a>
-            <!-- Profile dropdown list -->
-            <ul class="dropdown-content">
-              <li><a href="../dashboard-ar.php">ملفي الشخصي</a></li>
-              <li><a href="../Favorite-ar.php">المفضلة</a></li>
-              
-              <li><a href="../sign/check_session.php?logout=true" onclick="return confirm('هل أنت متأكد أنك تريد تسجيل الخروج؟')">تسجيل خروج</a></li>
-            </ul>
-          </li>
-          <?php endif; ?>
+      
       <li><a href="Quiz-en.php" style="font-weight:700">English</a></li>
 
     </ul>
@@ -138,6 +140,8 @@ if (!$LOGGED_IN) {
             <option value="Words">كلمات</option>
             <option value="Phrases">عبارات</option>
             <option value="Proverbs">أمثال</option>
+            <option value="UserQuestions-ar">أسئلة المستخدمين</option>
+
           </select>
         </div>
 
@@ -169,18 +173,32 @@ if (!$LOGGED_IN) {
     </section>
   </main>
 
-  <!-- Footer -->
-  <footer class="site-footer" aria-label="footer">
-    <div class="container footer-grid">
-      <ul class="footer-links">
-        <li><a href="#main">العودة إلى الأعلى</a></li>
-      </ul>
-      <div style="text-align:left">
-        <strong>هويّة</strong>
-        <p>© 2025 جميع الحقوق محفوظة</p>
-      </div>
+<footer class="site-footer" aria-label="تذييل الصفحة">
+  <div class="container footer-grid">
+    <div>
+      <strong>هويّة</strong>
+      <p>© 2025 جميع الحقوق محفوظة</p>
+      <p class="footer-sources">
+        المصادر:
+        <a href="https://github.com/LamaAy/SaudiCulture-Dataset" target="_blank" rel="noopener noreferrer">SaudiCulture-Dataset</a>،
+        مصادر أبشر:
+        <a href="https://docs.google.com/spreadsheets/d/1-O91eSIvOUJEuSIDnHoaS21OHMnVc3anpw0jAVw_krs/edit?usp=sharing" target="_blank" rel="noopener noreferrer">أبشر (كلمات)</a>،
+        <a href="https://docs.google.com/spreadsheets/d/1nwVsA24SzxqITv_-jVQ_rQWxQ4eqpGJmIifyxZq2jsY/edit?usp=sharing" target="_blank" rel="noopener noreferrer">أبشر (عبارات)</a>،
+        <a href="https://docs.google.com/spreadsheets/d/1HAUXQnbA8L4dhFNEx-XQA67OeOaO5lpwX5RUMgC3swQ/edit?usp=sharing" target="_blank" rel="noopener noreferrer">أبشر (أمثال)</a>،
+        <a href="https://www.absher.sa" target="_blank" rel="noopener noreferrer">موقع أبشر</a>.
+      </p>
     </div>
-  </footer>
+
+    <ul class="footer-links">
+      <li><a href="#main">العودة للأعلى</a></li>
+    </ul>
+
+    <!-- زر جديد بالأسفل بالمنتصف -->
+    <div class="footer-cta">
+      <a class="footer-contributors-btn" href="Contributors-ar.php">فريق العمل</a>
+    </div>
+  </div>
+</footer>
 
   <!-- Scripts (نفس ملفات JS الموجودة لديك) -->
   <script src="../assets/script.js"></script>
@@ -229,13 +247,39 @@ if (!$LOGGED_IN) {
     }, 3000);
   }
 
+  const ICON_COPY = `
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <rect x="9" y="9" width="11" height="11" rx="2" stroke="currentColor" stroke-width="2"/>
+      <rect x="4" y="4" width="11" height="11" rx="2" stroke="currentColor" stroke-width="2" opacity="0.9"/>
+    </svg>`;
+  const ICON_SHARE = `
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M12 3v10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      <path d="M8 7l4-4 4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M5 14v6a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    </svg>`;
+
+  function applyCircleIconButtonStyles(btn) {
+    btn.classList.add("qa-icon-btn");
+    btn.style.width = "42px";
+    btn.style.height = "42px";
+    btn.style.borderRadius = "999px";
+    btn.style.padding = "0";
+    btn.style.display = "inline-flex";
+    btn.style.alignItems = "center";
+    btn.style.justifyContent = "center";
+    btn.style.gap = "0";
+    btn.style.fontSize = "0";
+    btn.style.lineHeight = "0";
+  }
+
   let selectedQuestions = [];
 
   async function startQuiz(){
     const count = Number(document.getElementById('questionCount').value) || 5;
     const regionSelect = document.getElementById('regionFilter');
     const regionValue = regionSelect ? regionSelect.value : 'Words';
-    const regionFiles = ['Words','Phrases','Proverbs'];
+    const regionFiles = ['Words','Phrases','Proverbs','UserQuestions-ar'];
 
     let source = 'Words';
     if (regionValue === 'RANDOM') {
@@ -262,7 +306,7 @@ if (!$LOGGED_IN) {
     const category = document.getElementById('categoryFilter') ? document.getElementById('categoryFilter').value : 'all';
 
     // Prefer server-side fetching for Arabic datasets when a specific filter is selected
-    const arabicDatasets = ['Words','Phrases','Proverbs'];
+    const arabicDatasets = ['Words','Phrases','Proverbs','UserQuestions-ar'];
     const preferServerForArabicFilter = arabicDatasets.includes(source);
 
     if (!preferServerForArabicFilter && typeof fetchQuestions === 'function'){
@@ -295,7 +339,7 @@ if (!$LOGGED_IN) {
     try {
       // Build query params; for Arabic datasets we may send `arabic_filter` for dialect/block filters
       const qsObj = { source: source, count: String(count), type: mappedType === 'all' ? '' : mappedType, category: category || '' };
-      if (['Words','Phrases','Proverbs'].includes(source) && mappedType && mappedType !== 'all') {
+      if (['Words','Phrases','Proverbs','UserQuestions-ar'].includes(source) && mappedType && mappedType !== 'all') {
         const blockCols = ['Location_Recognition_question','Cultural_Interpretation_question','Contextual_Usage_question','Fill_in_Blank_question','True_False_question','Meaning_question'];
         if (blockCols.includes(mappedType) || !['MCQ (one correct)','MCQ (multiple correct)','Open-ended'].includes(mappedType)) {
           qsObj.arabic_filter = mappedType;
@@ -413,7 +457,8 @@ if (!$LOGGED_IN) {
       // Copy button
       const copyBtn = document.createElement('button');
       copyBtn.title = "نسخ السؤال";
-      copyBtn.innerHTML = " نسخ 📄";
+      copyBtn.innerHTML = ICON_COPY;
+      copyBtn.setAttribute("aria-label", "نسخ السؤال");
       copyBtn.style.background = "var(--gold-500)";
       copyBtn.style.color = "#1a1a1a";
       copyBtn.style.boxShadow = "var(--shadow-md)";
@@ -424,13 +469,15 @@ if (!$LOGGED_IN) {
       copyBtn.style.cursor = "pointer";
       copyBtn.style.transition = "transform .15s ease, box-shadow .15s ease, background .2s ease";
       copyBtn.style.fontFamily = "'Noto Kufi Arabic', sans-serif";
-      copyBtn.onmouseover = () => { copyBtn.style.transform = "translateY(-2px)"; copyBtn.style.boxShadow = "var(--shadow-gold-hover)"; };
+      applyCircleIconButtonStyles(copyBtn);
+      copyBtn.onmouseover = () => { copyBtn.style.transform = "translateY(-2px)"; copyBtn.style.boxShadow = "var(--shadow-md)"; };
       copyBtn.onmouseout = () => { copyBtn.style.transform = "translateY(0)"; copyBtn.style.boxShadow = "var(--shadow-md)"; };
       copyBtn.onclick = () => copyQuestion(i);
 
       // Share button
       const shareBtn = document.createElement('button');
-      shareBtn.textContent = "مشاركة 🔗";
+      shareBtn.innerHTML = ICON_SHARE;
+      shareBtn.setAttribute("aria-label", "مشاركة");
       shareBtn.style.background = "var(--gold-500)";
       shareBtn.style.color = "#1a1a1a";
       shareBtn.style.boxShadow = "var(--shadow-md)";
@@ -442,7 +489,8 @@ if (!$LOGGED_IN) {
       shareBtn.style.transition = "transform .15s ease, box-shadow .15s ease, background .2s ease";
       shareBtn.style.position = "relative";
       shareBtn.style.fontFamily = "'Noto Kufi Arabic', sans-serif";
-      shareBtn.onmouseover = () => { shareBtn.style.transform = "translateY(-2px)"; shareBtn.style.boxShadow = "var(--shadow-gold-hover)"; };
+      applyCircleIconButtonStyles(shareBtn);
+      shareBtn.onmouseover = () => { shareBtn.style.transform = "translateY(-2px)"; shareBtn.style.boxShadow = "var(--shadow-md)"; };
       shareBtn.onmouseout = () => { shareBtn.style.transform = "translateY(0)"; shareBtn.style.boxShadow = "var(--shadow-md)"; };
 
       // Dropdown
@@ -721,7 +769,26 @@ const encodedURL = encodeURIComponent(window.location.href);
 
 // أزرار المشاركة HTML باللوقو الرسمي لكل منصة
 shareContainer.innerHTML = `
-<div style="display: flex; gap: 12px; align-items: center; margin-top: 20px; flex-wrap: wrap;"><button title="Copy result" style="background: var(--gold-500); color: rgb(26, 26, 26); box-shadow: var(--shadow-md); font-weight: 700; padding: 0.75rem 1.1rem; border-radius: 0.8rem; border: 1px solid transparent; cursor: pointer; transition: transform 0.15s, box-shadow 0.15s, background 0.2s; font-family:'Noto Kufi Arabic', sans-serif;"> نسخ 📄</button><button style="background: var(--gold-500); color: rgb(26, 26, 26); box-shadow: var(--shadow-md); font-weight: 700; padding: 0.75rem 1.1rem; border-radius: 0.8rem; border: 1px solid transparent; cursor: pointer; transition: transform 0.15s, box-shadow 0.15s, background 0.2s; position: relative; transform: translateY(0px); font-family:'Noto Kufi Arabic', sans-serif;">مشاركة 🔗<div style="position: absolute; bottom: 45px; left: 0px; background: rgb(255, 255, 255); border: 1px solid rgb(221, 221, 221); border-radius: 8px; padding: 6px 10px; display: none; gap: 8px; box-shadow: rgba(0, 0, 0, 0.15) 0px 4px 12px; flex-wrap: wrap; z-index: 100;"><a href="https://x.com/intent/tweet?text=${encodedText}" target="_blank" title="X" style="margin: 2px; display: inline-block;"><img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/x.svg" width="26" height="26" style="transition: transform 0.2s;"></a><a href="https://www.facebook.com/sharer/sharer.php?u=${encodedURL}" target="_blank" title="Facebook" style="margin: 2px; display: inline-block;"><img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/facebook.svg" width="26" height="26" style="transition: transform 0.2s;"></a><a href="https://api.whatsapp.com/send?text=${encodedText}" target="_blank" title="WhatsApp" style="margin: 2px; display: inline-block;"><img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/whatsapp.svg" width="26" height="26" style="transition: transform 0.2s;"></a></div></button></div>
+<div style="display:flex;gap:12px;align-items:center;margin-top:20px;flex-wrap:wrap;">
+  <button title="Copy result" aria-label="نسخ النتيجة" style="background:var(--gold-500);color:#1a1a1a;box-shadow:var(--shadow-md);font-weight:700;width:42px;height:42px;padding:0;border-radius:999px;border:1px solid transparent;cursor:pointer;transition:transform .15s, box-shadow .15s, background .2s;display:inline-flex;align-items:center;justify-content:center;font-size:0;line-height:0;font-family:'Noto Kufi Arabic', sans-serif;">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <rect x="9" y="9" width="11" height="11" rx="2" stroke="currentColor" stroke-width="2"/>
+      <rect x="4" y="4" width="11" height="11" rx="2" stroke="currentColor" stroke-width="2" opacity="0.9"/>
+    </svg>
+  </button>
+  <button aria-label="مشاركة" style="background:var(--gold-500);color:#1a1a1a;box-shadow:var(--shadow-md);font-weight:700;width:42px;height:42px;padding:0;border-radius:999px;border:1px solid transparent;cursor:pointer;transition:transform .15s, box-shadow .15s, background .2s;position:relative;display:inline-flex;align-items:center;justify-content:center;font-size:0;line-height:0;font-family:'Noto Kufi Arabic', sans-serif;">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M12 3v10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      <path d="M8 7l4-4 4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M5 14v6a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+    <div style="position:absolute;bottom:45px;left:0;background:#fff;border:1px solid #ddd;border-radius:8px;padding:6px 10px;display:none;gap:8px;box-shadow:0 4px 12px rgba(0,0,0,.15);flex-wrap:wrap;z-index:100;">
+      <a href="https://x.com/intent/tweet?text=${encodedText}" target="_blank" title="X" style="margin:2px;display:inline-block;"><img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/x.svg" width="26" height="26" style="transition:transform 0.2s;"></a>
+      <a href="https://www.facebook.com/sharer/sharer.php?u=${encodedURL}" target="_blank" title="Facebook" style="margin:2px;display:inline-block;"><img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/facebook.svg" width="26" height="26" style="transition:transform 0.2s;"></a>
+      <a href="https://api.whatsapp.com/send?text=${encodedText}" target="_blank" title="WhatsApp" style="margin:2px;display:inline-block;"><img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/whatsapp.svg" width="26" height="26" style="transition:transform 0.2s;"></a>
+    </div>
+  </button>
+</div>
 `;
 
 // Add event listeners
@@ -812,7 +879,7 @@ document.addEventListener('click', (e) => {
       // Do not auto-insert MCQ/multi/fill UI options here; preserve only hardcoded block types
 
       // If Arabic dataset, try to extract dialects and block-question columns
-      const arabicDatasets = ['Words','Phrases','Proverbs'];
+      const arabicDatasets = ['Words','Phrases','Proverbs','UserQuestions-ar'];
       if (arabicDatasets.includes(src)) {
         try {
           const csvUrl = `../data/${src}.csv`;

@@ -13,7 +13,7 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>الهويّة | الصفحة الرئيسية</title>
+    <title>هويّة | الصفحة الرئيسية</title>
     <meta name="description" content="اكتشف العادات والتقاليد ومناطق المملكة العربية السعودية.">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -100,9 +100,21 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
 
       <!-- زر تغيير اللغة -->
 
-    
+    <?php if ($LOGGED_IN): ?>
+    <li class="dropdown">
+            <a class="dropbtn">ملفي الشخصي</a>
+            <!-- Profile dropdown list -->
+            <ul class="dropdown-content">
+              <li><a href="dashboard-ar.php">ملفي الشخصي</a></li>
+              <li><a href="Favorite-ar.php">المفضلة</a></li>
+              
+              <li><a href="sign/check_session.php?logout=true" onclick="return confirm('هل أنت متأكد أنك تريد تسجيل الخروج؟')">تسجيل خروج</a></li>
+            </ul>
+          </li>
+          <?php endif; ?>
+
 <?php if (!$LOGGED_IN): ?>
-    <li><a href="/sign/SignUp_LogIn_Form.html">تسجيل الدخول</a></li>
+    <li><a href="/sign/Signup_LogIn_Form_ar.html">تسجيل الدخول</a></li>
 <?php endif; ?>
 
       <li><a href="quiz/QUIZ-ar.php">الاختبارات</a></li>
@@ -120,29 +132,14 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
       </li>
 
       <li><a href="index-ar.php">الرئيسية</a></li>
-      <?php if ($LOGGED_IN): ?>
-    <li class="dropdown">
-            <a class="dropbtn">ملفي الشخصي</a>
-            <!-- Profile dropdown list -->
-            <ul class="dropdown-content">
-              <li><a href="dashboard-ar.php">ملفي الشخصي</a></li>
-              <li><a href="Favorites.php">المفضلة</a></li>
-              
-              <li><a href="sign/check_session.php?logout=true" onclick="return confirm('هل أنت متأكد أنك تريد تسجيل الخروج؟')">تسجيل خروج</a></li>
-            </ul>
-          </li>
-          <?php endif; ?>
+      
       <li><a href="index.php" style="font-weight:700">English</a></li>
 
     </ul>
 
   </nav>
+
 </header>
-
-  <!-- محتوى الترحيب -->
-  </header>
-
- 
 
   <!-- Main content -->
   <main id="main">
@@ -155,7 +152,7 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
           متصفحك لا يدعم الفيديو.
         </video>
         <div class="video-overlay">
-          <h1 class="video-welcome" id="video-welcome-ar">مرحباً بكم في السعودية</h1>
+          <h1 class="video-welcome" id="video-welcome-ar">مرحباً بكم في موقع هويّة</h1>
         </div>
         <button id="video-toggle-ar" aria-pressed="false" aria-label="إيقاف الفيديو">إيقاف</button>
       </div>
@@ -165,7 +162,7 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
     <section id="overview" class="section section-intro">
       <div class="container">
         <div class="overview-card sr-hidden">
-          <h2>ماذا نقدم</h2>
+          <h2>ماذا تقدم منصة هويّة</h2>
           <p>منصة تتيح الوصول إلى آلاف الأسئلة والاختبارات التفاعلية لاستكشاف الثقافة السعودية والتقاليد والمناطق.</p>
         </div>
       </div>
@@ -268,18 +265,32 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
 
   </main>
   
-<!-- Footer -->
-  <footer class="site-footer" aria-label="footer">
-   <div class="container footer-grid">
+<footer class="site-footer" aria-label="تذييل الصفحة">
+  <div class="container footer-grid">
     <div>
-     <strong>الهويّة </strong>
-     <p>© 2025 جميع الحقوق محفوظة</p>
+      <strong>هويّة</strong>
+      <p>© 2025 جميع الحقوق محفوظة</p>
+      <p class="footer-sources">
+        المصادر:
+        <a href="https://github.com/LamaAy/SaudiCulture-Dataset" target="_blank" rel="noopener noreferrer">SaudiCulture-Dataset</a>،
+        مصادر أبشر:
+        <a href="https://docs.google.com/spreadsheets/d/1-O91eSIvOUJEuSIDnHoaS21OHMnVc3anpw0jAVw_krs/edit?usp=sharing" target="_blank" rel="noopener noreferrer">أبشر (كلمات)</a>،
+        <a href="https://docs.google.com/spreadsheets/d/1nwVsA24SzxqITv_-jVQ_rQWxQ4eqpGJmIifyxZq2jsY/edit?usp=sharing" target="_blank" rel="noopener noreferrer">أبشر (عبارات)</a>،
+        <a href="https://docs.google.com/spreadsheets/d/1HAUXQnbA8L4dhFNEx-XQA67OeOaO5lpwX5RUMgC3swQ/edit?usp=sharing" target="_blank" rel="noopener noreferrer">أبشر (أمثال)</a>،
+        <a href="https://www.absher.sa" target="_blank" rel="noopener noreferrer">موقع أبشر</a>.
+      </p>
     </div>
+
     <ul class="footer-links">
-     <li><a href="#main">العودة للأعلى</a></li>
+      <li><a href="#main">العودة للأعلى</a></li>
     </ul>
-   </div>
-  </footer>
+
+    <!-- زر جديد بالأسفل بالمنتصف -->
+    <div class="footer-cta">
+      <a class="footer-contributors-btn" href="Contributors-ar.php">فريق العمل</a>
+    </div>
+  </div>
+</footer>
 
    <!-- Scripts -->
   <script src="assets/script.js"></script>

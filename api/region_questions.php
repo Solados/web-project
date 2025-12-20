@@ -154,7 +154,7 @@ function extractFullCorrectAnswer($text) {
 }
 
 /* ----------------------------------------------
-   تحويل choices النصية إلى مصفوفة [A => text]
+  Convert text choices to an array [A => text]
 -----------------------------------------------*/
 function parseChoices($choicesText) {
     $choices = [];
@@ -173,18 +173,18 @@ function parseChoices($choicesText) {
 }
 
 /* ----------------------------------------------
-   استخراج نص الإجابة من Answer + Choices
+  Extracting the answer text from Answer + Choices
 -----------------------------------------------*/
 function extractEnglishAnswerTextByType($answerLetters, $choicesText, $questionType) {
     if (!$answerLetters || !$choicesText) return "";
 
     $choices = parseChoices($choicesText);
 
-    // استخراج جميع الحروف (A, B, C...)
+    // Extract all letters (A, B, C...)
     preg_match_all('/[A-Z]/', $answerLetters, $matches);
     $letters = $matches[0];
 
-    // MCQ (one correct) → أول حرف فقط
+    // MCQ (one correct) → first letter only
     if (stripos($questionType, 'one correct') !== false) {
         $letters = array_slice($letters, 0, 1);
     }
@@ -200,7 +200,7 @@ function extractEnglishAnswerTextByType($answerLetters, $choicesText, $questionT
 }
 
 /* ----------------------------------------------
-   تحميل الأسئلة الإنجليزية
+  Loading English Questions
 -----------------------------------------------*/
 function loadEnglishQuestions($dataDir, $files) {
     $output = [];
@@ -216,7 +216,7 @@ function loadEnglishQuestions($dataDir, $files) {
 
             if ($q === '' || $a === '') continue;
 
-            // لو السؤال MCQ → استخرج نص الإجابة من Choices
+            // If the question is MCQ → extract the answer text from Choices
             $finalAnswer = $a;
 
             $questionType = strtolower(trim($r["Question Type"] ?? ""));
@@ -242,7 +242,7 @@ function loadEnglishQuestions($dataDir, $files) {
 }
 
 /* ----------------------------------------------
-   تحميل الأسئلة العربية من Words / Phrases / Proverbs
+  Loading Arabic Questions from Words / Phrases / Proverbs
 -----------------------------------------------*/
 function loadArabicQuestions($dataDir, $dialectsLower) {
     $result = [];
@@ -258,7 +258,7 @@ function loadArabicQuestions($dataDir, $dialectsLower) {
             $dialect = strtolower(trim($row['Dialect type'] ?? ''));
             if (!in_array($dialect, $dialectsLower)) continue;
 
-            // الأعمدة الأخرى كبلوكات
+            // Other columns as blocks
             $blockColumns = [
                 'Location_Recognition_question',
                 'Cultural_Interpretation_question',
@@ -293,7 +293,7 @@ function loadArabicQuestions($dataDir, $dialectsLower) {
 }
 
 /* ----------------------------------------------
-   جمع الأسئلة للموقع
+  Questions collected for the website
 -----------------------------------------------*/
 $config        = $regionConfig[$file];
 $dialectsLower = array_map('strtolower', $config['dialects']);
@@ -315,7 +315,6 @@ if ($lang !== 'all') {
     }));
 }
 
-// لا نستخدم التقسيم هنا — JS يتكفل بالصفحات
 echo json_encode([
     'questions' => $questions
 ], JSON_UNESCAPED_UNICODE);
