@@ -354,20 +354,34 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
 	 </section>
 	</main>
 
-	<!-- Footer -->
-	<footer class="site-footer" aria-label="footer">
-	 <div class="container footer-grid">
-		<div>
-		 <strong>Hawiyya</strong>
-		 <p>© 2025 All rights reserved</p>
-     <p class="footer-sources">Sources: <a href="https://github.com/LamaAy/SaudiCulture-Dataset" target="_blank" rel="noopener noreferrer">SaudiCulture-Dataset</a>, Absher sources: <a href="https://docs.google.com/spreadsheets/d/1-O91eSIvOUJEuSIDnHoaS21OHMnVc3anpw0jAVw_krs/edit?usp=sharing" target="_blank" rel="noopener noreferrer">Absher (Words)</a>, <a href="https://docs.google.com/spreadsheets/d/1nwVsA24SzxqITv_-jVQ_rQWxQ4eqpGJmIifyxZq2jsY/edit?usp=sharing" target="_blank" rel="noopener noreferrer">Absher (Phrases)</a>, <a href="https://docs.google.com/spreadsheets/d/1HAUXQnbA8L4dhFNEx-XQA67OeOaO5lpwX5RUMgC3swQ/edit?usp=sharing" target="_blank" rel="noopener noreferrer">Absher (Proverbs)</a>, <a href="https://www.absher.sa" target="_blank" rel="noopener noreferrer">Absher website</a>.</p>
-		</div>
-		<ul class="footer-links">
-		 <li><a href="#top">Back to Top</a></li>
-		 <li><a href="#main">Questions & Answers</a></li>
-		</ul>
-	 </div>
-	</footer>
+<!-- Footer -->
+<footer class="site-footer" aria-label="footer">
+  <div class="container footer-grid">
+    <div>
+      <strong>Hawiyya</strong>
+      <p>© 2025 All rights reserved</p>
+      <p class="footer-sources">
+        Sources:
+        <a href="https://github.com/LamaAy/SaudiCulture-Dataset" target="_blank" rel="noopener noreferrer">SaudiCulture-Dataset</a>,
+        Absher sources:
+        <a href="https://docs.google.com/spreadsheets/d/1-O91eSIvOUJEuSIDnHoaS21OHMnVc3anpw0jAVw_krs/edit?usp=sharing" target="_blank" rel="noopener noreferrer">Absher (Words)</a>,
+        <a href="https://docs.google.com/spreadsheets/d/1nwVsA24SzxqITv_-jVQ_rQWxQ4eqpGJmIifyxZq2jsY/edit?usp=sharing" target="_blank" rel="noopener noreferrer">Absher (Phrases)</a>,
+        <a href="https://docs.google.com/spreadsheets/d/1HAUXQnbA8L4dhFNEx-XQA67OeOaO5lpwX5RUMgC3swQ/edit?usp=sharing" target="_blank" rel="noopener noreferrer">Absher (Proverbs)</a>,
+        <a href="https://www.absher.sa" target="_blank" rel="noopener noreferrer">Absher website</a>.
+      </p>
+    </div>
+
+    <ul class="footer-links">
+      <li><a href="#top">Back to Top</a></li>
+      <li><a href="#main">Questions & Answers</a></li>
+    </ul>
+
+    <!-- New: Contributors button -->
+    <div class="footer-cta">
+      <a class="footer-contributors-btn" href="Contributors.php">Contributors</a>
+    </div>
+  </div>
+</footer>
 	<!-- Chatbase Script -->
 	<script>
 (function(){if(!window.chatbase||window.chatbase("getState")!=="initialized"){window.chatbase=(...arguments)=>{if(!window.chatbase.q){window.chatbase.q=[]}window.chatbase.q.push(arguments)};window.chatbase=new Proxy(window.chatbase,{get(target,prop){if(prop==="q"){return target.q}return(...args)=>target(prop,...args)}})}const onLoad=function(){const script=document.createElement("script");script.src="https://www.chatbase.co/embed.min.js";script.id="PkSRl6nFY3Csgenh8koIS";script.domain="www.chatbase.co";document.body.appendChild(script)};if(document.readyState==="complete"){onLoad()}else{window.addEventListener("load",onLoad)}})();
