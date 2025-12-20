@@ -104,7 +104,7 @@ function extractEnglishAnswerTextByType($answerLetters, $choicesText, $questionT
   preg_match_all('/[A-Z]/', $answerLetters, $matches);
   $letters = $matches[0];
 
-  // ✅ أهم نقطة: one correct = نأخذ أول حرف فقط
+// one correct = we only take the first letter
   if (stripos($questionType, 'one correct') !== false) {
     $letters = array_slice($letters, 0, 1);
   }
@@ -116,7 +116,7 @@ function extractEnglishAnswerTextByType($answerLetters, $choicesText, $questionT
 
 /* ---------- Load ALL English ---------- */
 function loadEnglishQuestionsAll($dataDir) {
-  // عدّل أسماء الملفات حسب الموجود عندك داخل data/
+  // Adjust file names according to what you have inside data/
   $files = ['GENERAL.csv','NORTH.csv','SOUTH.csv','EAST.csv','WEST.csv','CENTERAL.csv'];
   $output = [];
 
@@ -150,7 +150,7 @@ function loadEnglishQuestionsAll($dataDir) {
 
 /* ---------- Load ALL Arabic ---------- */
 function loadArabicQuestionsAll($dataDir) {
-  // عدّل أسماء الملفات حسب الموجود عندك داخل data/
+  // Adjust file names according to what you have inside data/
   $arabicFiles = ['Words.csv', 'Phrases.csv', 'Proverbs.csv'];
   $blockColumns = [
     'Location_Recognition_question',

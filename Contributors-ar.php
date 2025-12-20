@@ -92,62 +92,148 @@ if (session_status() === PHP_SESSION_NONE) {
 
       <div class="team-grid" aria-label="أعضاء الفريق">
 
+        <!-- Member 1: Hisham -->
         <article class="member-card">
-          <div class="member-avatar-wrap">
-            <img class="member-avatar" src="image/Hisham.jpg" alt="صورة العضو">
-          </div>
+        <div class="member-avatar-wrap">
+            <img class="member-avatar" src="image/Hisham.jpg" alt="صورة العضو: هشام آل مفرح">
+        </div>
 
-          <h2 class="member-name">هشام آل مفرح</h2>
-          <p class="member-role">Backend Developer</p>
+        <h2 class="member-name">هشام آل مفرح</h2>
+        <p class="member-role">Frontend Developer & Data Presentation</p>
 
-          <ul class="member-tasks">
-            <li>تنفيذ واجهات الصفحات وتنسيقها</li>
-            <li>تحسين الاستجابة لمختلف الشاشات</li>
-            <li>تحسين تجربة المستخدم في عرض الأسئلة</li>
-          </ul>
+        <ul class="member-tasks">
+            <li>تحليل البيانات وتطوير طريقة عرضها في جميع صفحات الموقع.</li>
+            <li>تحسين تجربة التنقل عبر تعديل ترتيب عناصر النافبار.</li>
+            <li>تطوير شريط البحث وتحسين أدائه داخل الموقع.</li>
+            <li>تطوير صفحة الكويز الإنجليزية.</li>
+            <li>إضافة فلاتر لعرض البيانات في الصفحات الرئيسية.</li>
+            <li>إنشاء صفحة المساهمين وتوثيق مساهمة كل عضو.</li>
+            <li>دمج أسئلة المستخدمين ضمن عرض الأسئلة.</li>
+            <li>تطوير صفحة المنطقة الجنوبية وتحديث صور السلايدر لتبرز المدن الرئيسية.</li>
+        </ul>
 
-          <div class="member-links">
-            <a class="member-link" href="#" target="_blank" rel="noopener">GitHub</a>
-            <a class="member-link" href="#" target="_blank" rel="noopener">LinkedIn</a>
-          </div>
+        <div class="member-links">
+            <a class="member-link" href="https://github.com/HishamMufarreh" target="_blank" rel="noopener">GitHub</a>
+            <a class="member-link" href="https://www.linkedin.com/in/hisham-mufarreh" target="_blank" rel="noopener">LinkedIn</a>
+            <a class="member-link" href="mailto:hs.mufarreh@gmail.com">Gmail</a>
+        </div>
         </article>
 
+        <!-- Member 2: Muhammed -->
         <article class="member-card">
-          <div class="member-avatar-wrap">
-            <img class="member-avatar" src="image/Muhammed.jpeg" alt="صورة العضو">
-          </div>
+        <div class="member-avatar-wrap">
+            <img class="member-avatar" src="image/Muhammed.jpeg" alt="صورة العضو: محمد المسعودي">
+        </div>
 
-          <h2 class="member-name">محمد المسعودي</h2>
-          <p class="member-role">Frontend Developer</p>
+        <h2 class="member-name">محمد المسعودي</h2>
+        <p class="member-role">UI Developer & Data Visualization</p>
 
-          <ul class="member-tasks">
-            <li>تطوير منطق البحث/الفلترة</li>
-            <li>إدارة الجلسات وتسجيل الدخول</li>
-            <li>تنظيم ملفات البيانات وربطها</li>
-          </ul>
+        <ul class="member-tasks">
+            <li>تحسين إحصائيات الاختبار وتوضيح عرض البيانات والألوان.</li>
+            <li>تحسين تصميم صفحة الكويز وتطوير شكل الفلاتر لتصبح أكثر احترافية.</li>
+            <li>تحسين تصميم صفحة تسجيل الدخول لتطابق ثيم الموقع.</li>
+            <li>تطوير صفحة المنطقة الغربية وتحديث صور السلايدر لتبرز المدن الرئيسية.</li>
+        </ul>
 
-          <div class="member-links">
-            <a class="member-link" href="#" target="_blank" rel="noopener">GitHub</a>
-          </div>
+        <div class="member-links">
+            <a class="member-link" href="https://github.com/lLweesl" target="_blank" rel="noopener">GitHub</a>
+            <a class="member-link" href="mailto:sasfe90@gmail.com">Gmail</a>
+        </div>
         </article>
 
+        <!-- Member 3: Mazen -->
         <article class="member-card">
-          <div class="member-avatar-wrap">
-            <img class="member-avatar" src="image/team/member3.jpg" alt="صورة العضو">
-          </div>
+        <div class="member-avatar-wrap">
+            <img class="member-avatar" src="image/Personal-photo.jpg" alt="صورة العضو: مازن الزهراني">
+        </div>
 
-          <h2 class="member-name">الاسم هنا</h2>
-          <p class="member-role">UI/UX + Content</p>
+        <h2 class="member-name">مازن الزهراني</h2>
+        <p class="member-role">Frontend Developer & Responsiveness</p>
 
-          <ul class="member-tasks">
-            <li>تحديد الهوية البصرية (ألوان/مسافات/خطوط)</li>
-            <li>تجهيز محتوى المناطق والأسئلة</li>
-            <li>مراجعة الاتساق بين العربية والإنجليزية</li>
-          </ul>
+        <ul class="member-tasks">
+            <li>تنفيذ تحسينات عامة للواجهة (توجيه الشعار للرئيسية ومعالجة مشاكل السلايدر).</li>
+            <li>المساهمة في تطوير صفحة البروفايل وتحسين توافقها مع تصميم الموقع.</li>
+            <li>تنقيح وتنظيم الكود وتحسين هيكلية المشروع.</li>
+            <li>بناء الصفحات والمكونات الرئيسية لواجهة المستخدم.</li>
+            <li>تحسين توافق الموقع مع مختلف أحجام الشاشات (Responsive).</li>
+            <li>تطوير صفحة المنطقة الشمالية وتحديث صور السلايدر لتبرز المدن الرئيسية.</li>
+        </ul>
 
-          <div class="member-links">
+        <div class="member-links">
+            <a class="member-link" href="https://github.com/Mazen-Alzahrani" target="_blank" rel="noopener">GitHub</a>
+            <a class="member-link" href="https://www.linkedin.com/in/%D9%85%D8%A7%D8%B2%D9%86-%D8%A7%D9%84%D8%B2%D9%87%D8%B1%D8%A7%D9%86%D9%8A-850889274/" target="_blank" rel="noopener">LinkedIn</a>
+            <a class="member-link" href="mailto:mazenhmz10@gmail.com">Gmail</a>
+        </div>
+        </article>
+
+        <!-- Member 4: Mansour -->
+        <article class="member-card">
+        <div class="member-avatar-wrap">
+            <img class="member-avatar" src="image/Personal-photo.jpg" alt="صورة العضو: منصور المقاطي">
+        </div>
+
+        <h2 class="member-name">منصور المقاطي</h2>
+        <p class="member-role">Backend Developer & Deployment</p>
+
+        <ul class="member-tasks">
+            <li>رفع الموقع على الاستضافة وتجهيز تشغيله على الهوست.</li>
+            <li>تطوير ميزة إضافة المستخدمين لأسئلة داخل الموقع.</li>
+            <li>ضبط صفحة الكويز وربط فلاتره بقاعدة البيانات.</li>
+            <li>تطوير شات بوت للمساعدة داخل الموقع.</li>
+            <li>إنشاء صفحة البروفايل وربطها بباقي أجزاء الموقع.</li>
+        </ul>
+
+        <div class="member-links">
+            <a class="member-link" href="https://github.com/Solados" target="_blank" rel="noopener">GitHub</a>
+            <a class="member-link" href="https://www.linkedin.com/in/manssor-almuqati-5414aa387/" target="_blank" rel="noopener">LinkedIn</a>
+            <a class="member-link" href="mailto:manssorralmuqati@gmail.com">Gmail</a>
+        </div>
+        </article>
+
+        <!-- Member 5: Anas -->
+        <article class="member-card">
+        <div class="member-avatar-wrap">
+            <img class="member-avatar" src="image/Personal-photo.jpg" alt="صورة العضو: أنس القايدي">
+        </div>
+
+        <h2 class="member-name">أنس القايدي</h2>
+        <p class="member-role">Frontend Features & UX</p>
+
+        <ul class="member-tasks">
+            <li>تطوير أزرار التفاعل مع الأسئلة (المفضلة، المشاركة، النسخ).</li>
+            <li>ربط الأسئلة المفضلة بصفحة مخصصة وتحسين تصميم صفحة المفضلة.</li>
+            <li>دعم تعدد اللغات وتحسين تجربة التبديل بين اللغات.</li>
+            <li>إضافة إحصائيات الاختبار.</li>
+            <li>تطوير ميزة مشاركة نتائج الاختبار على منصات التواصل الاجتماعي.</li>
+            <li>تطوير صفحة المنطقة الشرقية وتحديث صور السلايدر لتبرز المدن الرئيسية.</li>
+        </ul>
+
+        <div class="member-links">
+            <a class="member-link" href="https://github.com/Anas-dev11" target="_blank" rel="noopener">GitHub</a>
+            <a class="member-link" href="https://www.linkedin.com/in/anas-alqaidi-7177a8218/" target="_blank" rel="noopener">LinkedIn</a>
+            <a class="member-link" href="mailto:anas34rt@gmail.com">Gmail</a>
+        </div>
+        </article>
+
+        <!-- Member 6: Abdulrahman -->
+        <article class="member-card">
+        <div class="member-avatar-wrap">
+            <img class="member-avatar" src="image/Personal-photo.jpg" alt="صورة العضو: عبدالرحمن الحمدان">
+        </div>
+
+        <h2 class="member-name">عبدالرحمن الحمدان</h2>
+        <p class="member-role">Branding & Localization</p>
+
+        <ul class="member-tasks">
+            <li>إضافة هوية الموقع وتوحيد العناصر البصرية بما يتوافق مع التصميم العام.</li>
+            <li>المساهمة في دعم تعدد اللغات وتحسين تجربة عرض المحتوى.</li>
+            <li>تطوير صفحة المنطقة الوسطى وتحديث صور السلايدر لتبرز المدن الرئيسية.</li>
+        </ul>
+
+        <div class="member-links">
+            <a class="member-link" href="#" target="_blank" rel="noopener">GitHub</a>
             <a class="member-link" href="#" target="_blank" rel="noopener">LinkedIn</a>
-          </div>
+        </div>
         </article>
 
       </div>
@@ -155,6 +241,35 @@ if (session_status() === PHP_SESSION_NONE) {
   </section>
 
 </main>
+
+<footer class="site-footer" aria-label="تذييل الصفحة">
+  <div class="container footer-grid">
+    <div>
+      <strong>هويّة</strong>
+      <p>© 2025 جميع الحقوق محفوظة</p>
+      <p class="footer-sources">
+        المصادر:
+        <a href="https://github.com/LamaAy/SaudiCulture-Dataset" target="_blank" rel="noopener noreferrer">SaudiCulture-Dataset</a>،
+        مصادر أبشر:
+        <a href="https://docs.google.com/spreadsheets/d/1-O91eSIvOUJEuSIDnHoaS21OHMnVc3anpw0jAVw_krs/edit?usp=sharing" target="_blank" rel="noopener noreferrer">أبشر (كلمات)</a>،
+        <a href="https://docs.google.com/spreadsheets/d/1nwVsA24SzxqITv_-jVQ_rQWxQ4eqpGJmIifyxZq2jsY/edit?usp=sharing" target="_blank" rel="noopener noreferrer">أبشر (عبارات)</a>،
+        <a href="https://docs.google.com/spreadsheets/d/1HAUXQnbA8L4dhFNEx-XQA67OeOaO5lpwX5RUMgC3swQ/edit?usp=sharing" target="_blank" rel="noopener noreferrer">أبشر (أمثال)</a>،
+        <a href="https://www.absher.sa" target="_blank" rel="noopener noreferrer">موقع أبشر</a>.
+      </p>
+    </div>
+
+    <ul class="footer-links">
+      <li><a href="#main">العودة للأعلى</a></li>
+    </ul>
+
+    <!-- زر جديد بالأسفل بالمنتصف -->
+    <div class="footer-cta">
+      <a class="footer-contributors-btn" href="Contributors-ar.php">فريق العمل</a>
+    </div>
+  </div>
+</footer>
+
+
 
 <script src="assets/script.js"></script>
 </body>

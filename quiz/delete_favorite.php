@@ -16,10 +16,10 @@ if($index < 0 || $index >= count($lines)){
     exit('Invalid index');
 }
 
-// إزالة السطر المحدد
+// Remove the specified line
 unset($lines[$index]);
 
-// إعادة كتابة الملف
+// Rewrite the file
 file_put_contents($file, implode("\n", $lines) . "\n");
 
 echo 'Question removed from favorites!';

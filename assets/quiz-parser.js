@@ -357,29 +357,27 @@
       // apply TYPE filter (Question Type)
 if (type && String(type).toLowerCase() !== 'all') {
 
-  // نحول النوع إلى شكل موحد (عشان ما يصير تداخل)
   function canonType(s) {
     const t = String(s || '').toLowerCase().trim();
     if (t.includes('multiple')) return 'multi';
     if (t.includes('one')) return 'one';
     if (t.includes('open')) return 'open';
-    // بعض الملفات قد تكتبها بشكل مختلف
     if (t.includes('fill')) return 'open';
     return t;
   }
 
   const requested = canonType(type);
 
-  // أهم شيء: ندعم "Question Type" (يصير مفتاحه 'question type')
+  // Question Type
   const typeKeys = ['question type', 'type', 'question_type', 'questiontype', 'qtype', 'question-type'];
   const found = findHeaderKey(typeKeys);
 
   if (found !== null) {
-    // فلترة صارمة من العمود نفسه
+    // Filter from the same column
     const idx = hmap[found];
     filteredRows = filteredRows.filter(r => canonType(r[idx]) === requested);
   } else {
-    // fallback heuristic فقط إذا ما فيه عمود نوع
+    // fallback heuristic only if no type column
     const choicesKeys = ['choices', 'choice', 'options'];
     const choicesKey = findHeaderKey(choicesKeys);
     if (choicesKey !== null) {
@@ -388,7 +386,7 @@ if (type && String(type).toLowerCase() !== 'all') {
       if (requested === 'open') {
         filteredRows = filteredRows.filter(r => !r[cidx] || String(r[cidx]).trim() === '' || String(r[cidx]).trim() === '–');
       } else {
-        // one أو multi: لازم تكون choices موجودة
+        // one or multi: choices must be available
         filteredRows = filteredRows.filter(r => r[cidx] && String(r[cidx]).trim() !== '' && String(r[cidx]).trim() !== '–');
       }
     }
@@ -539,7 +537,7 @@ if (type && String(type).toLowerCase() !== 'all') {
         const raw = String(r[idx] || '').trim();
         if (!raw) continue;
 
-        // لو في خلية فيها أكثر من تصنيف مفصول بفواصل/؛/|
+        // If a cell contains more than one category separated by commas
         raw.split(/[,;|/]+/).forEach(part => {
           const v = String(part || '').trim();
           if (!v) return;
