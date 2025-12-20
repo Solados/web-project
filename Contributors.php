@@ -126,7 +126,7 @@ if (session_status() === PHP_SESSION_NONE) {
             <img class="member-avatar" src="image/Muhammed.jpeg" alt="Member photo">
         </div>
 
-        <h2 class="member-name">Muhammed Al-Masoudi</h2>
+        <h2 class="member-name">Muhammed Almasoudi</h2>
         <p class="member-role">UI Developer & Data Visualization</p>
 
         <ul class="member-tasks">
