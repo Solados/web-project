@@ -152,7 +152,7 @@ if (session_status() === PHP_SESSION_NONE) {
           Your browser does not support the video tag.
         </video>
         <div class="video-overlay">
-          <h1 class="video-welcome" id="video-welcome">Welcome in Saudi Arabia</h1>
+          <h1 class="video-welcome" id="video-welcome">Welcome to Hawiyya website</h1>
         </div>
         <button id="video-toggle" aria-pressed="false" aria-label="Pause video">Pause</button>
       </div>
@@ -162,8 +162,8 @@ if (session_status() === PHP_SESSION_NONE) {
     <section id="overview" class="section section-intro">
       <div class="container">
         <div class="overview-card sr-hidden">
-          <h2>About Hawiyyah</h2>
-          <p>Hawiyyah provides thousands of authentic questions and interactive quizzes to help learners explore Saudi traditions, language, and regions.</p>
+          <h2>About Hawiyya</h2>
+          <p>Hawiyya provides thousands of authentic questions and interactive quizzes to help learners explore Saudi traditions, language, and regions.</p>
         </div>
       </div>
     </section>

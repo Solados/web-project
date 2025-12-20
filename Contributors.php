@@ -82,7 +82,7 @@ if (session_status() === PHP_SESSION_NONE) {
       <div class="team-intro">
         <h1>Contributors</h1>
         <p>
-          This page highlights the people who contributed to building Hawiyyah and a short summary of what each person worked on.
+          This page highlights the people who contributed to building Hawiyya and a short summary of what each person worked on.
         </p>
       </div>
     </div>

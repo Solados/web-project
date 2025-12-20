@@ -152,7 +152,7 @@ $USER_EMAIL = $_SESSION['user_email'] ?? "";
           متصفحك لا يدعم الفيديو.
         </video>
         <div class="video-overlay">
-          <h1 class="video-welcome" id="video-welcome-ar">مرحباً بكم في السعودية</h1>
+          <h1 class="video-welcome" id="video-welcome-ar">مرحباً بكم في موقع هويّة</h1>
         </div>
         <button id="video-toggle-ar" aria-pressed="false" aria-label="إيقاف الفيديو">إيقاف</button>
       </div>
