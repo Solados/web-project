@@ -1,50 +1,61 @@
 <div class="add-question-form">
-  <h3>أضف سؤالاً جديداً</h3>
+  <h3>Add New Question</h3>
   <form id="addQuestionForm">
     <div class="form-group">
-      <label>نوع السؤال:</label>
+      <label>Question Type:</label>
       <select id="questionType" class="quiz-gold-select" required>
-        <option value="Location_Recognition_question">تعرّف على الموقع</option>
-        <option value="Cultural_Interpretation_question">التفسير الثقافي</option>
-        <option value="Contextual_Usage_question">الاستخدام السياقي</option>
-        <option value="Fill_in_Blank_question">املأ الفراغ</option>
-        <option value="True_False_question">صح أم خطأ</option>
-        <option value="Meaning_question">معنى الكلمة</option>
+        <option value="Open-ended">Open-ended</option>
+        <option value="MCQ (one correct)">Multiple Choice (one correct)</option>
+        <option value="MCQ (multiple correct)">Multiple Choice (multiple correct)</option>
+        <option value="True/False">True/False</option>
+        <option value="Fill in Blank">Fill in the Blank</option>
       </select>
     </div>
     
     <div class="form-group">
-      <label>اللهجة:</label>
-      <select id="questionDialect" class="quiz-gold-select" required>
-        <option value="northern">شمالي</option>
-        <option value="southern">جنوبي</option>
-        <option value="eastern">شرقي</option>
-        <option value="western">غربي</option>
-        <option value="central">وسطى</option>
-        <option value="general">عام</option>
+      <label>Domain:</label>
+      <select id="domain" class="quiz-gold-select" required>
+        <option value="Common">Common</option>
+        <option value="Specialized">Specialized</option>
       </select>
     </div>
     
     <div class="form-group">
-      <label>نص السؤال:</label>
-      <textarea id="questionText" class="quiz-gold-textarea" placeholder="اكتب السؤال هنا..." required></textarea>
+      <label>Category:</label>
+      <select id="category" class="quiz-gold-select" required>
+        <option value="Food">Food</option>
+        <option value="Clothes">Clothes</option>
+        <option value="Celebration">Celebration</option>
+        <option value="Entertainment">Entertainment</option>
+        <option value="Crafts and Work">Crafts and Work</option>
+        <option value="Dating">Dating</option>
+        <option value="Languages and Communication">Languages and Communication</option>
+      </select>
     </div>
     
     <div class="form-group">
-      <label>الإجابة الصحيحة:</label>
-      <input type="text" id="correctAnswer" class="quiz-gold-input" placeholder="الإجابة الصحيحة" required>
+      <label>Question Text:</label>
+      <textarea id="question" class="quiz-gold-textarea" placeholder="Enter the question here..." required></textarea>
     </div>
     
     <div class="form-group">
-      <label>الخيارات (اختياري - للمتعدد):</label>
-      <textarea id="questionChoices" class="quiz-gold-textarea" placeholder="أ) الخيار الأول&#10;ب) الخيار الثاني&#10;ج) الخيار الثالث"></textarea>
-      <small>اكتب كل خيار في سطر جديد مع حرفه العربي (أ، ب، ج، د)</small>
+      <label>Correct Answer:</label>
+      <textarea id="answer" class="quiz-gold-textarea" placeholder="Correct answer (use comma for multiple answers)" required></textarea>
+      <small>For multiple answers, separate with commas (e.g., "Rice, Bread, Meat")</small>
     </div>
     
-    <button type="submit" class="quiz-gold-btn">إضافة السؤال</button>
+    <div class="form-group">
+      <label>Choices (for multiple choice questions):</label>
+      <textarea id="choices" class="quiz-gold-textarea" placeholder="A) Choice 1&#10;B) Choice 2&#10;C) Choice 3&#10;D) Choice 4"></textarea>
+      <small>Write each choice on a new line starting with letter (A., B., C., D.)<br>
+      For open-ended questions, leave empty or enter "–"</small>
+    </div>
+    
+    <button type="submit" class="quiz-gold-btn">Add Question</button>
     <div id="formMessage" style="margin-top: 10px;"></div>
   </form>
 </div>
+
 <style>
 .add-question-form {
   background: #f9f5eb;
@@ -77,25 +88,29 @@
 small {
   color: #8a6d3b;
   font-size: 13px;
+  display: block;
+  margin-top: 5px;
 }
 </style>
+
 <script>
-    document.getElementById('addQuestionForm').addEventListener('submit', async function(e) {
+document.getElementById('addQuestionForm').addEventListener('submit', async function(e) {
   e.preventDefault();
   console.log('Form submission started');
   
   // Get form values
   const formData = new URLSearchParams();
-  formData.append('type', document.getElementById('questionType').value);
-  formData.append('dialect', document.getElementById('questionDialect').value);
-  formData.append('question', document.getElementById('questionText').value);
-  formData.append('answer', document.getElementById('correctAnswer').value);
-  formData.append('choices', document.getElementById('questionChoices').value);
+  formData.append('question', document.getElementById('question').value);
+  formData.append('answer', document.getElementById('answer').value);
+  formData.append('choices', document.getElementById('choices').value);
+  formData.append('question_type', document.getElementById('questionType').value);
+  formData.append('domain', document.getElementById('domain').value);
+  formData.append('category', document.getElementById('category').value);
   
   console.log('Form data:', formData.toString());
   
   const messageDiv = document.getElementById('formMessage');
-  messageDiv.innerHTML = 'جارٍ إضافة السؤال...';
+  messageDiv.innerHTML = 'Adding question...';
   messageDiv.style.cssText = 'padding: 10px; margin: 10px 0; border-radius: 5px; background: #fff9ef; color: #4b2d1b;';
   
   try {
@@ -138,10 +153,9 @@ small {
     }
   } catch (error) {
     console.error('Fetch error:', error);
-    messageDiv.innerHTML = '❌ حدث خطأ في الاتصال بالخادم: ' + error.message;
+    messageDiv.innerHTML = '❌ Connection error: ' + error.message;
     messageDiv.style.background = '#ffebee';
     messageDiv.style.color = 'red';
   }
 });
 </script>
-

@@ -28,3 +28,93 @@ Files: Array
 
 CSV File Path: C:\Users\manss\Desktop\web-project/data/UserQuestions.csv
 File written successfully. Size: 301 bytes
+=== 2025-12-20 12:31:21 ===
+POST Data: Array
+(
+    [type] => True_False_question
+    [dialect] => northern
+    [question] => السلام
+    [answer] => صحيح
+    [choices] => أ) صحيح
+ب) خطأ
+)
+
+Session: Array
+(
+    [user_id] => 9071588a920474260e8b7aeccb43640f
+    [user_name] => solados1
+    [user_email] => solados1@gmail.com
+    [logged_in] => 1
+    [login_time] => 1766230277
+    [last_activity] => 1766230277
+    [ip_address] => 127.0.0.1
+    [user_agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0
+)
+
+Files: Array
+(
+)
+
+
+CSV File Path: C:\Users\manss\Desktop\web-project/data/UserQuestions-ar.csv
+File written successfully. Size: 308 bytes
+=== 2025-12-20 12:47:59 ===
+POST Data: Array
+(
+    [type] => Location_Recognition_question
+    [dialect] => northern
+    [question] => السلام
+    [answer] => صحيح
+    [choices] => أ) صحيح 
+ب) خطأ
+)
+
+Session: Array
+(
+    [user_id] => 9071588a920474260e8b7aeccb43640f
+    [user_name] => solados1
+    [user_email] => solados1@gmail.com
+    [logged_in] => 1
+    [login_time] => 1766230277
+    [last_activity] => 1766230277
+    [ip_address] => 127.0.0.1
+    [user_agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0
+)
+
+Files: Array
+(
+)
+
+
+CSV File Path: C:\Users\manss\Desktop\web-project/data/UserQuestions-ar.csv
+File written successfully. Size: 541 bytes
+=== 2025-12-20 12:56:57 ===
+POST Data: Array
+(
+    [type] => Location_Recognition_question
+    [dialect] => northern
+    [question] => gg
+    [answer] => gg
+    [choices] => gg
+gg
+)
+
+Session: Array
+(
+    [user_id] => 9071588a920474260e8b7aeccb43640f
+    [user_name] => solados1
+    [user_email] => solados1@gmail.com
+    [logged_in] => 1
+    [login_time] => 1766230277
+    [last_activity] => 1766230277
+    [ip_address] => 127.0.0.1
+    [user_agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0
+)
+
+Files: Array
+(
+)
+
+
+CSV File Path: C:\Users\manss\Desktop\web-project/data/UserQuestions-ar.csv
+File written successfully. Size: 775 bytes
