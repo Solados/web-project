@@ -264,7 +264,7 @@ if (session_status() === PHP_SESSION_NONE) {
 
     <!-- زر جديد بالأسفل بالمنتصف -->
     <div class="footer-cta">
-      <a class="footer-contributors-btn" href="Contributors-ar.php">المساهمين</a>
+      <a class="footer-contributors-btn" href="Contributors-ar.php">فريق العمل</a>
     </div>
   </div>
 </footer>
