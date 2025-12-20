@@ -262,8 +262,7 @@ if (session_status() === PHP_SESSION_NONE) {
     </div>
 
     <ul class="footer-links">
-      <li><a href="#top">Back to Top</a></li>
-      <li><a href="#main">Questions & Answers</a></li>
+      <li><a href="#main">Back to Top</a></li>
     </ul>
 
     <!-- New: Contributors button -->
