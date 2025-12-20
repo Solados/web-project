@@ -81,18 +81,17 @@ if (carouselDom) {
 }
 
 
-// القائمة المنسدلة للمناطق
+// Drop-down list of regions
 const dropdown = document.querySelector('.dropdown');
 const dropbtn = dropdown?.querySelector('.dropbtn');
 
 if (dropdown && dropbtn) {
-  // عند الضغط على زر القائمة فقط
   dropbtn.addEventListener('click', function (e) {
-    e.preventDefault(); // يمنع التنقل عن الزر نفسه فقط
+    e.preventDefault(); 
     dropdown.classList.toggle('show');
   });
 
-  // إغلاق القائمة إذا ضغط المستخدم خارجها
+  // Close the dropdown if the user clicks outside of it
   window.addEventListener('click', function (e) {
     if (!e.target.closest('.dropdown')) {
       dropdown.classList.remove('show');

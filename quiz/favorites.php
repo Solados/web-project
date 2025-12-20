@@ -18,7 +18,7 @@ if (file_exists($file)) {
 <link rel="stylesheet" href="../assets/styles.css">
 <link rel="stylesheet" href="../assets/quiz-style.css">
 <style>
-/* Modal التأكيد */
+/* Confirmation Modal */
 #confirmModal {
     display: none;
     position: fixed;

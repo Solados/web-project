@@ -24,7 +24,7 @@ body {
     overflow-x: hidden;
 }
 
-/* حركة الانزلاق الهادئ للخلفية */
+/* Smooth sliding animation for background */
 @keyframes gradientMove {
     0%   { background-position: 0% 50%; }
     50%  { background-position: 100% 50%; }
@@ -52,7 +52,7 @@ body::before {
     opacity: 0.45;
 }
 
-/* حركة الخطوط الذهبية */
+/* Golden Lines Movement */
 @keyframes linesMove {
     0%   { transform: translateX(-20px); }
     50%  { transform: translateX(20px); }
@@ -260,7 +260,7 @@ margin-top: 18px;
   0% { left: -120%; }
   100% { left: 150%; }
 }
-/* الصندوق */
+/* The Box */
 .score-box {
   background: #fff;
   padding: 20px;
@@ -282,7 +282,7 @@ margin-top: 18px;
   transform: translateY(0);
 }
 
-/* العنوان */
+/* The Title */
 .score-title {
   margin: 0 0 10px;
   font-size: 22px;
@@ -290,14 +290,14 @@ margin-top: 18px;
   font-weight: 600;
 }
 
-/* الرقم */
+/* The Number */
 .score-main {
   font-size: 32px;
   font-weight: bold;
   color: #333;
 }
 
-/* التولتيب */
+/* The Tooltip */
 .tooltip {
   position: absolute;
   bottom: 110%;
@@ -315,7 +315,7 @@ margin-top: 18px;
   transition: 0.3s ease;
 }
 
-/* السهم */
+/* The Arrow */
 .tooltip::after {
   content: "";
   position: absolute;
@@ -327,7 +327,7 @@ margin-top: 18px;
   border-color: #333 transparent transparent transparent;
 }
 
-/* يظهر التولتيب عند مرور الماوس */
+/* Shows the tooltip on hover */
 .score-box:hover .tooltip {
   opacity: 1;
   bottom: 120%;

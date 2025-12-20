@@ -399,8 +399,6 @@ body { overflow-x: hidden; }
   text-align: left;
 }
 
-/* Arrows */
-/* تأكيد أن السلايدر هو المرجع */
 .carousel {
   position: relative;
 }
@@ -408,8 +406,8 @@ body { overflow-x: hidden; }
 /* ===== FIXED SLIDER ARROWS ===== */
 .arrows {
   position: absolute;
-  bottom: 100px;          /* ثابت من الأسفل */
-  left: 40%;             /* منتصف السلايدر */
+  bottom: 100px;          
+  left: 40%;            
   transform: translateX(-50%);
   z-index: 200;
 
@@ -769,7 +767,6 @@ body { overflow-x: hidden; }
   font-size: 17px;
 }
 
-/* إصلاح الهيدر بحيث لا يمنع القائمة من العمل */
 .site-header {
     position: fixed;
     top: 0;
@@ -777,7 +774,6 @@ body { overflow-x: hidden; }
     z-index: 9999;
 }
 
-/* إصلاح ظهور القائمة فوق كل العناصر */
 .navbar {
     position: relative;
     z-index: 9999;
@@ -788,7 +784,6 @@ body { overflow-x: hidden; }
     z-index: 9999;
 }
 
-/* القائمة المنسدلة */
 .navbar .dropdown {
     position: relative;
     z-index: 99999;
@@ -807,7 +802,6 @@ body { overflow-x: hidden; }
     z-index: 100000;
 }
 
-/* ظهور القائمة */
 .navbar .dropdown:hover .dropdown-content {
     display: block;
 }
@@ -820,7 +814,6 @@ body { overflow-x: hidden; }
     list-style: none;
 }
 
-/* التصميم الأصلي */
 .navbar .dropdown-content {
     position: absolute;
     top: 100%;
@@ -834,7 +827,6 @@ body { overflow-x: hidden; }
     z-index: 99999;
 }
 
-/* زر داخل القائمة */
 .navbar .dropdown-content li a {
     display: block;
     padding: 14px 20px;
@@ -844,17 +836,14 @@ body { overflow-x: hidden; }
     transition: 0.2s ease;
 }
 
-/* عند المرور */
 .navbar .dropdown-content li a:hover {
     background: #f3f3f3;
 }
 
-/* إظهار القائمة */
 .navbar .dropdown:hover .dropdown-content {
     display: block;
 }
 
-/* تأكيد ظهور الأسئلة الإنجليزية من اليسار لليمين فقط */
 .feature-card.en h3,
 .feature-card.en p {
     direction: ltr !important;
@@ -904,7 +893,6 @@ body { overflow-x: hidden; }
   cursor: pointer;
 }
 
-/* Search bar داخل صفحة Search.php */
 .page-search{
   display:flex;
   gap:10px;
@@ -1040,8 +1028,8 @@ body { overflow-x: hidden; }
     0 10px 28px rgba(0,0,0,0.8);
 }
 .carousel .list .item .content[dir="ltr"] {
-  padding-left: 36px;   /* زِد أو قلّل حسب الذوق */
-  padding-right: 24px;  /* توازن مع الطرف الآخر */
+  padding-left: 36px;   
+  padding-right: 24px;  
 }
 
 /* ===========================
@@ -1049,7 +1037,7 @@ body { overflow-x: hidden; }
    =========================== */
 
 .page-content{
-  padding-top: 90px; /* so fixed navbar doesn't overlap content */
+  padding-top: 90px; 
 }
 
 .team-intro{
@@ -1076,16 +1064,14 @@ body { overflow-x: hidden; }
 .team-grid{
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-
-  /* بدل gap: 16px; */
-  column-gap: 18px;   /* أفقي */
-  row-gap: 70px;      /* عمودي (المهم هنا) */
+  column-gap: 18px;  
+  row-gap: 70px;    
 }
 
 @media (max-width: 560px){
   .team-grid{
     grid-template-columns: 1fr;
-    row-gap: 80px; /* أكبر شوي لأن الكروت فوق بعض */
+    row-gap: 80px; 
   }
 }
 
@@ -1095,7 +1081,7 @@ body { overflow-x: hidden; }
   background: rgba(255,255,255,.76);
   border: 1px solid var(--sand-200);
   border-radius: 1rem;
-  padding: 56px 16px 18px; /* top padding to make room for avatar */
+  padding: 56px 16px 18px; 
   box-shadow: var(--shadow-md);
 }
 
@@ -1136,7 +1122,7 @@ body { overflow-x: hidden; }
 
 .member-tasks{
   margin: 0;
-  padding-inline-start: 1.15rem; /* works for RTL/LTR */
+  padding-inline-start: 1.15rem; 
   color: var(--text-700);
   line-height: 1.8;
 }
@@ -1169,11 +1155,10 @@ body { overflow-x: hidden; }
   transform: translateY(-1px);
 }
 
-/* زر صفحة المساهمين في أسفل الفوتر */
 .footer-cta{
-  grid-column: 1 / -1;     /* سطر مستقل تحت */
+  grid-column: 1 / -1;    
   display: flex;
-  justify-content: flex-start; /* يمين */
+  justify-content: flex-start; 
   margin-top: 10px;
 }
 
