@@ -399,6 +399,7 @@ $join_date = $login_time > 0 ? date('F j, Y', $login_time) : 'Unknown';
     <div>
      <strong>Hawiyya</strong>
      <p>© 2025 All rights reserved</p>
+      <p class="footer-sources">Sources: <a href="https://github.com/LamaAy/SaudiCulture-Dataset" target="_blank" rel="noopener noreferrer">SaudiCulture-Dataset</a>, Absher sources: <a href="https://docs.google.com/spreadsheets/d/1-O91eSIvOUJEuSIDnHoaS21OHMnVc3anpw0jAVw_krs/edit?usp=sharing" target="_blank" rel="noopener noreferrer">Absher (Words)</a>, <a href="https://docs.google.com/spreadsheets/d/1nwVsA24SzxqITv_-jVQ_rQWxQ4eqpGJmIifyxZq2jsY/edit?usp=sharing" target="_blank" rel="noopener noreferrer">Absher (Phrases)</a>, <a href="https://docs.google.com/spreadsheets/d/1HAUXQnbA8L4dhFNEx-XQA67OeOaO5lpwX5RUMgC3swQ/edit?usp=sharing" target="_blank" rel="noopener noreferrer">Absher (Proverbs)</a>, <a href="https://www.absher.sa" target="_blank" rel="noopener noreferrer">Absher website</a>.</p>
     </div>
     <ul class="footer-links">
      <li><a href="index.php">Back to Home</a></li>

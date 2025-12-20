@@ -431,6 +431,7 @@ $join_date_ar = "$day $month $year";
     <div>
      <strong>هويّة</strong>
      <p>© 2025 جميع الحقوق محفوظة</p>
+      <p class="footer-sources">المصادر: <a href="https://github.com/LamaAy/SaudiCulture-Dataset" target="_blank" rel="noopener noreferrer">SaudiCulture-Dataset</a>، مصادر أبشر: <a href="https://docs.google.com/spreadsheets/d/1-O91eSIvOUJEuSIDnHoaS21OHMnVc3anpw0jAVw_krs/edit?usp=sharing" target="_blank" rel="noopener noreferrer">أبشر (كلمات)</a>، <a href="https://docs.google.com/spreadsheets/d/1nwVsA24SzxqITv_-jVQ_rQWxQ4eqpGJmIifyxZq2jsY/edit?usp=sharing" target="_blank" rel="noopener noreferrer">أبشر (عبارات)</a>، <a href="https://docs.google.com/spreadsheets/d/1HAUXQnbA8L4dhFNEx-XQA67OeOaO5lpwX5RUMgC3swQ/edit?usp=sharing" target="_blank" rel="noopener noreferrer">أبشر (أمثال)</a>، <a href="https://www.absher.sa" target="_blank" rel="noopener noreferrer">موقع أبشر</a>.</p>
     </div>
     <ul class="footer-links">
      <li><a href="index-ar.php">العودة للرئيسية</a></li>
