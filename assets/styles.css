@@ -978,7 +978,7 @@ body { overflow-x: hidden; }
   position: absolute;
   bottom: 50px;
 
-  inset-inline-end: 2%;
+  inset-inline-end: -10.9%;
   inset-inline-start: auto;
 
   display: flex;
