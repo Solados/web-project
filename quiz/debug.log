@@ -118,3 +118,55 @@ Files: Array
 
 CSV File Path: C:\Users\manss\Desktop\web-project/data/UserQuestions-ar.csv
 File written successfully. Size: 775 bytes
+=== 2025-12-20 15:15:52 ===
+POST Data: Array
+(
+)
+
+Session: Array
+(
+    [user_id] => 9071588a920474260e8b7aeccb43640f
+    [user_name] => solados1
+    [user_email] => solados1@gmail.com
+    [logged_in] => 1
+    [login_time] => 1766230277
+    [last_activity] => 1766239520
+    [ip_address] => 127.0.0.1
+    [user_agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0
+)
+
+Files: Array
+(
+)
+
+
+=== 2025-12-20 15:17:01 ===
+POST Data: Array
+(
+    [type] => True_False_question
+    [dialect] => general
+    [question] => رد السلام عليكم هو وعليكم السلام
+    [answer] => صحيح
+    [choices] => أ) صحيح
+ب) خطأ
+)
+
+Session: Array
+(
+    [user_id] => 9071588a920474260e8b7aeccb43640f
+    [user_name] => solados1
+    [user_email] => solados1@gmail.com
+    [logged_in] => 1
+    [login_time] => 1766230277
+    [last_activity] => 1766239520
+    [ip_address] => 127.0.0.1
+    [user_agent] => Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0
+)
+
+Files: Array
+(
+)
+
+
+CSV File Path: C:\Users\manss\Desktop\web-project/data/UserQuestions-ar.csv
+File written successfully. Size: 3 bytes

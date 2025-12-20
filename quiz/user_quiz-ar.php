@@ -37,8 +37,8 @@
     
     <div class="form-group">
       <label>الخيارات (اختياري - للمتعدد):</label>
-      <textarea id="questionChoices" class="quiz-gold-textarea" placeholder="أ) الخيار الأول&#10;ب) الخيار الثاني&#10;ج) الخيار الثالث"></textarea>
-      <small>اكتب كل خيار في سطر جديد مع حرفه العربي (أ، ب، ج، د)</small>
+      <textarea id="questionChoices" class="quiz-gold-textarea" placeholder=" الخيار الأول&#10; الخيار الثاني&#10; الخيار الثالث"></textarea>
+      <small>اكتب كل خيار في سطر جديد بدون اضافة حروف الاختيارات  (أ، ب، ج، د)</small>
     </div>
     
     <button type="submit" class="quiz-gold-btn">إضافة السؤال</button>

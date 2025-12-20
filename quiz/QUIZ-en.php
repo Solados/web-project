@@ -108,6 +108,7 @@ if (!$LOGGED_IN) {
     <label class="quiz-gold-label">Select region/source:</label>
     <div class="select-wrapper">
       <select id="regionFilter" class="quiz-gold-select">
+        <option value="USERQUESTIONS">User Questions</option>
         <option value="GENERAL">GENERAL</option>
         <option value="CENTERAL">Central</option>
         <option value="NORTH">North</option>

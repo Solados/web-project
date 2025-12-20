@@ -140,6 +140,8 @@ if (!$LOGGED_IN) {
             <option value="Words">كلمات</option>
             <option value="Phrases">عبارات</option>
             <option value="Proverbs">أمثال</option>
+            <option value="UserQuestions-ar">أسئلة المستخدمين</option>
+
           </select>
         </div>
 
@@ -237,7 +239,7 @@ if (!$LOGGED_IN) {
     const count = Number(document.getElementById('questionCount').value) || 5;
     const regionSelect = document.getElementById('regionFilter');
     const regionValue = regionSelect ? regionSelect.value : 'Words';
-    const regionFiles = ['Words','Phrases','Proverbs'];
+    const regionFiles = ['Words','Phrases','Proverbs','UserQuestions-ar'];
 
     let source = 'Words';
     if (regionValue === 'RANDOM') {
@@ -264,7 +266,7 @@ if (!$LOGGED_IN) {
     const category = document.getElementById('categoryFilter') ? document.getElementById('categoryFilter').value : 'all';
 
     // Prefer server-side fetching for Arabic datasets when a specific filter is selected
-    const arabicDatasets = ['Words','Phrases','Proverbs'];
+    const arabicDatasets = ['Words','Phrases','Proverbs','UserQuestions-ar'];
     const preferServerForArabicFilter = arabicDatasets.includes(source);
 
     if (!preferServerForArabicFilter && typeof fetchQuestions === 'function'){
@@ -297,7 +299,7 @@ if (!$LOGGED_IN) {
     try {
       // Build query params; for Arabic datasets we may send `arabic_filter` for dialect/block filters
       const qsObj = { source: source, count: String(count), type: mappedType === 'all' ? '' : mappedType, category: category || '' };
-      if (['Words','Phrases','Proverbs'].includes(source) && mappedType && mappedType !== 'all') {
+      if (['Words','Phrases','Proverbs','UserQuestions-ar'].includes(source) && mappedType && mappedType !== 'all') {
         const blockCols = ['Location_Recognition_question','Cultural_Interpretation_question','Contextual_Usage_question','Fill_in_Blank_question','True_False_question','Meaning_question'];
         if (blockCols.includes(mappedType) || !['MCQ (one correct)','MCQ (multiple correct)','Open-ended'].includes(mappedType)) {
           qsObj.arabic_filter = mappedType;
@@ -814,7 +816,7 @@ document.addEventListener('click', (e) => {
       // Do not auto-insert MCQ/multi/fill UI options here; preserve only hardcoded block types
 
       // If Arabic dataset, try to extract dialects and block-question columns
-      const arabicDatasets = ['Words','Phrases','Proverbs'];
+      const arabicDatasets = ['Words','Phrases','Proverbs','UserQuestions-ar'];
       if (arabicDatasets.includes(src)) {
         try {
           const csvUrl = `../data/${src}.csv`;

@@ -199,6 +199,7 @@ if (isset($_GET['file'])) {
 
     $regionConfig = [
         'GENERAL' => ['englishFiles' => ['GENERAL.csv'], 'dialects' => ['general']],
+        'USERQUESTIONS' => ['englishFiles' => ['UserQuestions.csv'], 'dialects' => ['general']],
         'NORTH' => ['englishFiles' => ['NORTH.csv'], 'dialects' => ['northern','north']],
         'SOUTH' => ['englishFiles' => ['SOUTH.csv'], 'dialects' => ['southern','south']],
         'EAST'  => ['englishFiles' => ['EAST.csv'],  'dialects' => ['eastern','east']],
@@ -214,22 +215,84 @@ if (isset($_GET['file'])) {
     // small helper to read CSV into associative arrays
     $dataDirPath = realpath(__DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'data');
     if ($dataDirPath === false) $dataDirPath = __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'data';
-    function __region_loadCsvAssoc($path) {
-        if (!file_exists($path)) return [];
-        $rows = [];
-        if (($h = fopen($path, 'r')) !== false) {
-            $header = fgetcsv($h, 0, ',');
-            if ($header === false) { fclose($h); return []; }
-            $header = array_map('trim', $header);
+
+    // Load CSV as associative array
+
+function __region_loadCsvAssoc($path) {
+    if (!file_exists($path)) return [];
+    $rows = [];
+    
+    if (($h = fopen($path, 'r')) !== false) {
+        // Check for BOM
+        $bom = fread($h, 3);
+        if ($bom != "\xEF\xBB\xBF") {
+            rewind($h);
+        }
+        
+        // Try to read as CSV with header
+        $header = fgetcsv($h, 0, ',');
+        if ($header === false) {
+            fclose($h);
+            return [];
+        }
+        
+        // Check if first row looks like data (not header)
+        $firstCell = trim($header[0] ?? '');
+        $looksLikeData = in_array(strtolower($firstCell), ['general', 'northern', 'southern', 'eastern', 'western', 'central']);
+        
+        if ($looksLikeData) {
+            // First row is actually data - no header in file
+            fseek($h, 0); // Go back to beginning
+            if ($bom != "\xEF\xBB\xBF") {
+                rewind($h);
+            } else {
+                // Skip BOM again
+                fread($h, 3);
+            }
+            
+            // Use default headers for UserQuestions-ar.csv
+            $defaultHeaders = ['Dialect', 'QuestionBlock', 'AddedBy', 'Date', 'Status'];
+            
             while (($data = fgetcsv($h, 0, ',')) !== false) {
                 $row = [];
-                foreach ($header as $i => $col) $row[$col] = $data[$i] ?? '';
+                foreach ($defaultHeaders as $i => $col) {
+                    $row[$col] = $data[$i] ?? '';
+                }
                 $rows[] = $row;
             }
-            fclose($h);
+        } else {
+            // Normal CSV with header
+            $header = array_map('trim', $header);
+            
+            // Fix common header issues
+            if ($header[0] === 'm' && strpos(implode('', $header), 'Term') === false) {
+                // Fix BOM corruption: 'm' should be 'Term'
+                $header[0] = 'Term';
+            }
+            
+            while (($data = fgetcsv($h, 0, ',')) !== false) {
+                $row = [];
+                foreach ($header as $i => $col) {
+                    $value = $data[$i] ?? '';
+                    
+                    // Clean common prefixes
+                    if (strpos($col, 'Added') === 0 || strpos($col, 'Date') === 0 || strpos($col, 'Status') === 0) {
+                        $value = preg_replace('/^(added by|date added|status):?\s*/i', '', $value);
+                    }
+                    
+                    $row[$col] = trim($value);
+                }
+                $rows[] = $row;
+            }
         }
-        return $rows;
+        
+        fclose($h);
     }
+    
+    return $rows;
+}
+
+    // ========= ARABIC QUIZ HELPERS (NEW) =========
 
     function __region_extractQuestionFromBlock($text) {
         if (!$text) return '';
@@ -402,27 +465,141 @@ function __region_loadEnglishQuestions($dataDir, $files) {
 
     
     function __region_loadArabicQuestions($dataDir, $dialectsLower) {
-        $result = [];
-        $arabicFiles = ['Words.csv','Phrases.csv','Proverbs.csv'];
-        foreach ($arabicFiles as $file) {
-            $path = rtrim($dataDir, '/\\') . DIRECTORY_SEPARATOR . $file;
-            if (!file_exists($path)) continue;
-            $rows = __region_loadCsvAssoc($path);
+    $result = [];
+    $arabicFiles = ['Words.csv','Phrases.csv','Proverbs.csv','Questions-ar.csv','UserQuestions-ar.csv'];
+    
+    foreach ($arabicFiles as $file) {
+        $path = rtrim($dataDir, '/\\') . DIRECTORY_SEPARATOR . $file;
+        if (!file_exists($path)) continue;
+        
+        error_log("Loading Arabic questions from: " . $file);
+        
+        $rows = __region_loadCsvAssoc($path);
+        error_log("Rows loaded from $file: " . count($rows));
+        
+        // SPECIAL HANDLING FOR UserQuestions-ar.csv
+        if ($file === 'UserQuestions-ar.csv') {
             foreach ($rows as $row) {
-                $dialect = strtolower(trim($row['Dialect type'] ?? ''));
-                if (!in_array($dialect, $dialectsLower)) continue;
-                $blockColumns = ['Location_Recognition_question','Cultural_Interpretation_question','Contextual_Usage_question','Fill_in_Blank_question','True_False_question','Meaning_question'];
-                foreach ($blockColumns as $col) {
-                    if (!isset($row[$col])) continue;
-                    $block = trim($row[$col]); if ($block === '') continue;
-                    $qText = __region_extractQuestionFromBlock($block);
-                    $aText = __region_extractFullCorrectAnswer($block);
-                    if ($qText !== '' && $aText !== '') $result[] = ['question'=>$qText,'answer'=>$aText,'lang'=>'arabic','arabic_type'=>strtolower($col)];
+                // Check if this is SIMPLE format (has Question column)
+                if (isset($row['Question']) || isset($row['سؤال'])) {
+                    // SIMPLE FORMAT: Question, Answer, etc.
+                    $question = trim($row['Question'] ?? $row['سؤال'] ?? '');
+                    $answer = trim($row['Answer'] ?? $row['إجابة'] ?? '');
+                    $type = trim($row['Question Type'] ?? $row['نوع السؤال'] ?? '');
+                    
+                    if ($question && $answer) {
+                        $result[] = [
+                            'question' => $question,
+                            'answer' => $answer,
+                            'lang' => 'arabic',
+                            'arabic_type' => strtolower($type) ?: 'open-ended'
+                        ];
+                    }
+                } 
+                // Check if this is TERMS format (has Term column and question blocks)
+                else if (isset($row['Term']) || isset($row['Meaning_of_term'])) {
+                    // TERMS FORMAT: Term, Meaning_of_term, Dialect type, question blocks
+                    $dialect = strtolower(trim($row['Dialect type'] ?? ''));
+                    
+                    // Apply dialect filter if specified
+                    if (!empty($dialectsLower) && !in_array($dialect, $dialectsLower)) {
+                        continue;
+                    }
+                    
+                    $blockColumns = [
+                        'Location_Recognition_question',
+                        'Cultural_Interpretation_question',
+                        'Contextual_Usage_question',
+                        'Fill_in_Blank_question',
+                        'True_False_question',
+                        'Meaning_question'
+                    ];
+                    
+                    foreach ($blockColumns as $col) {
+                        if (!isset($row[$col])) continue;
+                        $block = trim($row[$col]);
+                        if ($block === '') continue;
+                        
+                        $qText = __region_extractQuestionFromBlock($block);
+                        $aText = __region_extractFullCorrectAnswer($block);
+                        
+                        if ($qText !== '' && $aText !== '') {
+                            $result[] = [
+                                'question' => $qText,
+                                'answer' => $aText,
+                                'lang' => 'arabic',
+                                'arabic_type' => strtolower($col),
+                                'source' => 'UserQuestions-ar.csv'
+                            ];
+                        }
+                    }
+                }
+                // Check if this is SHIFTED format (no headers, data starts directly)
+                else if (isset($row[0]) && in_array(strtolower($row[0]), ['general', 'northern', 'southern', 'eastern', 'western', 'central'])) {
+                    // SHIFTED FORMAT: dialect is in first column, question in second
+                    $dialect = strtolower(trim($row[0]));
+                    $questionBlock = $row[1] ?? '';
+                    
+                    if (!empty($dialectsLower) && !in_array($dialect, $dialectsLower)) {
+                        continue;
+                    }
+                    
+                    if ($questionBlock) {
+                        $qText = __region_extractQuestionFromBlock($questionBlock);
+                        $aText = __region_extractFullCorrectAnswer($questionBlock);
+                        
+                        if ($qText !== '' && $aText !== '') {
+                            $result[] = [
+                                'question' => $qText,
+                                'answer' => $aText,
+                                'lang' => 'arabic',
+                                'arabic_type' => 'true_false', // Default for shifted format
+                                'source' => 'UserQuestions-ar.csv (shifted)'
+                            ];
+                        }
+                    }
+                }
+            }
+            continue; // Skip to next file
+        }
+        
+        // ORIGINAL LOGIC FOR OTHER FILES (Words.csv, Phrases.csv, etc.)
+        foreach ($rows as $row) {
+            $dialect = strtolower(trim($row['Dialect type'] ?? ''));
+            if (!empty($dialectsLower) && !in_array($dialect, $dialectsLower)) continue;
+            
+            $blockColumns = [
+                'Location_Recognition_question',
+                'Cultural_Interpretation_question',
+                'Contextual_Usage_question',
+                'Fill_in_Blank_question',
+                'True_False_question',
+                'Meaning_question'
+            ];
+            
+            foreach ($blockColumns as $col) {
+                if (!isset($row[$col])) continue;
+                $block = trim($row[$col]);
+                if ($block === '') continue;
+                
+                $qText = __region_extractQuestionFromBlock($block);
+                $aText = __region_extractFullCorrectAnswer($block);
+                
+                if ($qText !== '' && $aText !== '') {
+                    $result[] = [
+                        'question' => $qText,
+                        'answer' => $aText,
+                        'lang' => 'arabic',
+                        'arabic_type' => strtolower($col)
+                    ];
                 }
             }
         }
-        return $result;
     }
+    
+    error_log("Total Arabic questions loaded: " . count($result));
+    return $result;
+}
 
     $config = $regionConfig[$file];
     $requestedArabicFilter = isset($_GET['arabic_filter']) ? trim($_GET['arabic_filter']) : '';
