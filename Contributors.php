@@ -9,8 +9,8 @@ if (session_status() === PHP_SESSION_NONE) {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Hawiyyah | Contributors</title>
-  <meta name="description" content="Meet the contributors who helped build Hawiyyah and what each person worked on.">
+  <title>Hawiyya | Contributors</title>
+  <meta name="description" content="Meet the contributors who helped build Hawiyya and what each person worked on.">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

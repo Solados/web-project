@@ -11,7 +11,7 @@ if (session_status() === PHP_SESSION_NONE) {
  <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Hawiyyah | Home Page</title>
+  <title>Hawiyya | Home Page</title>
     <meta name="description" content="Discover customs, traditions, and regions of the Kingdom of Saudi Arabia.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

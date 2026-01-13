@@ -174,7 +174,7 @@ if (!$LOGGED_IN) {
 
     <!-- New: Contributors button -->
     <div class="footer-cta">
-      <a class="footer-contributors-btn" href="Contributors.php">Our Team</a>
+      <a class="footer-contributors-btn" href="../Contributors.php">Our Team</a>
     </div>
   </div>
 </footer>

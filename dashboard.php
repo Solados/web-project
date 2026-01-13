@@ -17,8 +17,8 @@ $join_date = $login_time > 0 ? date('F j, Y', $login_time) : 'Unknown';
  <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Hawiyyah | My Profile</title>
-  <meta name="description" content="Manage your profile and track your progress on Hawiyyah.">
+  <title>Hawiyya | My Profile</title>
+  <meta name="description" content="Manage your profile and track your progress on Hawiyya.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@300;400;600;700&display=swap" rel="stylesheet">

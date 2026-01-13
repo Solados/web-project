@@ -195,7 +195,7 @@ if (!$LOGGED_IN) {
 
     <!-- زر جديد بالأسفل بالمنتصف -->
     <div class="footer-cta">
-      <a class="footer-contributors-btn" href="Contributors-ar.php">فريق العمل</a>
+      <a class="footer-contributors-btn" href="../Contributors-ar.php">فريق العمل</a>
     </div>
   </div>
 </footer>

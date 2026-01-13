@@ -1,8 +1,8 @@
-﻿# Hawiyyah  Cultural Regions & Quizzes
+﻿# Hawiyya Cultural Regions & Quizzes
 
 ## English
 
-Hawiyyah is a bilingual (Arabic / English) informational website focused on Saudi regional culture and interactive quizzes. It combines static region pages with a lightweight PHP profile/dashboard system for user sign-up, authentication, and basic progress tracking. This README presents both English and Arabic content in the same file.
+Hawiyya is a bilingual (Arabic / English) informational website focused on Saudi regional culture and interactive quizzes. It combines static region pages with a lightweight PHP profile/dashboard system for user sign-up, authentication, and basic progress tracking. This README presents both English and Arabic content in the same file.
 
 ### Key Features
 
@@ -13,14 +13,14 @@ Hawiyyah is a bilingual (Arabic / English) informational website focused on Saud
 
 ### Project structure (select files)
 
-- `index.php`  Home page
-- `index-ar.php`  Home page (Arabic)
-- `dashboard.php`  User profile dashboard (requires login)
-- `sign/`  Authentication handlers and forms (signup, login, session checks)
-- `api/`  Minimal API endpoints (profile and quiz-related actions)
-- `assets/`  CSS and JavaScript (`styles.css`, `script.js`, `quiz-parser.js`)
-- `data/`  CSV data files (includes `user_data.csv` for the prototype store)
-- `image/`  Image assets used across the site
+- `index.php` Home page
+- `index-ar.php` Home page (Arabic)
+- `dashboard.php` User profile dashboard (requires login)
+- `sign/` Authentication handlers and forms (signup, login, session checks)
+- `api/` Minimal API endpoints (profile and quiz-related actions)
+- `assets/` CSS and JavaScript (`styles.css`, `script.js`, `quiz-parser.js`)
+- `data/` CSV data files (includes `user_data.csv` for the prototype store)
+- `image/` Image assets used across the site
 
 ### Usage notes
 
@@ -59,14 +59,14 @@ Images and some fonts were obtained from public sources (for example, Unsplash a
 
 ### بنية المشروع (ملفات مختارة)
 
-- `index.php`  الصفحة الرئيسية
-- `index-ar.php`  الصفحة الرئيسية (بالعربية)
-- `dashboard.php`  لوحة الملف الشخصي (تتطلب تسجيل دخول)
-- `sign/`  معالجات ونماذج المصادقة (تسجيل دخول فحص الجلسة)
-- `api/`  نقاط نهاية API بسيطة (عمليات الملف الشخصي والاختبارات)
-- `assets/`  ملفات CSS وJavaScript (`styles.css`, `script.js`, `quiz-parser.js`)
-- `data/`  ملفات CSV (بما في ذلك `user_data.csv` لمخزن الاختبارات)
-- `image/`  ملفات الصور المستخدمة في الموقع
+- `index.php` الصفحة الرئيسية
+- `index-ar.php` الصفحة الرئيسية (بالعربية)
+- `dashboard.php` لوحة الملف الشخصي (تتطلب تسجيل دخول)
+- `sign/` معالجات ونماذج المصادقة (تسجيل دخول فحص الجلسة)
+- `api/` نقاط نهاية API بسيطة (عمليات الملف الشخصي والاختبارات)
+- `assets/` ملفات CSS وJavaScript (`styles.css`, `script.js`, `quiz-parser.js`)
+- `data/` ملفات CSV (بما في ذلك `user_data.csv` لمخزن الاختبارات)
+- `image/` ملفات الصور المستخدمة في الموقع
 
 ### ملاحظات الاستخدام
 
@@ -91,4 +91,3 @@ Images and some fonts were obtained from public sources (for example, Unsplash a
 الصور وبعض الخطوط مأخوذة من مصادر عامة (مثل Unsplash وGoogle Fonts). استبدل أو أعد ترخيص العناصر قبل النشر في بيئة إنتاج.
 
 ---
-
