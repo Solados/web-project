@@ -102,6 +102,7 @@ if (session_status() === PHP_SESSION_NONE) {
         <p class="member-role">Frontend Developer & Data Presentation</p>
 
         <ul class="member-tasks">
+            <li>رفع الموقع على الاستضافة وتجهيز تشغيله على الهوست.</li>
             <li>تحليل البيانات وتطوير طريقة عرضها في جميع صفحات الموقع.</li>
             <li>تحسين تجربة التنقل عبر تعديل ترتيب عناصر النافبار.</li>
             <li>تطوير شريط البحث وتحسين أدائه داخل الموقع.</li>
@@ -176,11 +177,10 @@ if (session_status() === PHP_SESSION_NONE) {
         <p class="member-role">Backend Developer & Deployment</p>
 
         <ul class="member-tasks">
-            <li>رفع الموقع على الاستضافة وتجهيز تشغيله على الهوست.</li>
-            <li>تطوير ميزة إضافة المستخدمين لأسئلة داخل الموقع.</li>
             <li>ضبط صفحة الكويز وربط فلاتره بقاعدة البيانات.</li>
             <li>تطوير شات بوت للمساعدة داخل الموقع.</li>
             <li>إنشاء صفحة البروفايل وربطها بباقي أجزاء الموقع.</li>
+            <li>إنشاء وتطوير صفحة تسجيل الدخول</li>
         </ul>
 
         <div class="member-links">

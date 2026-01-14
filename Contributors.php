@@ -103,6 +103,7 @@ if (session_status() === PHP_SESSION_NONE) {
         <p class="member-role">Frontend Developer & Data Presentation</p>
 
         <ul class="member-tasks">
+            <li>Deployed the website to hosting and ensured it runs properly online.</li>
             <li>Analyzed data and improved how it is presented across the website.</li>
             <li>Reorganized the navbar and enhanced overall navigation.</li>
             <li>Developed the search bar and improved its functionality.</li>
@@ -177,11 +178,11 @@ if (session_status() === PHP_SESSION_NONE) {
         <p class="member-role">Backend Developer & Deployment</p>
 
         <ul class="member-tasks">
-            <li>Deployed the website to hosting and ensured it runs properly online.</li>
-            <li>Developed the user question submission feature.</li>
             <li>Fixed and improved the quiz page, linking quiz filters to the database.</li>
             <li>Developed a chatbot to assist users.</li>
             <li>Created the Profile page and integrated it with the rest of the website.</li>
+            <li>Creating and developing a login page</li>
+
         </ul>
 
         <div class="member-links">

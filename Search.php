@@ -30,7 +30,7 @@ $q = isset($_GET['q']) ? trim($_GET['q']) : '';
    <!-- Navigation -->
     <nav class="navbar" aria-label="Main navigation">
      <a class="brand" href="index.php" aria-label="Back to top">
-                <img src="image/Hawiyah.png" alt="Logo" class="site-logo">
+                <img src="image/Hawiyah-En.png" alt="Logo" class="site-logo">
 
      </a>
     <button class="menu-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Toggle menu">☰</button>
@@ -99,6 +99,35 @@ $q = isset($_GET['q']) ? trim($_GET['q']) : '';
     </div>
   </section>
 </main>
+
+<!-- Footer -->
+<footer class="site-footer" aria-label="footer">
+  <div class="container footer-grid">
+    <div>
+      <strong>Hawiyya</strong>
+      <p>© 2025 All rights reserved</p>
+      <p class="footer-sources">
+        Sources:
+        <a href="https://github.com/LamaAy/SaudiCulture-Dataset" target="_blank" rel="noopener noreferrer">SaudiCulture-Dataset</a>,
+        Absher sources:
+        <a href="https://docs.google.com/spreadsheets/d/1-O91eSIvOUJEuSIDnHoaS21OHMnVc3anpw0jAVw_krs/edit?usp=sharing" target="_blank" rel="noopener noreferrer">Absher (Words)</a>,
+        <a href="https://docs.google.com/spreadsheets/d/1nwVsA24SzxqITv_-jVQ_rQWxQ4eqpGJmIifyxZq2jsY/edit?usp=sharing" target="_blank" rel="noopener noreferrer">Absher (Phrases)</a>,
+        <a href="https://docs.google.com/spreadsheets/d/1HAUXQnbA8L4dhFNEx-XQA67OeOaO5lpwX5RUMgC3swQ/edit?usp=sharing" target="_blank" rel="noopener noreferrer">Absher (Proverbs)</a>,
+        <a href="https://www.absher.sa" target="_blank" rel="noopener noreferrer">Absher website</a>.
+      </p>
+    </div>
+
+    <ul class="footer-links">
+      <li><a href="#top">Back to Top</a></li>
+      <li><a href="#main">Questions & Answers</a></li>
+    </ul>
+
+    <!-- New: Contributors button -->
+    <div class="footer-cta">
+      <a class="footer-contributors-btn" href="Contributors.php">Our Team</a>
+    </div>
+  </div>
+</footer>
 
 <!-- عدّل المسار إذا عندك مختلف -->
 <script src="assets/script.js"></script>
