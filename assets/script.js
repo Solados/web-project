@@ -39,6 +39,7 @@ if (carouselDom) {
 
     thumbnailBorderDom.appendChild(thumbnailItemsDom[0]);
     let timeRunning = 2250;
+    let timeAutoNext = 18000;
 
     nextDom.onclick = function(){
         showSlider('next');    
